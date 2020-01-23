@@ -1,0 +1,46 @@
+/* ce fichier le code de la mise en page de la premiere page d'acceuil */ 
+
+header{
+    height:100vh ;
+    background-color: rgb(61, 74, 85);
+}
+
+.nav-pills .nav-link.active{
+    background-color: rgba(25, 214, 183, 0.787);
+    color: black;
+}
+.nav-pills .nav-link{
+    background-color:transparent;
+    color:white;
+}
+
+section{
+    height:100vh;
+}
+
+#Présentation{
+    height: 50vh;
+    background-color: black;
+}
+
+#Membres{
+    height: 50vh;
+    background-color: beige;
+}
+
+#Stats{
+    background-color: rgb(61, 74, 85);
+}
+
+#Jouer{
+    height: 30vh;
+}
+
+#Events{
+    height: 70vh;
+    background-color: rgb(41, 110, 167);
+}
+#Contact{
+    height:50vh;
+    background-color: rgb(61, 74, 85);
+}
