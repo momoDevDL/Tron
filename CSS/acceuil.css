@@ -1,12 +1,47 @@
 /* ce fichier le code de la mise en page de la premiere page d'acceuil */ 
-
+body{
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    width: 100%;
+}
 header{
     height:100vh ;
-    background-color: rgb(61, 74, 85);
+    background-color: rgb(0, 0, 0);
+    background-image: url('../IMAGES/monochrome-photo-of-triangle-shape-digital-wallpaper-3137064.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
 }
-
+nav{
+    width: 100%;
+    position: fixed;
+    background-color: transparent;
+    font-family: 'Orbitron', sans-serif;
+    font-size:12px;
+}
+h1{
+    font-size:20em;
+    position: relative;
+    left: 350px;
+    top: 100px;
+    width: min-content;
+    color:rgb(0, 247, 255);
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+}
+.btn-primary.btn-lg{
+    background-color: rgb(0, 247, 255);
+    position: relative;
+    top: 5em;
+    left: 42%;
+    color: black;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+.nav-pills{
+    width: 100%;
+}
 .nav-pills .nav-link.active{
-    background-color: rgba(25, 214, 183, 0.787);
+    background-color: rgb(0, 247, 255);
     color: black;
 }
 .nav-pills .nav-link{
@@ -14,13 +49,22 @@ header{
     color:white;
 }
 
+h3{
+    text-align:  center;
+    color: aqua;
+    padding-top: 2em;
+}
+
+p{
+    color:white;
+}
 section{
     height:100vh;
 }
 
 #Présentation{
     height: 50vh;
-    background-color: black;
+    background-color: rgb(51, 49, 49);
 }
 
 #Membres{
