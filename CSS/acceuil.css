@@ -3,6 +3,8 @@ body{
     font-family: 'Orbitron', sans-serif;
     font-weight: bold;
     width: 100%;
+    margin: 0;
+    padding: 0;
 }
 header{
     height:100vh ;
@@ -11,12 +13,24 @@ header{
     background-repeat: no-repeat;
     background-size: cover;
 }
+button a{
+    text-decoration: none;
+    text-align: center;
+    color: black;
+}
+
+button a:hover{
+    text-decoration: none;
+    text-align: center;
+    color: black;
+}
 nav{
     width: 100%;
     position: fixed;
-    background-color: transparent;
+    background-color: rgba(109, 107, 107, 0.376);
     font-family: 'Orbitron', sans-serif;
     font-size:12px;
+    z-index: 2;
 }
 h1{
     font-size:20em;
@@ -28,7 +42,7 @@ h1{
     font-family: 'Orbitron', sans-serif;
     font-weight: bold;
 }
-.btn-primary.btn-lg{
+#logButton {
     background-color: rgb(0, 247, 255);
     position: relative;
     top: 5em;
@@ -37,6 +51,8 @@ h1{
     padding-left: 50px;
     padding-right: 50px;
 }
+
+
 .nav-pills{
     width: 100%;
 }
@@ -49,10 +65,26 @@ h1{
     color:white;
 }
 
-h3{
+.nav-link:hover{
+    background-color: rgb(0, 247, 255);
+    color: black;
+}
+
+
+h3{    
     text-align:  center;
     color: aqua;
-    padding-top: 2em;
+    background-color: black;
+    width: min-content;
+    position: relative;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 15px;
+    left: 40%;
+    bottom: 30px;
+    z-index: 1;
 }
 
 p{
@@ -64,25 +96,77 @@ section{
 
 #Présentation{
     height: 50vh;
-    background-color: rgb(51, 49, 49);
+    background-color: white;
+}
+#Présentation p {
+        color: black;
 }
 
-#Membres{
-    height: 50vh;
-    background-color: beige;
+#Team{
+    height:70vh;
+    background-color: black;
 }
 
-#Stats{
-    background-color: rgb(61, 74, 85);
+
+#Team #row{
+    width: auto;
+    height: 45vh;
+    margin-left: 6em;
+}
+
+#row .card{
+    float : left;
+    margin-right: 3em;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+.card p{
+    color: black;
+}
+
+#row .card:hover{
+    box-shadow: 0 8px 16px 0 rgb(8, 158, 163);
+    cursor: pointer;
+}
+
+#row img{
+    height: 30vh;
+}
+
+#Stats{/*rgb(61, 74, 85);*/
+    background-color: white;
 }
 
 #Jouer{
     height: 30vh;
+    background-color: rgb(61, 74, 85);
 }
-
+#Jouer p{
+    font-size: larger;
+    font-weight: 800;
+    margin-left: 3em;
+}
+#Jouer h3{
+    width: 15%;
+    margin-bottom: 20px;
+}
+#playIAButton {
+    background-color: rgb(0, 247, 255);
+    color: black;
+    float: right;
+    position: relative;
+    right: 5%;
+    bottom: 20%;
+    padding-left: 50px;
+    padding-right: 50px;
+}
 #Events{
     height: 70vh;
-    background-color: rgb(41, 110, 167);
+    background-color: white;
+}
+
+#carouselExampleCaptions img{
+    width: min-content;
+    height: 50vh;
 }
 #Contact{
     height:50vh;
