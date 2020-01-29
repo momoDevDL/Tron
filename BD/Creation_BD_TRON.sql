@@ -13,9 +13,9 @@ A METTTRE OBLIGATOIREMENT AU DEBUT
 */
 
 
-DROP DATABASE IF EXISTS  lightCycleFight;
-CREATE DATABASE  lightCycleFight;
-USE  lightCycleFight ;
+/*DROP DATABASE IF EXISTS  lightcyclefight;
+CREATE DATABASE  lightcyclefight;
+USE  lightcyclefight ;*/
 
 /*
 Création de la base de  données
