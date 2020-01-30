@@ -1,7 +1,7 @@
 <?php
  echo "<div id='container-signUp' >
 
- <form  action='utilisateurSignUp.php'  method='GET'  id='formulaireVisiteur' >
+ <form  action='utilisateurSignUp   .php'  method='GET'  id='formulaireVisiteur' >
                  
                  <!--label for='Pseudo' >PSEUDO :</label-->
                  <input type='text' name='Pseudo' placeholder='PSEUDO'>

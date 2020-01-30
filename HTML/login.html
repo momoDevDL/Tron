@@ -13,19 +13,9 @@
 <body>
     <h1>AUTHENTIFICATION</h1>
         <div id="formulaire">
-            <form id="logInForm" action='../PHP/login.php' method='POST' style="display:none">
+            <form id="logInForm" action='../PHP/login.php' method='POST'>
                 <input type="text" name="user_name" placeholder="pseudo">
-                <span class="bar"></span>
-                
-                <?php
-                    if ($_SESSION['ErreurPassword']){
-		                echo"<input type='hidden' name='erreur' value='true'/><br />";
-		                $_SESSION['ErreurPassword']=false;
-		            }else{
-						echo"<input type='hidden' name='erreur' value='false'/><br />";
-					}
-                ?>
-                
+                <span class="bar"></span>            
                 <input type="password" name="password" placeholder="mot de passe">
                 <span class="bar"></span>
                
