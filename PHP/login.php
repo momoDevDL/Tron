@@ -16,14 +16,14 @@
                                 
                     $_SESSION['ErreurPassword'] = true;
 
-				header('location:../index.php');// à mettre l'endroit où renvoyer aprés un échec
+				header('location:../HTML/login.html');
 			}
 			
 			else{
 				$user = $resultat->fetch();
 				$_SESSION['id_utilisateur']=$user['PSEUDO'];
 				$_SESSION['id_role']=$user['ROLE'];
-				header('location:../HTML/dashboardUser.html');// à mettre l'endroit où renvoyer aprés la reussite
+				header('location:../HTML/dashboardUser.html');
 			}
 			if($bdd){
    				 $bdd = NULL;
