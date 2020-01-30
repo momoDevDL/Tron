@@ -1,11 +1,10 @@
 $(document).ready(function(){
 
     $("body").on('click',"#signUp",function(){
-        console.log("heey");
+
             $.ajax({
-                url : "../HTML/SignUp.php",
+                url : "../PHP/SignUp.php",
                 method : "POST",
-                data : " ",
                 dataType: "text",
                 success:function(data){
                 console.log(data);
@@ -15,7 +14,7 @@ $(document).ready(function(){
                     console.log(data);
                 },
                 error: function(data){
-                        console.log('error');
+                    console.log("error");
                         console.log(data);
                 }
                 

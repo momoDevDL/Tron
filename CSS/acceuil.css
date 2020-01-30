@@ -8,7 +8,7 @@ body{
 }
 header{
     height:100vh ;
-    background-color: rgb(0, 0, 0);
+    background-color: #181818;
     background-image: url('../IMAGES/monochrome-photo-of-triangle-shape-digital-wallpaper-3137064.jpg');
     background-repeat: no-repeat;
     background-size: cover;
@@ -109,7 +109,7 @@ section{
 
 #Team{
     height:70vh;
-    background-color: black;
+   background-color:#181818 ;
 }
 
 #Team h3{
@@ -126,14 +126,16 @@ section{
 #row .card{
     float : left;
     margin-right: 3em;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    border: none;
+    /*box-shadow: -4px 4px 8px 4px rgb(58, 56, 56);*/
 }
+
 .card p{
     color: black;
 }
 
 #row .card:hover{
-    box-shadow: 0 8px 16px 0 rgb(8, 158, 163);
+    box-shadow: -8px 8px 10px 4px rgb(8, 158, 163);
     cursor: pointer;
 }
 
@@ -151,7 +153,7 @@ section{
 
 #Jouer{
     height: 30vh;
-    background-color: black;
+    background-color:rgb(24,24,24);
 }
 #Jouer p{
     font-size: larger;
@@ -191,7 +193,7 @@ section{
 }
 
 #contact-container{
-    background-color: black;
+    background-color:#181818;
     float: left;
     width: 43%;
     height: 40vh;
