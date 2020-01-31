@@ -1,0 +1,71 @@
+<html>
+   <head>
+     <meta charset="UTF-8" />    
+     <title>Moto</title>
+     <style type="text/css"> td {padding: 20px; } </style>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+     <script src="https://d3js.org/d3.v5.min.js"></script>
+     <script src="config.js"></script>
+     <script src="Plateau.js"></script>
+     <script src="squelette_client.js"></script>
+   </head>
+
+  <body>  
+     <h1 id='tmp'>Temps de Jeu :</h1>
+     <div>
+        Rejoindre la partie <input type="text" name="joueur"> </input> <button onClick="rejoindrePartie()"> Hello </button>
+        <br/>
+        Quitter les vivants <button onClick="quitterPartie()"> Bye Bye </button><br/><br/>
+        <table>
+          <td> Joueur 1 : <label id="joueur0"> </label> </td>
+          <td> Joueur 2 : <label id="joueur1"> </label> </td>
+          <td> Joueur 3 : <label id="joueur2"> </label> </td>
+          <td> Joueur 4 : <label id="joueur3"> </label> </td>
+        </table>
+        <br/>
+     </div>
+      
+     <div id="damier"></div>
+     <script>
+        //QUESTION A POSER : IL SEMBLERAIT QUE LE EU "LAG" PLUS QUAND LES OUTILS DEV NE SONT PAS ACTIVES :(
+         // INITIALISATION DU PLATEAU DE JEU
+      let pl = new Plateau();
+      let x0,y0;
+      var timer = TMP_PARTIE;
+      pl.newPlateau(PL_L,PL_NBCOL,PL_NBLIG);
+      pl.newGrandeCases(100,100,3,3);
+      //setInterval(TimerPartie,INTERVAL);
+      
+
+
+      
+    //TEST POUR COLORIER LES AIRES
+ // NE fonctionne pas encore, je ne sais pas pourquoi
+    
+
+      
+   //    for(let i in pl.grandeCases)
+   //  {
+   //      let x = i['x']
+   //      let col = (Math.random()*0xFFFFFF<<0).toString(16);
+   //      pl.colorAire(i['x'],i['y'],i['w'],i['h'],"blue");
+        
+        
+   //  }
+
+   for(let i in pl.grandeCases)
+    {
+       console.log(i);//¨pourquoi il renvoie des 1 2 3 4 5 .. et pas des objets???  
+    }
+   
+     </script>
+
+  </body>
+</html>
+
+
+
+
+
+
+
