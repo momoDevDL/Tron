@@ -1,0 +1,84 @@
+body{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background-image: url('../IMAGES/monochrome-photo-of-triangle-shape-digital-wallpaper-3137064.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-family: 'Orbitron',sans-serif;
+}
+
+#User-dashboard{
+    background-color:rgb(0, 247, 255);
+    width: 100%;
+    height: fit-content;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+#logo{
+float: left;
+}
+#links{
+    display: inline;
+    margin-left: 38%;
+}
+#links a{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    margin-right: 5px;
+
+    background-color: transparent;
+}
+#logOut{
+    float: right;
+    margin-right: 10px;
+}
+.StatsRow{
+    width: 100%;
+    height: 50%;
+    margin-top:10em;
+    margin-bottom: 5em;
+    align-content: center;
+    display: flex;
+    flex-direction: row;
+   background-color: transparent;
+}
+
+.statsCards{
+    width: 20%;
+    height: 100%;
+    background-color: aliceblue;
+    border: none;
+    text-align: center;
+    margin-left: 4.5em;
+}
+
+.statsCards:hover{
+    box-shadow: -8px 8px 10px 4px rgb(8, 158, 163);
+}
+
+.statsData p{
+    padding-top: 2em;
+    padding-bottom: 2em;
+    font-size: 30px;
+}
+
+.statsTitle p{
+    padding-top: 2em;
+    padding-bottom: 2em;
+    font-size: larger;
+}
+.statsData{
+    width: 100%;
+    height: 50%;
+    background-color: aliceblue;
+}
+
+.statsTitle{
+    width: 100%;
+    height: 50%;
+    background-color: #181818;
+    color: rgb(0, 247, 255);
+}

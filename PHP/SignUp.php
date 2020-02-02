@@ -1,7 +1,7 @@
 <?php
  echo "<div id='container-signUp' >
 
- <form  action='utilisateurSignUp   .php'  method='GET'  id='formulaireVisiteur' >
+ <form  action='../PHP/creationCompte.php'  method='POST'  id='formulaireVisiteur' >
                  
                  <!--label for='Pseudo' >PSEUDO :</label-->
                  <input type='text' name='Pseudo' placeholder='PSEUDO'>
@@ -12,7 +12,7 @@
                  <!--label for='passwd' >MOT DE PASSE</label-->
                  <input type='password' name='passwd' placeholder='MOT DE PASSE'>
                  <span class='bar'></span>
-                 <input id='submit' type='submit' name='formulaireVisiteur' value='Confirmer'>
+                 <input id='submit' type='submit' name='submit' value='Confirmer'>
  </form>
  </div>";
  

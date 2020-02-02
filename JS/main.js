@@ -15,4 +15,6 @@ $(document).ready(function(){
     
         $(this).attr('class','nav-link active');
     });
+
+ 
 }); 
