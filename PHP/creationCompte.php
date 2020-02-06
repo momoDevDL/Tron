@@ -17,11 +17,11 @@
                 //$query = "INSERT INTO UTILISATEUR VALUES('$pseudo',md5($passwd),'JOUEUR','$email',1,100,1.00,'NULL','ORANGE','BLEU')";
                 $req = $dbh->query($sql);
              
-                header("Location:../HTML/dashboardUser.html");
+                header("Location:dashboardUser.php");
                 }else{
                     session_start();
                     $_SESSION["pseudoExistant"] = "true";
-                    header("Location:../PHP/login.php");
+                    header("Location:login.php");
                 }
             }
         

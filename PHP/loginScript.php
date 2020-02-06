@@ -23,7 +23,7 @@
 				$user = $resultat->fetch();
 				$_SESSION['id_utilisateur']=$user['PSEUDO'];
 				$_SESSION['id_role']=$user['ROLE'];
-				header('Location:../HTML/dashboardUser.html');
+				header('Location:dashboardUser.php');
 			}
 			if($bdd){
    				 $bdd = NULL;

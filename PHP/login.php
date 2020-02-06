@@ -54,7 +54,7 @@ if(!(isset($_SESSION['pseudoExistant']))){
                
                 <button type="submit" id="submit" name="submit" class="btn btn-primary btn-lg" value="Soumettre">Soumettre</button>
                 <div id="links">
-                    <a href="../index.html">Revenir à l'acceuil</a>
+                    <a href="../index.php">Revenir à l'acceuil</a>
                     <a id="signUp" href="#">Créer un compte</a>
                 </div> 
             </form>

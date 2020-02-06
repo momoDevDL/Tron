@@ -8,42 +8,118 @@ body{
     background-repeat: no-repeat;
     font-family: 'Orbitron',sans-serif;
 }
+#intro{
+    height: 70vh;
+    background-color: #181818;
+    border-bottom: 4px solid rgb(0, 247, 255);
+ /*   background-image: url(../IMAGES/person-holding-a-glass-ball-3588602.jpg);*/
+    background-size: cover;
+    background-position-y: -30em;
+    background-repeat: no-repeat;
+}
+h1{
+    font-size:180px;
+    position: relative;
+    left: 25%; 
+    letter-spacing: 1em;
+    top: 20%;
+    width: min-content;
+    color:rgb(0, 247, 255);
+    font-weight: bold;
+    margin-bottom: 200px;
+}
+
+#playIAButton {
+    background-color: transparent;
+    color: black;
+    border: 2px solid white;
+    color: white;
+    position: relative;
+    left: 38%;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+#playIAButton:hover , #playIAButton:focus{
+    box-shadow: 0 0.5em 0.5em -0.2em rgb(0, 247, 255);
+    transform: translateY(-0.25em);
+    color: rgb(0, 247, 255);
+    border: 2px solid rgb(0, 247, 255);
+}
+
 
 #User-dashboard{
     background-color:rgb(0, 247, 255);
     width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
     height: fit-content;
-    padding-bottom: 5px;
-    padding-top: 5px;
 }
 #logo{
 float: left;
+margin:0;
+padding-top: 12px;
+padding-bottom: 12px;
 }
 #links{
-    display: inline;
-    margin-left: 38%;
+    margin-left: 25%;
 }
 #links a{
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-right: 10px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-right: 12px;
+    padding-left: 12px;
     margin-right: 5px;
-
     background-color: transparent;
+    text-decoration: none;
+    color: #181818;
 }
+
+#links a:hover{
+    background-color: #181818;   
+    color:rgb(0, 247, 255);
+    cursor: pointer;
+    /*border-bottom: 2px solid rgb(0, 247, 255);  */
+    border-radius: 10px;
+}
+
 #logOut{
     float: right;
     margin-right: 10px;
+    text-decoration: none;
+    margin-left: 20%;
+}
+
+#logOut a{
+    color:#181818;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-decoration: none;
+    border-radius: 10px;
+    padding-right: 12px;
+    padding-left: 12px;
+}
+
+#logOut a:hover{
+    background-color: rgb(61, 74, 85);
+    color:rgb(0, 247, 255);
+    text-decoration: none;
+}
+
+#profil{
+    width: 100%;
+    height : 150vh;
+    background-color: #181818;
 }
 .StatsRow{
     width: 100%;
     height: 50%;
-    margin-top:10em;
-    margin-bottom: 5em;
     align-content: center;
     display: flex;
     flex-direction: row;
-   background-color: transparent;
+    background-color: #181818;
 }
 
 .statsCards{
@@ -57,18 +133,19 @@ float: left;
 
 .statsCards:hover{
     box-shadow: -8px 8px 10px 4px rgb(8, 158, 163);
+    
 }
 
 .statsData p{
     padding-top: 2em;
     padding-bottom: 2em;
-    font-size: 30px;
+    font-size: 25px;
+    columns: #111111;;
 }
-
 .statsTitle p{
     padding-top: 2em;
     padding-bottom: 2em;
-    font-size: larger;
+    font-size: 18px;
 }
 .statsData{
     width: 100%;
@@ -81,4 +158,126 @@ float: left;
     height: 50%;
     background-color: #181818;
     color: rgb(0, 247, 255);
+    border-bottom: 5px solid rgb(0, 247, 255);
+    border-top: 5px solid rgb(0, 247, 255);
+
+}
+
+#Info{
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+#Profil{
+    height:45vh;
+    margin-left: 20px;
+    width:50%;
+    margin-top: 5em;
+    margin-bottom: 5em;
+}
+
+#profil h3{
+    left: 43%;
+}
+
+#profil-container{
+    background-color:#181818;
+    float: left;
+    width: 100%;
+    height: 45vh;
+    color: white;
+    border: 6px solid rgb(0, 247, 255);
+    border-radius: 10px;
+}
+#profil-form h2{
+    text-align: center;
+}
+
+#profil-form input{
+    width: 100%;
+}
+#profil-form{
+    height: 50%;
+}
+#profil-form #submitContactForm{
+    width: 30%; 
+    position: relative;
+    bottom: 3em;
+    left: 25em;
+    border: 2px solid white;
+    background-color: transparent;
+}
+
+#submitContactForm:hover{
+    box-shadow: inset 0 0 0 2em rgb(0, 247, 255);
+    color: #181818;
+}
+
+#Tournois{
+    width: 40%;
+    height: 45vh;
+    background-color: #181818;
+    margin-top: 5em;
+    margin-bottom: 5em;
+}
+
+#TournoiContainer{
+    border: 6px solid rgb(0, 247, 255);
+    border-radius: 10px;
+}
+
+#TournoiContainer h2{
+    text-align: center;
+    color: aliceblue;
+}
+
+#TournoiInfo{
+    color: aliceblue;
+    margin-left: 10px;
+}
+
+#Contact{
+    background-color: #181818;
+    height: 50vh;
+}
+
+#contact-container{
+    background-color:#181818;
+    float: left;
+    width: 100%;
+    height: 100%;
+    color: white;
+    border: 6px solid rgb(0, 247, 255);
+    border-radius: 10px;
+}
+
+#contact-form {
+    width: 100%;
+    background-color: gray;
+    height: 100%;
+
+}
+
+#contact-form h2{
+    text-align: center;
+}
+
+#contact-form form{
+    width: 100%;
+    margin-left: 20em;
+}
+
+#contact-form input{
+    width: 50%;
+    margin-top: 1em;
+}
+
+#contact-form #submitContactForm{
+    width: 30%; 
+    position: relative;
+    bottom: 3em;
+    left: 25em;
+    border: 2px solid white;
+    background-color: transparent;
 }

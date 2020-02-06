@@ -1,6 +1,3 @@
-
-
-
 $(document).ready(function(){
 
             $("body").on('click',"#signUp",function(){
