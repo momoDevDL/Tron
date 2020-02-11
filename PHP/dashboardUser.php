@@ -2,6 +2,33 @@
     require_once('ConnexionBD.php');
     if(!isset($_SESSION)){session_start();}
     $PSEUDO= isset($_SESSION['id_utilisateur']) ? $_SESSION['id_utilisateur'] : 0;
+   // $res= $dbh->query("SELECT EMAIL FROM UTILISATEUR WHERE PSEUDO='$PSEUDO'");
+    
+    $res2= $dbh->query("SELECT * FROM UTILISATEUR WHERE PSEUDO='$PSEUDO'");
+    /*$res3= $dbh->query("SELECT NIVEAU FROM UTILISATEUR WHERE PSEUDO='$PSEUDO'");
+    $res4= $dbh->query("SELECT MMR FROM UTILISATEUR WHERE PSEUDO='$PSEUDO'");
+    $res5= $dbh->query("SELECT COULEUR_GENTIL FROM UTILISATEUR WHERE PSEUDO='$PSEUDO'");
+    $res6= $dbh->query("SELECT COULEUR_MECHANT FROM UTILISATEUR WHERE PSEUDO='$PSEUDO'");*/
+    
+    foreach($res2 as $row){
+        $PSEUDO = $row['PSEUDO'];
+        $email = $row['EMAIL'];
+        $role = $row['ROLE'];
+        $niveau = $row['NIVEAU'];
+        $mmr= $row['MMR'];
+        $couleurG = $row['COULEUR_GENTIL'];
+        $couleurM = $row['COULEUR_MECHANT'];
+        $mdp= $row['PASSWORD'];
+        $avatar = $row['AVATAR'];
+    } 
+
+    $sql =" SELECT T.ID_TOURNOI,T.TITRE_EVENEMENTS,T.DATE_DEBUT,T.TYPE_TOURNOI FROM INSCRIT I,TOURNOI T WHERE I.ID_TOURNOI = T.ID_TOURNOI AND PSEUDO = '$PSEUDO' ORDER BY T.DATE_DEBUT DESC ";
+    $res7 = $dbh->query($sql);
+    $tabTournoi;
+    
+    foreach($res7 as $row){
+       $tabTournoi[]= array("ID"=>$row['ID_TOURNOI'],"TITRE"=>$row['TITRE_EVENEMENTS'],"DD"=>$row['DATE_DEBUT'],"TYPE"=>$row['TYPE_TOURNOI']);
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +50,7 @@
             <a>Jouer Vs IA</a>
             <a>Jouer En Ligne</a>
             <a>Mes Tournois</a>
-            <a>Mon profile</a>
+            <a id="Joueur">Mon profile</a>
         </div>
         <div id="logOut">
             <a href="logout.php">Se deconnecter</a>
@@ -41,41 +68,58 @@
 
      <div id="Profil">
         <div id="profil-container">
-          <div id="profil-form">
-              <h2>Profil</h2>
-              <form method="post" > 
-              <label for="first-name"> Prénom:  </label>
-                  <input type="text" name="first-name" placeholder="First-Name">
-            
-              
-              <label for="last-name"> Nom :  </label>
-                  <input type="text" name="last-name" placeholder="Last-Name">
-              
-      
-              <label for="email"> Email :  </label>
-                  <input type="text" name="email" placeholder="exemple@exemple.com"></br>
-          
-              <label class="emailContent" for="emailContent">Contenu de message:  </label></br>
-                  <textarea class="emailContent" name="emailContent" placeholder="text"></textarea></br>
-              <input id='submitContactForm' type='submit' name='submit' class='btn btn-primary' value="Submit">
-              
-              </form>
-          </div>
-      
+        <h2>Profil</h2>
+            <div id="avatar">
+            <img src='<?php echo $avatar;?>' width="200px" height="200px">
+            </div>
+            <div class="niveauMmr">
+                <p>Niveau : <?php echo $niveau; ?></p>
+            <p>MMR : <?php echo $mmr; ?></p>
+                </div>
+            <div id="info-profile">
+            <p id="pseudo">Pseudo : <?php echo $PSEUDO; ?></p>
+            <p id="email" >email : <?php echo $email; ?></p>
+            <p id="mdp" >mot de passe :<?php for($i=0 ;$i < strlen($mdp) ;$i++){
+                echo '*';
+            } ?></p>
+                <p id="couleur_g">AUTOBOTS : <?php echo $couleurG; ?></p>
+                <p id="couleur_m">DECEPTICONS : <?php echo $couleurM; ?></p>
+               
+            </div>
+            <button id='modifyProfile' class='btn btn-primary'>Modifier</button>
       </div>
     </div>
 
     <div id="Tournois">
         <div id="TournoiContainer">
         <h2>Tournois</h2>
-        <div id="TournoiInfo">
-        <p>Pseudo :<?php echo $PSEUDO ;?></p>
+        <?php 
+        switch(sizeof($tabTournoi)){
+            case 0:
+                echo "<p id='aucunTournoi'>VOUS N'ETES PAS INSCRIT DANS UN DE NOS PROCHAINS TOURNOIS</p>
+                <button id='ConsulterTournoi' >INSCRIVEZ-VOUS MAINTENANT</button>";
+            break;
+            default:
+            echo "<div id='TournoiInfo'>";
+            for( $i = 0 ; $i < sizeof($tabTournoi) ; $i++ ){
+             
+             echo "<div class='detailsTournoi'>
+                 <h4>
+                    ".$tabTournoi[$i]['TITRE']."
+                 </h4>
+                 <p>".$tabTournoi[$i]['DD']."</p>
+                 <button class='afficheDetailsTournoi' id='".$tabTournoi[$i]['ID']."'>savoir plus</button>
+             </div>" ;
+            }
+             echo "</div>";
+        break;
+        }
+        
+        ?>
+       
         </div>
-
     </div>
 
-
-</div>
      <div class="StatsRow">
         <div class="statsCards">
             <div class="statsData">
@@ -150,7 +194,9 @@
         
     </div>
 
+    </div>
      </section>
+     
     <section>
 
     <div id="Contact">
@@ -171,20 +217,37 @@
           
               <label class="emailContent" for="emailContent">Contenu de message:  </label></br>
                   <textarea class="emailContent" name="emailContent" placeholder="text"></textarea></br>
-              <input id='submitContactForm' type='submit' name='submit' class='btn btn-primary' value="Submit">
+                  <input id='submitContactForm' type='submit' name='submit' class='btn btn-primary' value="Submit">
               
               </form>
           </div>
       
       </div>
+         <div id="membre">
+             <h3>Membres</h3>
+              <span class="dot">
+              <img class="in" src='../IMAGES/linkdn.jpeg' width='150px' height='150px'/>
+              <img src='../IMAGES/31543101_102282713975787_7975195690995286016_o.jpg' width='150px' height='150px'/>
+                </span>
+            <span class="dot">
+            <img class="in" src='../IMAGES/linkdn.jpeg' width='150px' height='150px'/>
+            <img src='../IMAGES/40313576_642691499489932_8305937623378034688_o.jpg' width='150px' height='150px'/>
+            </span>
+            <span class="dot">
+            <img class="in" src='../IMAGES/linkdn.jpeg' width='150px' height='150px'/>
+            <img src='../IMAGES/23004546_713516668850307_9057302007055486628_o.jpg' width='150px' height='150px'/>
+        </span>
+            <span class="dot">
+            <img class="in" src='../IMAGES/linkdn.jpeg' width='150px' height='150px'/>
+            <img src='../IMAGES/48380390_342138316604462_2327487200549142528_o.jpg' width='150px' height='150px'/>
+            </span>
+            <p>ALL COPYRIGHTS RESERVED @2020</p>
+        </div>
+        
     </div>
-
+    
     </section>
 
-    
-    
-      
-      <script src="../JSON/jquery-3.4.1.min.js" type="text/javascript"></script>
       <script src="../JS/dashboard.js"></script>
       
 </body>

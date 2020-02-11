@@ -13,11 +13,16 @@
                 $checkExistance = $dbh->query($query);
                 
                 if($checkExistance->rowCount() == 0 ){
-                $sql  = "INSERT INTO UTILISATEUR VALUES('$pseudo',md5('$passwd'),'JOUEUR','$email',1,100,0.99,NULL,'ORANGE','BLEU')";  
+                $sql  = "INSERT INTO UTILISATEUR VALUES('$pseudo',md5('$passwd'),'JOUEUR','$email',1,100,0.99,NULL,'ORANGE','BLEU','-wooden-pingpong-table-709134.jpg')";  
                 //$query = "INSERT INTO UTILISATEUR VALUES('$pseudo',md5($passwd),'JOUEUR','$email',1,100,1.00,'NULL','ORANGE','BLEU')";
+                
                 $req = $dbh->query($sql);
-             
+                
+                session_start();
+                $_SESSION['id_utilisateur']= $pseudo;
+                $_SESSION['id_role']="JOUEUR";
                 header("Location:dashboardUser.php");
+
                 }else{
                     session_start();
                     $_SESSION["pseudoExistant"] = "true";

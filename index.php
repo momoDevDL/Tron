@@ -116,7 +116,7 @@ require_once('PHP/ConnexionBD.php');
                 </p>
             </div>
             <div class="statsTitle">
-                <p>Nombre total de partie joué</p>
+                <p>Nombre de partie joué</p>
             </div>
         </div>
         
@@ -124,10 +124,10 @@ require_once('PHP/ConnexionBD.php');
             <div class="statsData">
                 <p>
                 <?php
-                $sql = "SELECT COUNT(*) as NBPARTIET FROM PARTIE";
+                $sql = "SELECT COUNT(*) as NBPARTIEIA FROM PARTIE WHERE TYPE_MATCH='IA'";
                $res= $dbh->query($sql);
                foreach($res as $row)
-                   echo $row['NBPARTIETOT'];
+                   echo $row['NBPARTIEIA'];
                    ?>
                 </p>
             </div>
@@ -138,10 +138,17 @@ require_once('PHP/ConnexionBD.php');
 
         <div class="statsCards">
             <div class="statsData">
-                <p>15K</p>
+                <p>
+                <?php
+                $sql = "SELECT COUNT(*) as NBJOUEUR FROM UTILISATEUR WHERE ROLE='JOUEUR'";
+               $res= $dbh->query($sql);
+               foreach($res as $row)
+                   echo $row['NBJOUEUR'];
+                   ?>
+                </p>
             </div>
             <div class="statsTitle">
-                <p>Nombre de partie nulle</p>
+                <p>Nombre de joueur</p>
             </div>
         </div>
 

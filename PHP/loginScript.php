@@ -6,7 +6,7 @@
 		extract($_POST);
 			require_once("ConnexionBD.php");
 		$password = md5($password);		
-		$sql="SELECT * FROM UTILISATEUR WHERE PSEUDO ='$user_name' AND PASSWORD='$password'";
+		$sql="SELECT * FROM UTILISATEUR WHERE PSEUDO ='$user_name' AND PASSWORD='$password' ";
 		$resultat=$dbh->query($sql);
 		
 		if($resultat){
