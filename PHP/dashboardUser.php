@@ -203,7 +203,7 @@
         <div id="contact-container">
           <div id="contact-form">
               <h2>Contactez-nous</h2>
-              <form method="post" > 
+              <form method="post" action='contact-submit.php'> 
               <label for="first-name"> Prénom:  </label>
                   <input type="text" name="first-name" placeholder="First-Name">
 </br>
@@ -213,9 +213,9 @@
               
 </br> 
               <label for="email"> Email :  </label>
-                  <input type="text" name="email" placeholder="exemple@exemple.com"></br>
+                  <input type="text" name="email" placeholder="exemple@exemple.com" required></br>
           
-              <label class="emailContent" for="emailContent">Contenu de message:  </label></br>
+              <label class="emailContent" for="emailContent" >Contenu de message:  </label></br>
                   <textarea class="emailContent" name="emailContent" placeholder="text"></textarea></br>
                   <input id='submitContactForm' type='submit' name='submit' class='btn btn-primary' value="Submit">
               
