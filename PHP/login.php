@@ -22,11 +22,12 @@ if(!(isset($_SESSION['pseudoExistant']))){
     <script src="../JS/jquery-3.4.1.min.js"></script>
     <script src="https://kit.fontawesome.com/e2aac98496.js" crossorigin="anonymous"></script>
 </head>
-<body>  
+<body class="col-md-12">  
     
 
-    <h1>AUTHENTIFICATION</h1>
+    
         <div id="formulaire">
+        <h1 class="col-md-12">AUTHENTIFICATION</h1>
             <form id="logInForm" action='loginScript.php' method='POST'>
             <?php
     

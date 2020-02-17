@@ -29,19 +29,26 @@ nav{
     position: fixed;
     background-color: rgba(109, 107, 107, 0.808);
     font-family: 'Orbitron', sans-serif;
-    font-size:12px;
+    font-size:14px;
     z-index: 2;
 }
+hr{
+    background-color: white;
+    width: 50%;
+    margin-top: 15%;
+    height: 5px;
+}
 h1{
-    font-size:180px;
+    font-size:150px;
     position: relative;
-    left: 55px;
-    top: 200px;
+    top: 20%;
+    text-align: center;
     width: min-content;
     color:rgb(0, 247, 255);
     font-family: 'Orbitron', sans-serif;
     font-weight: bold;
     margin-bottom: 200px;
+    letter-spacing: 5px;
 }
 #logButton {
     background-color:transparent;
@@ -115,7 +122,7 @@ section{
 
 #Présentation{
     height: 50vh;
-    background-color: antiquewhite;
+    background-color: white;
 }
 
 #Présentation p {
@@ -128,7 +135,7 @@ section{
 
 #Team{
     height:70vh;
-   background-color:#181818 ;
+   background-color:white ;
 }
 
 #Team h3{
@@ -149,11 +156,12 @@ section{
     float : left;
     margin-right: 3em;
     border: none;
+    background-color: #181818;
     /*box-shadow: -4px 4px 8px 4px rgb(58, 56, 56);*/
 }
 
 .card p{
-    color: black;
+    color: white;
 }
 
 #row .card:hover{
@@ -164,9 +172,13 @@ section{
 #row img{
     height: 30vh;
 }
+.fab{
+    
+    color: white;
+}
 
 #Stats{/*rgb(61, 74, 85);*/
-    background-color:antiquewhite;
+    background-color:#181818;
     height: 70vh;
 }
 
@@ -182,16 +194,16 @@ section{
     align-content: center;
     display: flex;
     flex-direction: row;
-   background-color: transparent;
+    background-color: transparent;
+    justify-content: space-around;
 }
 
 .statsCards{
     width: 20%;
     height: 100%;
-    background-color:#181818;
+    background-color:white;
     border: none;
     text-align: center;
-    margin-left: 4.5em;
 }
 
 .statsCards:hover{
@@ -203,18 +215,19 @@ section{
     padding-top: 2em;
     padding-bottom: 2em;
     font-size: 35px;
-    color:  rgb(0, 247, 255);
+    color:#181818;
 }
 
 .statsTitle p{
     padding-top: 4em;
     padding-bottom: 2em;
     font-size: 18px;
+    color: rgb(0, 247, 255);
 }
 .statsData{
     width: 100%;
     height: 50%;
-    background-color: #181818;
+    background-color: white;
    
 }
 
@@ -258,7 +271,7 @@ section{
 
 #Events{
     height: 70vh;
-    background-color:antiquewhite;
+    background-color:white;
 }
 
 .carousel-inner{

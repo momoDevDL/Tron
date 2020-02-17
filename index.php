@@ -20,8 +20,8 @@ require_once('PHP/ConnexionBD.php');
 <body>
     <header>
        
-            <nav>
-                <ul class="nav nav-pills justify-content-end">
+            <nav class="nav navbar-default">
+                <ul class="nav nav-pills justify-content-center">
                     <li class="nav-item">
                       <a class="nav-link active" href="#">Acceuil</a>
                     </li>
@@ -53,7 +53,8 @@ require_once('PHP/ConnexionBD.php');
                   </ul>
             </nav>
 
-            <h1>LightCycleFight</h1>
+            <h1 class="col-md-12">LightCycleFight</h1>
+            <hr>
             <button type='button' id='logButton' class='btn btn-primary btn-lg'><a href="PHP/login.php">S'authentifier</a></button>
             <!--button type='button' class='btn btn-primary btn-lg'>JOUER MAINTENANT</button-->
     </header> 
@@ -61,45 +62,7 @@ require_once('PHP/ConnexionBD.php');
         <h3>Présentation</h3>
         <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>
     </section>   
-    <section id="Team">
-        <h3>Team</h3>
-        <div id="row">
-            <div class="card" style="width: 20%;">
-                <img src="IMAGES/31543101_102282713975787_7975195690995286016_o.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                  <p class="card-text" id="momo">Mohamed MASBAH ABOU LAICH</p>
-                  <p>L3 Informatique FDS Montpellier</p>
-                  <i class="fab fa-linkedin fa-4x"></i>
-                </div>
-              </div>
-              <div class="card" style="width: 20%;">
-                <img src="IMAGES/40313576_642691499489932_8305937623378034688_o.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <p class="card-text">Antoine AFFLATET<p>
-                        <p>L3 Informatique FDS Montpellier</p>
-                        <i class="fab fa-linkedin fa-4x"></i> 
-                </div>
-              </div>
-              <div class="card" style="width: 20%;">
-                <img src="IMAGES/23004546_713516668850307_9057302007055486628_o.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                  <p class="card-text">Hugo MIRAULT</p>
-                  <p>L3 Informatique FDS Montpellier</p>
-                  <i class="fab fa-linkedin fa-4x"></i>
 
-                </div>
-              </div>
-              <div class="card" style="width: 20%;">
-                <img src="IMAGES/48380390_342138316604462_2327487200549142528_o.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <p class="card-text"> Thomas BESSON<p>
-                        <p>L3 Informatique FDS Montpellier</p>
-                        <i class="fab fa-linkedin fa-4x "></i>
-                </div>
-              </div>
-        </div>
-      
-    </section>   
     <section id="Stats">
         <h3>Statistiques</h3>
 
@@ -162,11 +125,51 @@ require_once('PHP/ConnexionBD.php');
         </div>
         
     </div>
+    </section>  
+    <section id="Team">
+        <h3>Team</h3>
+        <div id="row">
+            <div class="card" style="width: 20%;">
+                <img src="IMAGES/31543101_102282713975787_7975195690995286016_o.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <p class="card-text" id="momo">Mohamed MASBAH ABOU LAICH</p>
+                  <p>L3 Informatique FDS Montpellier</p>
+                  <i class="fab fa-linkedin fa-4x"></i>
+                </div>
+              </div>
+              <div class="card" style="width: 20%;">
+                <img src="IMAGES/40313576_642691499489932_8305937623378034688_o.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <p class="card-text">Antoine AFFLATET<p>
+                        <p>L3 Informatique FDS Montpellier</p>
+                        <i class="fab fa-linkedin fa-4x"></i> 
+                </div>
+              </div>
+              <div class="card" style="width: 20%;">
+                <img src="IMAGES/23004546_713516668850307_9057302007055486628_o.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <p class="card-text">Hugo MIRAULT</p>
+                  <p>L3 Informatique FDS Montpellier</p>
+                  <i class="fab fa-linkedin fa-4x"></i>
+
+                </div>
+              </div>
+              <div class="card" style="width: 20%;">
+                <img src="IMAGES/48380390_342138316604462_2327487200549142528_o.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <p class="card-text"> Thomas BESSON<p>
+                        <p>L3 Informatique FDS Montpellier</p>
+                        <i class="fab fa-linkedin fa-4x "></i>
+                </div>
+              </div>
+        </div>
+      
     </section>   
+   
     <section id="Jouer">
         <h3>Essayer le jeu </h3>
-        <p>Essayer une partie contre une IA développée par nos soins pour vous garantir une experience de jeu intense </p>
-         <button type='button' id="playIAButton" class='btn btn-primary btn-lg'>JOUER MAINTENANT</button>
+        <p class="col-md-7">Essayer une partie contre une IA développée par nos soins pour vous garantir une experience de jeu intense </p>
+         <button type='button' id="playIAButton" class='btn btn-primary btn-lg col-md-4'>JOUER MAINTENANT</button>
 
     </section>   
     <section id="Events">
@@ -245,6 +248,7 @@ require_once('PHP/ConnexionBD.php');
       <p id="Copyrights">All Copyrights Reserved 2020.</p>
     </section>   
     <script src="JS/main.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
 
 </html>

@@ -95,10 +95,11 @@ try {
 
     $mail->send();
     echo 'Message has been sent';
-    if(isset($_SESSION))
+    if(isset($_SESSION)){
     header('Location:dashboardUser.php');
-   else
-   header('Location:../PHP/index.php');
+    }else{
+   header('Location:../index.php');
+    }
 
 } catch (Exception $e) {
     echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
