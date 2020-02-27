@@ -1,34 +1,64 @@
-//import { platform } from "os";
-
-function InitGame(){
-    moto1 = new Moto(350,200 , 1, "black");//création de moto
-    moto2 = new Moto(250, 250, 2, col_moto);
-    moto1.dessinerMoto(); //on dessine la moto
-    moto2.dessinerMoto();
-    
+/**
+ * InitGame()
+ * ne prend aucun paramètre
+ * résultat : initialise les motos donc créé les objets et les dessine sur la plateau.
+ */
+function InitGame(id_){
+    moto1 = new Moto(id_);//création de moto 1
+    moto1.dessinerMoto(); //on dessine la moto numéro 1
+    //console.log(moto1.id_player);
 }
 
-//définition de l'objet moto
-function Moto(X, Y, id_p, color){
+/*
+définition de l'objet moto
+Moto(cooronnée X, coordonnée Y, un identifiant id_p, une couleur color)
+new Moto(X, Y, 158, "red");
+*/
+function Moto(id_p){
 
-    this.X = X;//coordonnée X et Y de la moto
-    this.Y = Y;
-    this.speedX = 0; //vitesse de déplacement selon l'axe X ou Y
-    this.speedY = -10;
-    this.id_player = id_p;
-    this.color = color;
-    this.rectangle = null; //contiendra le dessin de la moto
-    this.rot = 0; //on a une rotation de 0 de base
-    this.ori = "N"; //on regarde au nord ou au sud tout dépend si on est méchant ou gentil
-    this.train_act = false;
+    this.id_player = id_p; //identifiant du joueur
+    this.speedX = 0; //vitesse de déplacement selon l'axe X
+    
 
+    //vitesse de déplacement selon l'axe y 
+    if(this.id_player == 1){
+        this.X = 300;
+        this.Y = 400;
+        this.speedY = -1;
+        this.ori = "N";
+        this.color = "black"; //couleur de la moto du joueur
+        this.rot = 0;//cet attribut nous permet de savoir l'angle de rotation de la moto
+    }else{
+        this.X = 300;
+        this.Y = 200;
+        this.speedY = 1;
+        this.ori = "S";
+        this.color = "red"; //couleur de la moto du joueur
+        this.rot = 180;//cet attribut nous permet de savoir l'angle de rotation de la moto
+    }
+    this.rectangle = null; /*cet attribut vas nous servire pour stocker le dessin de la moto*/
+     
+    this.train_act = false; //cet attribut est un booléen pour savoir la trainé de la moto est active ou non
+
+    /*dessinerMoto() méthode de l'objet moto
+    ne prend aucun paramètre
+    resultat : dessine la moto avec d3.js celon les coordonnées X et Y de la moto et celon son attribut rot
+    */
     this.dessinerMoto= function(){
         //on dessine la moto avec déjà les attributs rotation que l'on modifiera avec l'attribut this.rot
         this.rectangle = svgContainer.append("rect").attr("x", this.X).attr("y", this.Y).attr("width", MOT_Width).attr("height", MOT_Height).attr("fill", this.color).attr("id", "moto_html"+this.id_player).attr("transform", "rotate("+this.rot+","+(this.X+5)+","+(this.Y+25)+")");
     }
+
+    /*movRight() méthode de l'objet moto
+    ne prend aucun paramètre
+    résultat : décplace la moto sur la droite donc speedX = 1*/
     this.movRight = function(){
         this.speedX = 1;
     }
+
+    /*moveleft() méthode de l'objet moto
+    ne prend aucun paramètres
+    résultat : déplace la moto sur la gauche, donc on décremente sur l'axe X donc speedX = -1*/
     this.moveleft = function(){
         this.speedX = -1;
     }
@@ -39,6 +69,10 @@ function Moto(X, Y, id_p, color){
         this.speedY = 1;
     }
 
+    /*moveUPRIGHT() méthode de l'objet moto
+    ne prend aucun paramètre
+    résultat : déplace la moto en haut à droite. donc on incrémente l'axe X et on décremente l'axe Y.
+    attention ici speedX n'est pas égale à 1 mais à 0.71 car sinon la moto accélèrerai dans les diagonales.*/
     this.moveUPRIGHT = function(){
         this.speedX = 0.71;
         this.speedY = -0.71;
@@ -59,148 +93,63 @@ function Moto(X, Y, id_p, color){
         this.speedY = 0.71;
     }
 
-    //cette fonction met à jour les coordonnées de la moto selon la vitesse de déplacement
+
+    /*newPos() méthode de l'objet moto
+    ne prend aucun paramètre
+    résultat : actualise les coordonnée X et Y en ajoutant speedX à X et speedY à Y pour déplacer la moto*/
     this.newPos = function() {
         this.X += this.speedX;
         this.Y += this.speedY;  
-    }        
+    } 
+    
+    this.destroy = function(){
+        var elem = document.getElementById("moto_html"+this.id_player);
+        elem.parentNode.removeChild(elem);
+    }
 }
 
-//on "raffraichit" la page , on va supprimer la moto et affciher une nouvelle moto avec les nouvelles coordonnées
+/**
+Update(moto_update)
+moto_update : est un objet de type Moto
+résultat : nous allons EFFACER la moto (pas la détruire mais l'effacer) du dom, pour ensuite lui donner de nouvelles coordonnées X et Y et ensuite la redessiner.
+ */
 function Update(moto_update){
-    //console.log("dans l'Update");
 
-    //on selectionne la moto dans le corps html
     var elem = document.getElementById("moto_html"+moto_update.id_player);
-
-    //on retire la moto de la plateforme on l'efface (Attention on ne la détruit pas !!!)
     elem.parentNode.removeChild(elem);
-    //on lui donne la nouvelle direction à prendre
     moto_update.newPos();
-    //on redessine la moto avec les nouvelle coordonné et la nouvelle direction
     moto_update.dessinerMoto();
+
 }
 
-function Frame()
-{
-    Move();
-    collision(moto2);
-    
-        
-        
-        if (timerMur > 0) timerMur -= (INTERVAL/1000);
-        let timeraffiche = (Math.floor(timerMur*1000))/1000;
-
-        //console.log("timerMur : "+timerMur);
-        if (timerMur <= 0 && murActif == true)// Quand on a finis de poser un mur
-            {
-                timerMur = TMP_RECHARGEMUR;
-                murActif = false;
-                moto2.train_act = false;
-               // console.log("RECHARGREMENT DE LA TRIANEE");
-            }
-        if (timerMur <= 0 && murActif == false)//Quand ona fini de recharger le mur
-            {
-                timerMur = 0;
-                murActif = false;
-                moto2.train_act = false;
-                //console.log("RECHARGREMENT DE LA TRIANEE");
-            }
-
-        //affichage sur le dom
-
-        if (timerMur == 0)
-        {
-        document.getElementById("Space").innerText = "Pret";
-        document.getElementById("etatSpace").innerText = "Ready";
-        }
-        else if(murActif)
-        {
-            document.getElementById("Space").innerText = "EN COURS";
-            document.getElementById("etatSpace").innerText = "Temps de pose restant : "+timeraffiche+" s";
-        }
-        else if(!murActif)
-        {
-            document.getElementById("Space").innerText = "Rechargement";
-            document.getElementById("etatSpace").innerText = "Temps de recharge restant restant : "+timeraffiche+" s";
-        }
-        
-    
-}
-
-function Move(){
-    //on rafracihi la moto
-    rotation(moto2); //à chaque frame on regarde si on touche a été enfoncé et on effectue la rotation et le changement de direction 
-    Update(moto2); //on donne les nouvelles coordonnées à la moto via la fonction Update
-    Update(moto1);
-   
-}
-
-
-//fonction qui va permettre de détecter si on appuie sur une touche ou pas
-function toto()
-{
-    console.log("Coucou");
-}
-function defEvent(motoPr)
-{
-    let main = document.getElementById("main");
-    //console.log(dam);
-    main.addEventListener('keydown', (e) => {
-        if(!e.repeat)
-         {   
-
-            if(e.keyCode==32)
-            {
-                
-                if (motoPr.train_act == true)
-                    {
-                        motoPr.train_act = false;
-                        murActif = false;
-                        timerMur = TMP_RECHARGEMUR;
-                        console.log("descativ avance")
-                    }
-                else if (motoPr.train_act == false && timerMur==0)
-                    { 
-                        motoPr.train_act = true;
-                        murActif = true;
-                        timerMur = TMP_POSMUR;
-                    }
-            } 
-            var code = e.keyCode;
-            if(touches.indexOf(code)<0) touches.push(code);
-         }
-         
-      });
-
-
-
-
-      main.addEventListener('keyup', (e) => {
-
-        var code = e.keyCode;
-        index = touches.indexOf(code);
-        if(index>=0) 
-            touches.splice(index,1);
-      
-      });
-             
-}
-
-
+/**
+ * direction()
+ * ne prend aucun paramètre
+ * resultat : renvoi un entier selon la touche qui aura était enfoncé
+ * exemple si on appuie sur gauche et haut direction() va renvoyer 3
+ */
 function direction()
 {
     var dir=0;
-    //code pour chaque touche
-    if(touches.indexOf(37)!=-1) dir +=1; //left
-    if(touches.indexOf(38)!=-1) dir +=2; //up
-    if(touches.indexOf(39)!=-1) dir +=4; //right
-    if(touches.indexOf(40)!=-1) dir +=8; //down
-    if(touches.indexOf(32)!=-1) dir +=13;
+    if(touches.indexOf(37)!=-1) dir +=1; //gauche
+    if(touches.indexOf(38)!=-1) dir +=2; //haut
+    if(touches.indexOf(39)!=-1) dir +=4; //droit
+    if(touches.indexOf(40)!=-1) dir +=8; //bas
+    if(touches.indexOf(32)!=-1) dir +=13; //barre espace
     
     return dir;
 }
 
+/**
+ * rotation(moto_m)
+ * moto_m : est un objet de type moto
+ * resultat : nous allons récupérer les touches enfoncé par l'utilisateur et celon les touche nous allons luis donner une rotation/orientation
+ * de plus prenons comme exemple si le jour mont (va du bas vers le haut), si l'utilisateur appuis sur haut et gauche alors
+ * ->on regarde si il le droit (dans ce cas la oui) -> exemple si la moto se dirige vers l'ouest et l'utilisateur appui sur la touche droite le changement ne se fera pas car on ne peux que faire des rotations de 45d, dans ce cas il ne se passera rien
+ * -> on change l'attribut ori de la moto
+ * -> on donner l'angle de rotation à la moto ici 45d
+ * -> on appel lé méthode moveUPLEFT() de moto_m
+ */
 function rotation(moto_m){
     var dir =  direction();
     moto_m.speedX = 0; //la direction est mise à 0 en X et Y
@@ -301,77 +250,29 @@ function rotation(moto_m){
           
 }
 
-//cette fonction permet de donner la direction à prendre selon la direction prise
-function avancedefault(moto_m){
-    //console.log(moto_m.ori, moto_m.rot);
-
-    switch (moto_m.ori){
-        case "N":
-            if(moto_m.train_act){
-                pl.transformeCase(moto2.X+5,moto2.Y+25,col_traine,"mur"); //permet de créer la trainée de la moto
-            }
-            moto_m.moveup();
-        break;
-
-        case "S":
-            if(moto_m.train_act){
-                pl.transformeCase(moto2.X+5,moto2.Y+25,col_traine,"mur"); //permet de créer la trainée de la moto
-            }
-            moto_m.movedown();
-        break;
-        
-        case "O":
-            if(moto_m.train_act){
-                pl.transformeCase(moto2.X+5,moto2.Y+25,col_traine,"mur"); //permet de créer la trainée de la moto
-            }
-            moto_m.moveleft();
-            break;
-        
-        case "E":
-            if(moto_m.train_act){
-                pl.transformeCase(moto2.X+5,moto2.Y+25,col_traine,"mur"); //permet de créer la trainée de la moto
-            }
-            moto_m.movRight();
-            break;
-            
-        case "NO":
-            if(moto_m.train_act){
-                pl.transformeCase(moto2.X+5,moto2.Y+25,col_traine,"mur"); //permet de créer la trainée de la moto
-            }
-            moto_m.moveUPLEFT();
-            break;
-        
-        case "NE":
-            if(moto_m.train_act){
-                pl.transformeCase(moto2.X+5,moto2.Y+25,col_traine,"mur"); //permet de créer la trainée de la moto
-            }
-            moto_m.moveUPRIGHT();
-            break;
-
-        case "SO":
-            if(moto_m.train_act){
-                pl.transformeCase(moto2.X+5,moto2.Y+25,col_traine,"mur"); //permet de créer la trainée de la moto
-            }
-            moto_m.moveDOWNLEFT();
-            break;
-        
-        case "SE":
-            if(moto_m.train_act){
-                pl.transformeCase(moto2.X+5,moto2.Y+25,col_traine,"mur"); //permet de créer la trainée de la moto
-            }
-            moto_m.moveDOWNRIGTH();
-            break;
-        default: console.log("pas d'oritentation");
-    }
-
+/**
+ * Move()
+ * ne prend aucun paramètre pour le moment mais devrait prendre les deux motos en paramètre
+ * résulatat : on regarde si l'utilisateur souhaite faire une rotation (changer de sens), et on appel les fonctions Update de chaque moto
+ */
+function Move(moto_m){
+    //on rafracihi la moto
+    rotation(moto_m); //à chaque frame on regarde si on touche a été enfoncé et on effectue la rotation et le changement de direction 
 }
 
+/**
+ *
+ * collision(moto_m) 
+ * moto_m : est un objet de type Moto
+ * resultat : permet de détecter une colision entre un mur/une trainé et la moto du joueur
+ */
 function collision(moto_m)
 {
-    //x+5 et y+25 points fixe de la moto(point de rotation)
+    //console.log("je suis dans la fct collision");
     let x = (moto_m.X +5);
     let y = (moto_m.Y +25);
-    //console.log("detection de collision");
+
+    let safeZoneOffset = Math.sqrt(2*(PL_L*PL_L)) + 1;
 
     let xi;
     let yi;
@@ -394,14 +295,14 @@ function collision(moto_m)
             if(x%PL_L==0)jmax=MOT_Width;
             else jmax = MOT_Width+PL_L;
 
-            for (let i = 0; i < 25-PL_L; i+=PL_L)           
+            for (let i = 0; i < 25-safeZoneOffset; i+=PL_L)           
             {
                 for (let j = 0; j < jmax; j+=PL_L)
                 {
                    
                     if(pl.isMur(xi+j,y+i))
                     {
-                    alertcol()
+                    alertcol();
                         break;
                     }
                      //svgContainer.append("rect").attr("x", xi+j).attr("y", y+i).attr("width", 1).attr("height", 1).attr("fill", "green");
@@ -422,14 +323,14 @@ function collision(moto_m)
             else jmax = MOT_Width+PL_L;
 
            
-            for (let i = 0; i < 25-PL_L; i+=PL_L)           
+            for (let i = 0; i < 25-safeZoneOffset; i+=PL_L)           
             {
                 for (let j = 0; j < jmax; j+=PL_L)
                 {
                    
                     if(pl.isMur(xi+j,y-i))
                     {
-                    alertcol()
+                    alertcol();
                         break;
                     }
                     //  svgContainer.append("rect").attr("x", xi+j).attr("y", y-i).attr("width", 1).attr("height", 1).attr("fill", "cyan");
@@ -449,7 +350,7 @@ function collision(moto_m)
 
             
 
-            for (let i = 0; i < 25-PL_L; i+=PL_L)           
+            for (let i = 0; i < 25-safeZoneOffset; i+=PL_L)           
             {
                 for (let j = 0; j < jmax; j+=PL_L)
                 {
@@ -487,7 +388,7 @@ function collision(moto_m)
             //     //svgContainer.append("rect").attr("x", x).attr("y", yi+j).attr("width", 1).attr("height", 1).attr("fill", "red");    
             // }
 
-            for (let i = 0; i < 25-PL_L; i+=PL_L)           
+            for (let i = 0; i < 25-safeZoneOffset; i+=PL_L)           
             {
                 for (let j = 0; j < jmax; j+=PL_L)
                 {
@@ -523,7 +424,7 @@ function collision(moto_m)
 
            
               jmax = Math.floor(MOT_Width/PL_L);
-            for (let i = 0; i*PL_L < 25-PL_L; i++) {
+            for (let i = 0; i*PL_L < 25-safeZoneOffset; i++) {
 
               for (let j = 0; j < jmax; j++)
               {
@@ -533,7 +434,7 @@ function collision(moto_m)
                       break;
                   }
                   
-                //    svgContainer.append("rect").attr("x", x2+j*bidule+i*bidule).attr("y", y2-j*bidule+i*bidule).attr("width", 1).attr("height", 1).attr("fill", "green");   
+                    //svgContainer.append("rect").attr("x", x2+j*bidule+i*bidule).attr("y", y2-j*bidule+i*bidule).attr("width", 1).attr("height", 1).attr("fill", "green");   
               }
 
               if(pl.isMur(x2+2*boui+i*bidule , y2+2*boui+i*bidule))
@@ -541,7 +442,7 @@ function collision(moto_m)
                       alertcol()
                       break;
                   }
-            //  svgContainer.append("rect").attr("x", x2+2*boui+i*bidule).attr("y", y2-2*boui+i*bidule).attr("width", 1).attr("height", 1).attr("fill", "green");
+            //svgContainer.append("rect").attr("x", x2+2*boui+i*bidule).attr("y", y2-2*boui+i*bidule).attr("width", 1).attr("height", 1).attr("fill", "green");
                 }
            
             break;
@@ -560,7 +461,7 @@ function collision(moto_m)
          
             jmax = Math.floor(MOT_Width/PL_L);
 
-            for (let i = 0; i*PL_L < 25-PL_L; i++) {
+            for (let i = 0; i*PL_L < 25-safeZoneOffset; i++) {
 
                 for (let j = 0; j < jmax; j++)
                 {
@@ -600,7 +501,7 @@ function collision(moto_m)
               jmax = Math.floor(MOT_Width/PL_L);
             
 
-              for (let i = 0; i*PL_L < 25-PL_L; i++) {
+              for (let i = 0; i*PL_L < 25-safeZoneOffset; i++) {
 
               for (let j = 0; j < jmax; j++)
               {
@@ -641,7 +542,7 @@ function collision(moto_m)
            
             jmax = Math.floor(MOT_Width/PL_L);
 
-            for (let i = 0; i*PL_L < 25-PL_L; i++) {
+            for (let i = 0; i*PL_L < 25-safeZoneOffset; i++) {
             for (let j = 0; j < jmax; j++)
             {
 
@@ -668,12 +569,201 @@ function collision(moto_m)
 
        
     
-        }
-
-       
+        }   
 }
 
+/**
+ * timerMur(moto_m)
+ * moto_m est un objet de type moto
+ * permet de mettre en place le timer pour le mur
+ */
+function timerMurF(moto_m){
+
+    //console.log("dans timerMurF");
+
+    if (timerMur > 0) timerMur -= (INTERVAL/1000);
+
+    let timeraffiche = (Math.floor(timerMur*1000))/1000;
+
+    if (timerMur <= 0 && murActif == true)// Quand on a finis de poser un mur
+    {
+        timerMur = TMP_RECHARGEMUR;
+        murActif = false;
+        moto_m.train_act = false;
+    }
+    if (timerMur <= 0 && murActif == false)//Quand ona fini de recharger le mur
+    {
+        timerMur = 0;
+        murActif = false;
+        moto_m.train_act = false;
+    }
+
+    if (timerMur == 0)
+    {
+        document.getElementById("Space").innerText = "Pret";
+        document.getElementById("etatSpace").innerText = "Ready";
+    }
+    else if(murActif)
+    {
+        document.getElementById("Space").innerText = "EN COURS";
+        document.getElementById("etatSpace").innerText = "Temps de pose restant : "+timeraffiche+" s";
+    }
+    else if(!murActif)
+    {
+        document.getElementById("Space").innerText = "Rechargement";
+        document.getElementById("etatSpace").innerText = "Temps de recharge restant restant : "+timeraffiche+" s";
+    }   
+}
+
+/**
+ * 
+ * defEvent(motoPr)
+ * motoPr : est un objet de type Moto
+ * resultat : cette fonction vas nous permettre de savoir quand une touche est enfoncé et quand on relache une touche
+ * sachant que si on enfonce la touhce espace deux cas s'offre à nous 
+ * -> premier cas si la trainé est active qu'il reste encore du temps de trainé alors on coupe le chrono et la trainé
+ * -> deuxime cas la trainé n'est pas activé alors on l'active et on active le chrono
+ */
+function defEvent(motoPr)
+{
+    let main = document.getElementById("main");
+    //console.log(dam);
+    main.addEventListener('keydown', (e) => {
+        if(!e.repeat)
+         {  
+            if(e.keyCode==32)
+            {
+                
+                if (motoPr.train_act == true)
+                    {
+                        motoPr.train_act = false;
+                        murActif = false;
+                        timerMur = TMP_RECHARGEMUR;
+                        console.log("descativ avance")
+                    }
+                else if (motoPr.train_act == false && timerMur==0)
+                    { 
+                        motoPr.train_act = true;
+                        murActif = true;
+                        timerMur = TMP_POSMUR;
+                    }
+            } 
+            var code = e.keyCode;
+            if(touches.indexOf(code)<0) touches.push(code);
+         }
+         
+      });
+
+
+
+
+      main.addEventListener('keyup', (e) => {
+
+        var code = e.keyCode;
+        index = touches.indexOf(code);
+        if(index>=0) 
+            touches.splice(index,1);
+      
+      });           
+}
+
+/**
+ * 
+ * avancedefault(moto_m)
+ * moto_m : est un objet de type Moto
+ * resultat : si la trainé de moto_m est active alors on dessine la traine et dans tous les cas la moto avance dans son orientation
+ */
+function avancedefault(moto_m){
+    //console.log(moto_m.ori, moto_m.rot);
+
+    switch (moto_m.ori){
+        case "N":
+            if(moto_m.train_act){
+                pl.transformeCase(moto_m.X+5,moto_m.Y+25,moto_m.color,"mur"); //permet de créer la trainée de la moto
+            }
+            moto_m.moveup();
+        break;
+
+        case "S":
+            if(moto_m.train_act){
+                pl.transformeCase(moto_m.X+5,moto_m.Y+25,moto_m.color,"mur"); //permet de créer la trainée de la moto
+            }
+            moto_m.movedown();
+        break;
+        
+        case "O":
+            if(moto_m.train_act){
+                pl.transformeCase(moto_m.X+5,moto_m.Y+25,moto_m.color,"mur"); //permet de créer la trainée de la moto
+            }
+            moto_m.moveleft();
+            break;
+        
+        case "E":
+            if(moto_m.train_act){
+                pl.transformeCase(moto_m.X+5,moto_m.Y+25,moto_m.color,"mur"); //permet de créer la trainée de la moto
+            }
+            moto_m.movRight();
+            break;
+            
+        case "NO":
+            if(moto_m.train_act){
+                pl.transformeCase(moto_m.X+5,moto_m.Y+25,moto_m.color,"mur"); //permet de créer la trainée de la moto
+            }
+            moto_m.moveUPLEFT();
+            break;
+        
+        case "NE":
+            if(moto_m.train_act){
+                pl.transformeCase(moto_m.X+5,moto_m.Y+25,moto_m.color,"mur"); //permet de créer la trainée de la moto
+            }
+            moto_m.moveUPRIGHT();
+            break;
+
+        case "SO":
+            if(moto_m.train_act){
+                pl.transformeCase(moto_m.X+5,moto_m.Y+25,moto_m.color,"mur"); //permet de créer la trainée de la moto
+            }
+            moto_m.moveDOWNLEFT();
+            break;
+        
+        case "SE":
+            if(moto_m.train_act){
+                pl.transformeCase(moto_m.X+5,moto_m.Y+25,moto_m.color,"mur"); //permet de créer la trainée de la moto
+            }
+            moto_m.moveDOWNRIGTH();
+            break;
+        default: console.log("pas d'oritentation");
+    }
+}
+
+/**
+ * alertcol()
+ * ne prend aucun paramètre
+ * résultat : alerte le joueur qu'il y a eu une collision
+ */
 function alertcol()
 {
-    console.log("Collision");
+    //alert("collision");
+
+    socket.emit('collision','collision moto');   
+}
+
+/**
+ * Frame(moto_m1, moto_m2)
+ * moto_m1/2 sont deux objets de type moto
+ * resultat : on met en mouvement toutes les motos et on détecte si il y a une collision et de plus on met leur chrono sur les murs
+ */
+function Frame(moto_m1)
+{
+
+    Move(moto_m1);
+    //Move(moto_m2);
+
+    socket.emit('joueur_bouge', moto_m1);
+
+    collision(moto_m1);
+    //collision(moto_m2);
+
+    timerMurF(moto_m1);
+    //timerMur(moto_m2);
 }
