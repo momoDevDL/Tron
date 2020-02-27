@@ -39,16 +39,20 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Orbitron&display=swap" rel="stylesheet">  
     <link rel="stylesheet" href="../CSS/dashboard.css">
+    <script src="../JS/node_modules/socket.io-client/dist/socket.io.js"></script>
     <script src="../JS/jquery-3.4.1.min.js"></script>
     <script src="https://kit.fontawesome.com/e2aac98496.js" crossorigin="anonymous"></script>
 </head>
 <body>
+<div id='rechercheMatch' style="display:none">
+<p>Recherche d'adversaire en cours . . .</p>
+</div>
     <div id="User-dashboard">
         <p id="logo">LCF</p>
         <div id="links">
             <a href="../index.php">Acceuil</a>
             <a>Jouer Vs IA</a>
-            <a>Jouer En Ligne</a>
+            <a id="1V1">Jouer En Ligne</a>
             <a>Mes Tournois</a>
             <a id="Joueur">Mon profile</a>
         </div>

@@ -117,10 +117,17 @@ require_once('PHP/ConnexionBD.php');
 
         <div class="statsCards">
             <div class="statsData">
-                <p>15K</p>
+            <p>
+                <?php
+                $sql = "SELECT COUNT(*) as NBPARTIETOT1V1 FROM PARTIE WHERE TYPE_MATCH='1v1'";
+                $res= $dbh->query($sql);
+                foreach($res as $row)
+                    echo $row['NBPARTIETOT1V1'];
+                    ?>
+                </p>
             </div>
             <div class="statsTitle">
-                <p>Nombre de partie Vs IA</p>
+                <p>Nombre de partie 1V1 </p>
             </div>
         </div>
         
@@ -182,21 +189,21 @@ require_once('PHP/ConnexionBD.php');
             </ol>
             <div class="carousel-inner">
               <div class="carousel-item active">
-                <img src="IMAGES/monochrome-photo-of-triangle-shape-digital-wallpaper-3137064.jpg" class="d-block w-100" alt="...">
+                <img src="IMAGES/edgar-m-Tfrl8rH-QoU-unsplash.jpg" class="d-block w-100" alt="...">
                 <div class="carousel-caption d-none d-md-block">
                   <h5>First slide label</h5>
                   <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
                 </div>
               </div>
               <div class="carousel-item">
-                <img src="IMAGES/three-white-ceramic-pots-with-green-leaf-plants-near-open-796602.jpg" class="d-block w-100" alt="...">
+                <img src="IMAGES/s_t_a_r__labs_wallpaper_by_celethas-dbj509r.png" class="d-block w-100" alt="...">
                 <div class="carousel-caption d-none d-md-block">
                   <h5>Second slide label</h5>
                   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                 </div>
               </div>
               <div class="carousel-item">
-                <img src="IMAGES/top-view-photo-of-people-near-wooden-table-3183150.jpg" class="d-block w-100" alt="...">
+                <img src="IMAGES/jason-dent-uw-2pbbxIHs-unsplash.jpg" class="d-block w-100" alt="...">
                 <div class="carousel-caption d-none d-md-block">
                   <h5>Third slide label</h5>
                   <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>

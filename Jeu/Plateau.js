@@ -157,10 +157,10 @@ function Plateau()
            {
             
                 this.grandeCases.push({
-                    "x":Math.floor((svgW/nbC_L)*j),//Position de depart x
-                    "y":Math.floor((svgH/nbC_l)*i),//Position de depart y
-                    "w":Math.floor((svgW/nbC_L)/PL_L),//width de la Case en nb de petite cases
-                    "h":Math.floor((svgH/nbC_l)/PL_L),//height de la Case en nb de petite cases
+                    "x":Math.floor((svgW/ nbC_L)*j),//Position de depart x
+                    "y":Math.floor((svgH/ nbC_l)*i),//Position de depart y
+                    "w":Math.floor((svgW/ nbC_L)/ PL_L),//width de la Case en nb de petite cases
+                    "h":Math.floor((svgH/ nbC_l)/ PL_L),//height de la Case en nb de petite cases
                     "temps": 0//mesure de temps passe sur chaque zone par les joueurs
                 })
            }
