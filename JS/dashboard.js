@@ -50,7 +50,7 @@ $(document).ready(function(){
             });               
     }); 
     
-        var searchingPlayers ; // variable qui va contenir l'ensembles des joueurs connectés
+        
 
     $('body').on('click','#1V1',function(){
         $('#rechercheMatch').css({
@@ -72,35 +72,23 @@ $(document).ready(function(){
 
         $('#rechercheMatch').fadeIn(); 
 
-        $.ajax({
-            url : "addPlayerToSearch.php",
+       
+
+      var socket = io('http://localhost:8888/first-namespace');
+      var PriorityClient ; // variable qui va contenir la priorité de joueur  
+      let indiceRoom = -1 ;
+
+
+       
+          $.ajax({
+            url : "fetchPlayerPriority.php",
             method : "POST",
             dataType: "text",
             success:function(data){
-                console.log(data);
-               
-            },
-            complete:function(data){
-                console.log("lol");
-                console.log(data);
-            },
-            error: function(data){
-                    console.log('error');
-                    console.log(data);
-            }
-            
-        });
+                PriorityClient = data;
+                console.log("this is data " +data);
+                console.log("this is data " +PriorityClient);
 
-        setTimeout(1000);
-
-        $.ajax({
-            url : "fetchPlayersFromSearch.php",
-            method : "POST",
-            dataType: "JSON",
-            success:function(data){
-                searchingPlayers = data;
-                console.log(data);
-                console.log(searchingPlayers);
             },
             complete:function(data){
                 console.log("after lol");
@@ -113,15 +101,30 @@ $(document).ready(function(){
             
         });
 
-      var socket = io('http://localhost:8888/first-namespace');
-
+        
       socket.on('connect',function(){
-          socket.emit('hello',searchingPlayers);
+        socket.emit('envoiDePriorite',PriorityClient);
       });
 
-      socket.on('connectedRoom',function(indiceRoom){
-        console.log("You Are Connected to Room" + indiceRoom+1);
-      })
+      socket.emit('CommencerRecherche');
+
+      socket.on('connectedToRoom',function(indiceRoom){
+        console.log("You Are Connected to Room " + indiceRoom);
+        indiceRoom = indiceRoom ;
+      
+      });
+
+      socket.on('CommenceBientot',function(indiceRoom){
+        $("body #rechercheMatch").append("<p id='PartieEnConst'>Votre partie va bientot commencer</p>");
+        $("body #PartieEnConst").css({
+            'position':'relative',
+            'top':'60%',
+            'color':'white' 
+        });
+        socket.emit('CommencerPartie',indiceRoom);
+      });
+
+     /* */
     });
 
 });

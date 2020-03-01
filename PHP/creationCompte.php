@@ -13,7 +13,7 @@
                 $checkExistance = $dbh->query($query);
                 
                 if($checkExistance->rowCount() == 0 ){
-                $sql  = "INSERT INTO UTILISATEUR VALUES('$pseudo',md5('$passwd'),'JOUEUR','$email',1,100,0.99,NULL,'ORANGE','BLEU','-wooden-pingpong-table-709134.jpg')";  
+                $sql  = "INSERT INTO UTILISATEUR VALUES('$pseudo',md5('$passwd'),'JOUEUR','$email',1,100,0.99,NULL,'ORANGE','BLEU','null','-wooden-pingpong-table-709134.jpg')";  
                 //$query = "INSERT INTO UTILISATEUR VALUES('$pseudo',md5($passwd),'JOUEUR','$email',1,100,1.00,'NULL','ORANGE','BLEU')";
                 
                 $req = $dbh->query($sql);
