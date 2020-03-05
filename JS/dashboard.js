@@ -53,6 +53,7 @@ $(document).ready(function(){
         
 
     $('body').on('click','#1V1',function(){
+        
         $('#rechercheMatch').css({
             'position':'fixed',
             'width':'100%', 
@@ -121,10 +122,109 @@ $(document).ready(function(){
             'top':'60%',
             'color':'white' 
         });
+        
+        $.ajax({
+            url : "LoadGamePage.php",
+            method : "POST",
+            dataType: "text",
+            success:function(data){
+                
+                console.log("this is data " +data);
+                $('body').html(data);
+
+            },
+            complete:function(data){
+                console.log("after lol");
+                console.log(data);
+            },
+            error: function(data){
+                    console.log('error');
+                    console.log(data);
+            }
+            
+        });
         socket.emit('CommencerPartie',indiceRoom);
       });
 
-     /* */
+     console.log("===========================LA PARTIE DOIT COMMENCER MNT===================");
+        let id_player_html;
+         let moto2;
+         
+         //nous alerte lors d'une collision de nous ou de l'autre joueur
+         socket.on('collision', function(message){
+            alert(message);
+         });
+
+         //nous donne l'id du joueur pour la partie en cours (sert pour initialiser la moto)
+         socket.on('id_joueur', function(id){
+            id_player_html = id;
+         });
+
+         //quand les deux joueurs sont pret on lance la partie
+         socket.on('joueurs_pret', function(){
+            DemareJeu(id_player_html);
+         });
+
+         //il faut arriver à récupérer la moto du joueur adverse
+         socket.on('autre_joueur', function(motoE){
+            moto2 = new Moto(motoE.id_player);
+            moto2.dessinerMoto();
+         });
+
+         /**
+         lorsque on recoit le message du serveur comme quoi un joueur à bougé deux cas : 
+         premier cas c'est nous alors on Update juste les deux motos
+         deuxième cas on regarde si l'id de l'objet passé en paramètre est bien l'id de la moto adverse et dans ce cas on lui donne les arguments (de plus si la trainé est activé on la dessine)
+         et ensuite on Update les deux motos
+
+         */
+        socket.on('update_joueur', function(moto){
+            if(moto.id_player == moto2.id_player){
+
+                moto2.X = moto.X;
+                moto2.Y = moto.Y;
+                moto2.ori = moto.ori;
+                moto2.rot = moto.rot;
+                moto2.speedX = moto.speedX;
+                moto2.speedY = moto.speedY;
+                moto2.train_act = moto.train_act;
+
+                if(moto2.train_act){
+                    pl.transformeCase(moto2.X+5,moto2.Y+25,moto2.color,'mur'); //permet de créer la trainée de la moto
+                }
+            }
+            Update(moto1);
+            Update(moto2);
+         });
+
+
+         let x0,y0; var touches = [];
+         var timer = TMP_PARTIE;
+         
+         let moto1;
+         //let moto2;
+         var timerMur = 0;
+         var murActif = false;
+
+         let pl = new Plateau();
+         var svgContainer = d3.select('#damier').append('svg').attr('width',PL_NBCOL*PL_L).attr('height',PL_NBLIG*PL_L);
+         pl.newPlateau(PL_L,PL_NBCOL,PL_NBLIG);
+         pl.newGrandeCases(PL_NBCOL*PL_L,PL_NBLIG*PL_L,5,5);
+         console.log(pl);
+         console.log(svgContainer);
+
+         function DemareJeu(id_){
+
+            InitGame(id_player_html);
+            defEvent(moto1);
+
+            socket.emit('envoi_autre_joueur_serveur', moto1);
+
+            var myVar = setInterval(Frame, INTERVAL, moto1);
+
+
+         }
+     
     });
 
 });
