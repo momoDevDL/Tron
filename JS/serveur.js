@@ -7,8 +7,8 @@ var serveur = require('http').createServer(app);
 var io = require("socket.io")(serveur);
 const nsp = io.of('/first-namespace');
 
-serveur.listen(8888,function(){
-    console.log("serveur est en ecoute sur le port num : "+ 8888);
+serveur.listen(3333,function(){
+    console.log("serveur est en ecoute sur le port num : "+ 3333);
 });
 /*
 app.get('/',function(req,res){
@@ -26,30 +26,25 @@ nsp.on('connection', function (socket) {
 
     var inseré = false ;
    console.log('connetion');
-   if(id < 2){
-        id += 1;
-        socket.emit('id_joueur', id);
-    }
-
-    if(id==2){
-        io.emit('joueurs_pret');
-        //socket.broadcast.emit('joueurs_pret');
-    }
+  
+   
     
     //lors d'une collision un message est envoyé au client même et à l'autre client
-    socket.on('collision', function(message){
+ /*  socket.on('collision', function(message){
         socket.emit('collision', 'vous etes en collision !');
         socket.broadcast.emit('collision', 'l\'autre joueur est en collision');
-    });
+    });*/
 
     //quand un des clients est prêt on l'envoie à l'autre joueur
-    socket.on('envoi_autre_joueur_serveur', function(moto){
-        socket.broadcast.emit('autre_joueur',moto);
+    socket.on('envoi_autre_joueur_serveur', function(moto,indice){
+        console.log(indice);
+        console.log(moto);
+        socket.to(Rooms[indice].name).emit('autre_joueur',moto);
     });
 
     //si un joueur bouge on l'envoi à tout les clients
-    socket.on('joueur_bouge', function(moto){
-        io.emit('update_joueur', moto);
+    socket.on('joueur_bouge', function(moto,indice){
+        socket.to(Rooms[indice].name).emit('update_joueur', moto);
         //socket.broadcast.emit('update_joueur', moto);
     });
    //console.log(nsp.adapter.rooms);
@@ -104,7 +99,7 @@ nsp.on('connection', function (socket) {
     });
 
     if(!inseré){
-        Rooms.push({'name':'room'+indiceInsertion , 'size':2,'remaining':2,'Priority':'null' });
+        Rooms.push({name:'room'+indiceInsertion , size:2,'remaining':2,Priority:'null' });
         socket.join(Rooms[indiceInsertion].name);
         Rooms[indiceInsertion].remaining-- ;
         Rooms[indiceInsertion].Priority = Priority;
@@ -117,7 +112,19 @@ nsp.on('connection', function (socket) {
     });
 
     socket.on('CommencerPartie',(indiceRoom) =>{
+
         console.log("Une Partie a commencé dans room " +indiceRoom);
+
+        if(id < 2){
+            id += 1;
+            socket.emit('id_joueur', id);
+        }
+        
+        if(id==2){
+        nsp.in(Rooms[indiceRoom].name).emit('joueurs_pret');
+        id = 0 ;
+        //socket.broadcast.emit('joueurs_pret');
+        }
     });
     
     socket.on('disconnect',function(){

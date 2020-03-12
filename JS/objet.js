@@ -3,10 +3,10 @@
  * ne prend aucun paramètre
  * résultat : initialise les motos donc créé les objets et les dessine sur la plateau.
  */
-function InitGame(id_){
+function InitGame(id_,svgContainer){
     moto1 = new Moto(id_);//création de moto 1
-    moto1.dessinerMoto(); //on dessine la moto numéro 1
-    //console.log(moto1.id_player);
+    moto1.dessinerMoto(svgContainer); //on dessine la moto numéro 1
+    console.log("moto1 id player : " + moto1.id_player);
 }
 
 /*
@@ -44,7 +44,7 @@ function Moto(id_p){
     ne prend aucun paramètre
     resultat : dessine la moto avec d3.js celon les coordonnées X et Y de la moto et celon son attribut rot
     */
-    this.dessinerMoto= function(){
+    this.dessinerMoto= function(svgContainer){
         //on dessine la moto avec déjà les attributs rotation que l'on modifiera avec l'attribut this.rot
         this.rectangle = svgContainer.append("rect").attr("x", this.X).attr("y", this.Y).attr("width", MOT_Width).attr("height", MOT_Height).attr("fill", this.color).attr("id", "moto_html"+this.id_player).attr("transform", "rotate("+this.rot+","+(this.X+5)+","+(this.Y+25)+")");
     }
@@ -118,7 +118,7 @@ function Update(moto_update){
     var elem = document.getElementById("moto_html"+moto_update.id_player);
     elem.parentNode.removeChild(elem);
     moto_update.newPos();
-    moto_update.dessinerMoto();
+    moto_update.dessinerMoto(svgContainer);
 
 }
 
@@ -128,7 +128,7 @@ function Update(moto_update){
  * resultat : renvoi un entier selon la touche qui aura était enfoncé
  * exemple si on appuie sur gauche et haut direction() va renvoyer 3
  */
-function direction()
+function direction(touches)
 {
     var dir=0;
     if(touches.indexOf(37)!=-1) dir +=1; //gauche
@@ -151,7 +151,7 @@ function direction()
  * -> on appel lé méthode moveUPLEFT() de moto_m
  */
 function rotation(moto_m){
-    var dir =  direction();
+    var dir =  direction(touches);
     moto_m.speedX = 0; //la direction est mise à 0 en X et Y
     moto_m.speedY = 0;
    // console.log("rotation" + dir);
@@ -758,10 +758,10 @@ function Frame(moto_m1)
 
     Move(moto_m1);
     //Move(moto_m2);
+    console.log(" l'indice de la room dans frame est  : "+ indiceRoom);
+    socket.emit('joueur_bouge', moto_m1,indiceRoom);
 
-    socket.emit('joueur_bouge', moto_m1);
-
-    collision(moto_m1);
+    //collision(moto_m1);
     //collision(moto_m2);
 
     timerMurF(moto_m1);

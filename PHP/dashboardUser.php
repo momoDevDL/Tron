@@ -42,12 +42,15 @@
     <script src="../JS/node_modules/socket.io-client/dist/socket.io.js"></script>
     <script src="../JS/jquery-3.4.1.min.js"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
-     <script src="../JS/config.js"></script>
+    <script src="../JS/config.js"></script>
      <script src="../JS/objet.js"></script>
      <script src="../JS/Plateau.js"></script>
-    <script src="https://kit.fontawesome.com/e2aac98496.js" crossorigin="anonymous"></script>
     <script src='../JS/dashboard.js'></script> 
+    <script src="https://kit.fontawesome.com/e2aac98496.js" crossorigin="anonymous"></script>
+    
 </head>
+
+
 <body id="main">
 <div id='rechercheMatch' style="display:none">
 <p>Recherche d'adversaire en cours . . .</p>
