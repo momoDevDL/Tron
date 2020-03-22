@@ -1,26 +1,28 @@
+/*=============================VARIABLE GLOBAL ================================ **/
+
+var PriorityClient ; // variable qui va contenir la priorité de joueur  
+let indiceRoom = -1 ;
+
+let ID_joueur;
+    
+var touches = [];
+var timer = TMP_PARTIE;
+    
+let moto1;
+let moto2;
+
+var socket;
+var timerMur = 0;
+var murActif = false;
+var pl;
+var svgContainer;
+var tempPartie;
 
 
-    var PriorityClient ; // variable qui va contenir la priorité de joueur  
-    let indiceRoom = -1 ;
-    let id_player_html;
-    
-    let x0,y0;
-    var touches = [];
-    var timer = TMP_PARTIE;
-    
-    let moto1;
-    let moto2;
-    //let moto2;
-    var socket;
-    var timerMur = 0;
-    var murActif = false;
-    var pl ;
-    var svgContainer;
+/** ========================================On prépare la page de jeu ================================ */
 
 
 $(document).ready(function(){
-
-
 
     $('body').on("click","#modifyProfile",function(){
         let niveau = $('.niveauMmr p:first').html();
@@ -71,8 +73,6 @@ $(document).ready(function(){
             });               
     }); 
     
-    
-
     $('body').on('click','#1V1',function(){
         
         $('#rechercheMatch').css({
@@ -99,126 +99,145 @@ $(document).ready(function(){
         socket = io('http://localhost:3333/first-namespace');
 
 
-      function DemareJeu(id_,svgContainer){
- 
-        InitGame(id_,svgContainer);
-        defEvent(moto1);
-        console.log("l'indice de la room est :" + indiceRoom);
-        socket.emit('envoi_autre_joueur_serveur',moto1,indiceRoom);
+        /*=============================Fonction qui créé les joueurs, les moto et indique au serveur que le joueur est pret ================================ **/
 
-        var myVar = setInterval(Frame, INTERVAL, moto1);
+        function BoutonReady(){
+            var btn = document.createElement("button");
+            btn.setAttribute("id","btn_ready");
+            btn.setAttribute("onclick","socket.emit('joueur_pret')");
+            btn.innerHTML = 'Are You Ready ?';
+            document.body.appendChild(btn);
+        }
 
 
-     }
+        function GenerPlateau(id_,svgContainer){
+            pl = new Plateau();
+            svgContainer = d3.select('#damier').append('svg').attr('width',PL_NBCOL*PL_L).attr('height',PL_NBLIG*PL_L).attr('id','plateau_');
+            pl.newPlateau(PL_L,PL_NBCOL,PL_NBLIG);
+            pl.newGrandeCases(PL_NBCOL*PL_L,PL_NBLIG*PL_L,5,5);
+            
+            socket.emit('CommencerPartie',indiceRoom);
+
+        }
+
+        function DemarePartie(){
+            InitGame(ID_joueur,svgContainer, indiceRoom);
+            defEvent(moto1);
+
+            console.log("l'indice de la room est :" + indiceRoom);
+
+            socket.emit('envoi_de_notre_moto',moto1,indiceRoom);
+            setTimeout(lanceMoto, 10000);
+        }
+
+        /*============================= Met en mouvement les motos ================================ **/
+
+        function lanceMoto(){
+            tempPartie = setInterval(Frame, INTERVAL, moto1);
+        }
 
        
-          $.ajax({
+        $.ajax({
             url : "fetchPlayerPriority.php",
             method : "POST",
             dataType: "text",
             success:function(data){
                 PriorityClient = data;
-                console.log("this is data " +data);
-                console.log("this is data " +PriorityClient);
-
-            },
-            complete:function(data){
-                console.log("after lol");
-                console.log(data);
-            },
-            error: function(data){
+                    console.log("this is data " +data);
+                    console.log("this is data " +PriorityClient);
+                },
+                complete:function(data){
+                    console.log("after lol");
+                    console.log(data);
+                },
+                error: function(data){
                     console.log('error');
                     console.log(data);
-            }
-            
-        });
-
-        
-      socket.on('connect',function(){
-        socket.emit('envoiDePriorite',PriorityClient);
-      });
-
-      socket.emit('CommencerRecherche');
-
-      socket.on('connectedToRoom',function(indiceRoomS){
-        console.log("You Are Connected to Room " + indiceRoomS);
-        indiceRoom = indiceRoomS ;
-        console.log(indiceRoom);
-      });
-
-      socket.on('CommenceBientot',function(indiceRoom){
-
-        $("body #rechercheMatch").append("<p id='PartieEnConst'>Votre partie va bientot commencer</p>");
-
-        $("body #PartieEnConst").css({
-            'position':'relative',
-            'top':'60%',
-            'color':'white' 
-        });
-        
-        $.ajax({
-            url : "LoadGamePage.php",
-            method : "POST",
-            dataType: "text",
-            success:function(data){
+                }
                 
-                console.log("this is data " +data);
-                $('#main').html(data);
-
-
-            },
-            complete:function(data){
-                console.log("after lol");
-                console.log(data);
-                pl = new Plateau();
-                svgContainer = d3.select('#damier').append('svg').attr('width',PL_NBCOL*PL_L).attr('height',PL_NBLIG*PL_L);
-                pl.newPlateau(PL_L,PL_NBCOL,PL_NBLIG);
-                pl.newGrandeCases(PL_NBCOL*PL_L,PL_NBLIG*PL_L,5,5);
-                console.log( " this is the pl " + pl);
-                console.log(" this is the svgContainer " +svgContainer);
-                console.log(" this is the end" );
-                socket.emit('CommencerPartie',indiceRoom);
-            },
-            error: function(data){
-                    console.log('error');
-                    console.log(data);
-            }
-            
         });
 
+        
+        socket.on('connect',function(){
+            socket.emit('envoiDePriorite',PriorityClient);
+        });
+
+        socket.emit('CommencerRecherche');
+
+        socket.on('connectedToRoom',function(indiceRoomS){
+            console.log("You Are Connected to Room " + indiceRoomS);
+            indiceRoom = indiceRoomS ;
+            console.log(indiceRoom);
+        });
 
         
+        /*============================= Commence la partie !!!!!!! ================================ **/
 
+        socket.on('CommenceBientot',function(indiceRoom){
 
-        console.log("===========================LA PARTIE DOIT COMMENCER MNT===================");
-      });
-      
+            $("body #rechercheMatch").append("<p id='PartieEnConst'>Votre partie va bientot commencer</p>");
 
-      
-         //nous alerte lors d'une collision de nous ou de l'autre joueur
-         socket.on('collision', function(message){
-            alert(message);
-         });
+            $("body #PartieEnConst").css({
+                'position':'relative',
+                'top':'60%',
+                'color':'white' 
+            });
+            
+            $.ajax({
+                url : "LoadGamePage.php",
+                method : "POST",
+                dataType: "text",
+                success:function(data){
+                    //console.log("this is data " +data);
+                    $('#main').html(data);
+                },
 
-         //nous donne l'id du joueur pour la partie en cours (sert pour initialiser la moto)
-         socket.on('id_joueur', function(id){
-          
-            id_player_html = id;
+                complete:function(data){
+                    socket.emit('demande_id');
+                    BoutonReady();
+                },
+                error: function(data){
+                        console.log('error');
+                        console.log(data);
+                }
+                
+            });
+            console.log("===========================LA PARTIE DOIT COMMENCER MNT===================");
+        });
+        
+        //nous donne l'id du joueur pour la partie en cours (sert pour initialiser la moto)
+        socket.on('id_joueur', function(id){
+            ID_joueur = id;
             console.log("id joueur est : "+ id);
+        });
 
-         });
+        socket.on('generer_partie',function(){
+            GenerPlateau(ID_joueur, svgContainer);
+        });
 
-         //quand les deux joueurs sont pret on lance la partie
-         socket.on('joueurs_pret', function(){
-
-            DemareJeu(id_player_html,svgContainer);
-         });
-
-         //il faut arriver à récupérer la moto du joueur adverse
-         socket.on('autre_joueur', function(motoE){
+        //il faut arriver à récupérer la moto du joueur adverse
+        socket.on('autre_joueur', function(motoE){
             moto2 = new Moto(motoE.id_player);
             moto2.dessinerMoto(svgContainer);
-         });
+        });
+
+        //quand les deux joueurs sont pret on lance la partie
+        socket.on('lance_partie', function(){
+            DemarePartie();
+        });
+
+         //nous alerte lors d'une collision de nous ou de l'autre joueur
+        socket.on('collision', function(message){
+            console.log("=========================collision===============");
+            moto1 = null;
+            moto2 = null;
+            svgContainer = null;
+            pl = null;
+            clearInterval(tempPartie);
+            var elem = document.getElementById('plateau_');
+            elem.parentNode.removeChild(elem);
+        });
+
 
          /**
          lorsque on recoit le message du serveur comme quoi un joueur à bougé deux cas : 
@@ -244,9 +263,12 @@ $(document).ready(function(){
             }
             Update(moto1);
             Update(moto2);
-         });
-        
-     
+        });
+
+        socket.on('nouvelP', function(message){
+            console.log("======================nouvelle partie =============================");
+            GenerPlateau();
+        });
     });
 
 });
