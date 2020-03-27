@@ -1,12 +1,13 @@
+var IndRoom = -1;
 /**
  * InitGame()
  * ne prend aucun paramètre
  * résultat : initialise les motos donc créé les objets et les dessine sur la plateau.
  */
-function InitGame(id_,svgContainer){
+function InitGame(id_, idr){
     moto1 = new Moto(id_);//création de moto 1
-    moto1.dessinerMoto(svgContainer); //on dessine la moto numéro 1
-    console.log("moto1 id player : " + moto1.id_player);
+    moto1.dessinerMoto(); //on dessine la moto numéro 1
+    IndRoom = idr;
 }
 
 /*
@@ -44,7 +45,7 @@ function Moto(id_p){
     ne prend aucun paramètre
     resultat : dessine la moto avec d3.js celon les coordonnées X et Y de la moto et celon son attribut rot
     */
-    this.dessinerMoto= function(svgContainer){
+    this.dessinerMoto= function(){
         //on dessine la moto avec déjà les attributs rotation que l'on modifiera avec l'attribut this.rot
         this.rectangle = svgContainer.append("rect").attr("x", this.X).attr("y", this.Y).attr("width", MOT_Width).attr("height", MOT_Height).attr("fill", this.color).attr("id", "moto_html"+this.id_player).attr("transform", "rotate("+this.rot+","+(this.X+5)+","+(this.Y+25)+")");
     }
@@ -302,7 +303,7 @@ function collision(moto_m)
                    
                     if(pl.isMur(xi+j,y+i))
                     {
-                    alertcol();
+                        alertcol();
                         break;
                     }
                      //svgContainer.append("rect").attr("x", xi+j).attr("y", y+i).attr("width", 1).attr("height", 1).attr("fill", "green");
@@ -639,7 +640,7 @@ function defEvent(motoPr)
                         motoPr.train_act = false;
                         murActif = false;
                         timerMur = TMP_RECHARGEMUR;
-                        console.log("descativ avance")
+                        //console.log("descativ avance")
                     }
                 else if (motoPr.train_act == false && timerMur==0)
                     { 
@@ -744,8 +745,7 @@ function avancedefault(moto_m){
 function alertcol()
 {
     //alert("collision");
-
-    socket.emit('collision','collision moto');   
+    socket.emit('collision',IndRoom);   
 }
 
 /**
@@ -758,10 +758,10 @@ function Frame(moto_m1)
 
     Move(moto_m1);
     //Move(moto_m2);
-    console.log(" l'indice de la room dans frame est  : "+ indiceRoom);
+    //console.log(" l'indice de la room dans frame est  : "+ indiceRoom);
     socket.emit('joueur_bouge', moto_m1,indiceRoom);
 
-    //collision(moto_m1);
+    collision(moto_m1);
     //collision(moto_m2);
 
     timerMurF(moto_m1);
