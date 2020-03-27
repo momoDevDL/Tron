@@ -39,15 +39,15 @@ $(document).ready(function(){
             data: {niveau: niveau , mmr: mmr,pseudo: pseudo, email: email,couleur_g: couleur_g , couleur_m: couleur_m, avatar:avatar},
             dataType:"text",
             success:function(data){
-                console.log(data);
+                //console.log(data);
                 $("#profil-container").html(data);
                 },
                 complete:function(data){
-                    console.log(data);
+                    //console.log(data);
                 },
                 error: function(data){
                     console.log("error");
-                        console.log(data);
+                    //    console.log(data);
                 }
         });
     });
@@ -58,16 +58,16 @@ $(document).ready(function(){
                     method : "POST",
                     dataType: "text",
                     success:function(data){
-                        console.log(data);
+                        //console.log(data);
                     $("#Contact").html(data);    
                     },
                     complete:function(data){
-                        console.log("lol");
-                        console.log(data);
+                        //console.log("lol");
+                        //console.log(data);
                     },
                     error: function(data){
                             console.log('error');
-                            console.log(data);
+                            //console.log(data);
                     }
                     
             });               
@@ -117,37 +117,26 @@ $(document).ready(function(){
             svgContainer = d3.select('#damier').append('svg').attr('width',PL_NBCOL*PL_L).attr('height',PL_NBLIG*PL_L).attr('id','plateau_');
             pl.newPlateau(PL_L,PL_NBCOL,PL_NBLIG);
             pl.newGrandeCases(PL_NBCOL*PL_L,PL_NBLIG*PL_L,5,5);
-            console.log(svgContainer);
+            //console.log(svgContainer);
             socket.emit('CommencerPartie',indiceRoom);
 
         }
 
         function DemarePartie(){
-            console.log(svgContainer);
+            //console.log(svgContainer);
             InitGame(ID_joueur, indiceRoom);
             defEvent(moto1);
 
-            console.log("l'indice de la room est :" + indiceRoom);
+            //console.log("l'indice de la room est :" + indiceRoom);
 
             socket.emit('envoi_de_notre_moto',moto1,indiceRoom);
-            var seconde_left = 10;
-            var interval = setInterval(function(){
-                document.getElementById('timer_partie').innerHTML = --seconde_left;
-
-                if(seconde_left <= 0){
-                    lanceMoto();
-
-                    clearInterval(interval);
-                }
-            }, 1000);
         }
 
         /*============================= Met en mouvement les motos ================================ **/
 
-        function lanceMoto(){
+        /**function lanceMoto(){
             tempPartie = setInterval(Frame, INTERVAL, moto1);
-        }
-
+        }*/
        
         $.ajax({
             url : "fetchPlayerPriority.php",
@@ -155,16 +144,16 @@ $(document).ready(function(){
             dataType: "text",
             success:function(data){
                 PriorityClient = data;
-                    console.log("this is data " +data);
-                    console.log("this is data " +PriorityClient);
+                    //console.log("this is data " +data);
+                    //console.log("this is data " +PriorityClient);
                 },
                 complete:function(data){
-                    console.log("after lol");
-                    console.log(data);
+                    //console.log("after lol");
+                    //console.log(data);
                 },
                 error: function(data){
-                    console.log('error');
-                    console.log(data);
+                    //console.log('error');
+                    //console.log(data);
                 }
                 
         });
@@ -177,9 +166,9 @@ $(document).ready(function(){
         socket.emit('CommencerRecherche');
 
         socket.on('connectedToRoom',function(indiceRoomS){
-            console.log("You Are Connected to Room " + indiceRoomS);
+            //console.log("You Are Connected to Room " + indiceRoomS);
             indiceRoom = indiceRoomS ;
-            console.log(indiceRoom);
+            //console.log(indiceRoom);
         });
 
         
@@ -210,21 +199,21 @@ $(document).ready(function(){
                 },
                 error: function(data){
                         console.log('error');
-                        console.log(data);
+                        //console.log(data);
                 }
                 
             });
-            console.log("===========================LA PARTIE DOIT COMMENCER MNT===================");
+            //console.log("===========================LA PARTIE DOIT COMMENCER MNT===================");
         });
         
         //nous donne l'id du joueur pour la partie en cours (sert pour initialiser la moto)
         socket.on('id_joueur', function(id){
             ID_joueur = id;
-            console.log("id joueur est : "+ id);
+            //console.log("id joueur est : "+ id);
         });
 
         socket.on('generer_partie',function(){
-            console.log("je genere la partie");
+            //console.log("je genere la partie");
             GenerPlateau();
         });
 
@@ -232,6 +221,23 @@ $(document).ready(function(){
         socket.on('autre_joueur', function(motoE){
             moto2 = new Moto(motoE.id_player);
             moto2.dessinerMoto();
+            console.log(moto2);
+            socket.emit('ok_pret', indiceRoom, TMP_PARTIE, INTERVAL);
+        });
+
+        //socket qui affiche le décompte avant le lancement de la manche
+        socket.on('decompte_avant_demarage_parti', function(seconde_left){
+            document.getElementById('timer_partie').innerHTML = seconde_left;
+        });
+
+        //socket qui est appelé toutes les 20 ms pour raffraichir les motos
+        socket.on('frame', function(){
+            Frame(moto1);
+        });
+
+        //socket qui permet de voir le timer d'une manche
+        socket.on('timer_manche_affichage', function(seconde){
+            document.getElementById('tmp').innerHTML = seconde;
         });
 
         //quand les deux joueurs sont pret on lance la partie
@@ -240,13 +246,12 @@ $(document).ready(function(){
         });
 
          //nous alerte lors d'une collision de nous ou de l'autre joueur
-        socket.on('collision', function(message){
-            console.log("=========================collision===============");
+        socket.on('fin_manche', function(message){
+            console.log("=========================FIN DE MANCHE===============  " + message);
             moto1 = null;
             moto2 = null;
             svgContainer = null;
             pl = null;
-            clearInterval(tempPartie);
             var elem = document.getElementById('plateau_');
             elem.parentNode.removeChild(elem);
         });
@@ -279,7 +284,7 @@ $(document).ready(function(){
         });
 
         socket.on('nouvelP', function(message){
-            console.log("======================nouvelle partie =============================");
+            //console.log("======================nouvelle partie =============================");
             BoutonReady();
         });
     });
