@@ -36,13 +36,11 @@ function Plateau()
            if(y == 0 || xi == 0 || xi == PL_NBCOL*PL_L-PL_L || y == PL_NBLIG*PL_L-PL_L )
            d3.select("rect[id ='"+id+"']")//faire des test pour verifier que il ne faut pas inverser x et y
            .attr("fill",neons)
-           .attr("stroke",neons)
-           .attr("etat",etat);
+           .attr("stroke",neons);
           else
            d3.select("rect[id ='"+id+"']")//faire des test pour verifier que il ne faut pas inverser x et y
            .attr("fill",color)
-           .attr("stroke",color)
-           .attr("etat",etat);
+           .attr("stroke",color);
 
            xi += PL_L;
            
@@ -113,16 +111,8 @@ function Plateau()
      .attr("width", L)
      .attr("height", L)
      .attr("id",x+"_"+y)
-     .attr("etat",etat)
-
-     // .on("mouseover", function(){
-     
-     //    console.log(this.getAttribute("etat"));
-       
-
-     // })   
-
-  }
+     .attr("etat",etat);
+   }
 
    /*
    isMur(x,y)
@@ -132,12 +122,12 @@ function Plateau()
    */
   this.isMur = function(x,y)
   {
-     x = (x - (x%PL_L));
-     y = (y - (y%PL_L));
-     let id =x+"_"+y;
-    // console.log(id)
-    // console.log(d3.select("rect[id ='"+id+"']").attr("etat"));
-     return ("mur" == d3.select("rect[id ='"+id+"']").attr("etat"));
+      x = (x - (x%PL_L));
+      y = (y - (y%PL_L));
+      let id =x+"_"+y;
+      //console.log(id)
+      //console.log(d3.select("rect[id ='"+id+"']").attr("etat"));
+      return (d3.select("rect[id ='"+id+"']").attr("etat") == "mur");
   }
 
   /*
@@ -224,10 +214,14 @@ function Plateau()
         {
            if(ligne == 0 || colonne == 0 || ligne == (nbLig-1) || colonne == (nbCol-1) )
            {
+              //console.log("===================creation de bordure========================= "+x+" ==== "+ y);
               this.creeCarre(L,x,y,"mur");
-
            }
-           else this.creeCarre(L,x,y,"vide");
+           else {
+            //console.log("===================creation de case vide========================= "+x+" ==== "+ y);
+
+            this.creeCarre(L,x,y,"vide");
+           }
            
               y += L;        
         } 
