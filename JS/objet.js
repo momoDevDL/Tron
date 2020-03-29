@@ -429,7 +429,7 @@ function collision(moto_m)
 
               for (let j = 0; j < jmax; j++)
               {
-                  if(pl.isMur(x2+j*bidule+i*bidule,y2-j*bidule))
+                  if(pl.isMur(x2+j*bidule+i*bidule,y2-j*bidule+i*bidule))
                   {
                      alertcol()
                       break;
@@ -438,7 +438,7 @@ function collision(moto_m)
                     //svgContainer.append("rect").attr("x", x2+j*bidule+i*bidule).attr("y", y2-j*bidule+i*bidule).attr("width", 1).attr("height", 1).attr("fill", "green");   
               }
 
-              if(pl.isMur(x2+2*boui+i*bidule , y2+2*boui+i*bidule))
+              if(pl.isMur(x2+2*boui+i*bidule , y2-2*boui+i*bidule))
                   {
                       alertcol()
                       break;
