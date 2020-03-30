@@ -1,14 +1,13 @@
-/*=============================VARIABLE GLOBAL ================================ **/
 
-var PriorityClient ; // variable qui va contenir la priorité de joueur  
-let indiceRoom = -1 ;
 
-let ID_joueur;
+    var PriorityClient ; // variable qui va contenir la priorité de joueur  
+    let indiceRoom = -1 ;
+    let id_player_html;
     
-var touches = [];
-var timer = TMP_PARTIE;
+    let x0,y0;
+    var touches = [];
+    var timer = TMP_PARTIE;
     
-<<<<<<< HEAD
     let moto1;
     let moto2;
     //let moto2;
@@ -20,25 +19,10 @@ var timer = TMP_PARTIE;
     var Pseudo;
     var ID_Partie;
     var pseudoAdv;
-$(document).ready(function(){
-=======
-let moto1;
-let moto2;
-let score = 0;
-
-var socket;
-var murActif = false;
-var pl;
-var svgContainer;
-var tempPartie;
-var nbrManche = NBR_MANCHE;
-
-
-/** ========================================On prépare la page de jeu ================================ */
->>>>>>> 392f5b7551db74eb3b26fa7526b0ffd2e71b8587
-
 
 $(document).ready(function(){
+
+
 
     $('body').on("click","#modifyProfile",function(){
         let niveau = $('.niveauMmr p:first').html();
@@ -55,15 +39,15 @@ $(document).ready(function(){
             data: {niveau: niveau , mmr: mmr,pseudo: pseudo, email: email,couleur_g: couleur_g , couleur_m: couleur_m, avatar:avatar},
             dataType:"text",
             success:function(data){
-                //console.log(data);
+                console.log(data);
                 $("#profil-container").html(data);
                 },
                 complete:function(data){
-                    //console.log(data);
+                    console.log(data);
                 },
                 error: function(data){
                     console.log("error");
-                    //    console.log(data);
+                        console.log(data);
                 }
         });
     });
@@ -74,21 +58,23 @@ $(document).ready(function(){
                     method : "POST",
                     dataType: "text",
                     success:function(data){
-                        //console.log(data);
+                        console.log(data);
                     $("#Contact").html(data);    
                     },
                     complete:function(data){
-                        //console.log("lol");
-                        //console.log(data);
+                        console.log("lol");
+                        console.log(data);
                     },
                     error: function(data){
                             console.log('error');
-                            //console.log(data);
+                            console.log(data);
                     }
                     
             });               
     }); 
     
+    
+
     $('body').on('click','#1V1',function(){
         
         $('#rechercheMatch').css({
@@ -115,48 +101,19 @@ $(document).ready(function(){
         socket = io('http://10.138.123.54:3333/first-namespace');
 
 
-        /*=============================Fonction qui créé les joueurs, les moto et indique au serveur que le joueur est pret ================================ **/
+      function DemareJeu(id_,svgContainer){
+ 
+        InitGame(id_,svgContainer);
+        defEvent(moto1);
+        console.log("l'indice de la room est :" + indiceRoom);
+        socket.emit('envoi_autre_joueur_serveur',moto1,indiceRoom);
 
-        function BoutonReady(){
-            var btn = document.createElement("button");
-            btn.setAttribute("id","btn_ready");
-            btn.setAttribute("onclick","socket.emit('joueur_pret')");
-            btn.innerHTML = 'Are You Ready ?';
-            document.body.appendChild(btn);
-        }
+        var myVar = setInterval(Frame, INTERVAL, moto1);
 
 
-        function GenerPlateau(){
-            document.getElementById('nbr_manche').innerHTML = nbrManche;
-            document.getElementById('score').innerHTML = score;
-            var elem = document.getElementById("btn_ready");
-            elem.parentNode.removeChild(elem);
-            pl = new Plateau();
-            svgContainer = d3.select('#damier').append('svg').attr('width',PL_NBCOL*PL_L).attr('height',PL_NBLIG*PL_L).attr('id','plateau_');
-            pl.newPlateau(PL_L,PL_NBCOL,PL_NBLIG);
-            pl.newGrandeCases(PL_NBCOL*PL_L,PL_NBLIG*PL_L,5,5);
-            //console.log(svgContainer);
-            socket.emit('CommencerPartie',indiceRoom);
+     }
 
-        }
-
-        function DemarePartie(){
-            //console.log(svgContainer);
-            InitGame(ID_joueur, indiceRoom);
-            defEvent(moto1);
-
-            //console.log("l'indice de la room est :" + indiceRoom);
-
-            socket.emit('envoi_de_notre_moto',moto1,indiceRoom);
-        }
-
-        /*============================= Met en mouvement les motos ================================ **/
-
-        /**function lanceMoto(){
-            tempPartie = setInterval(Frame, INTERVAL, moto1);
-        }*/
        
-<<<<<<< HEAD
      $.ajax({
        url : "fetchPlayerPseudo&Priority.php",
        method : "POST",
@@ -186,53 +143,21 @@ $(document).ready(function(){
         socket.emit('envoiDePriorite',PriorityClient);
         socket.emit('envoiPseudo',Pseudo);
       });
-=======
-        $.ajax({
-            url : "fetchPlayerPriority.php",
-            method : "POST",
-            dataType: "text",
-            success:function(data){
-                PriorityClient = data;
-                    //console.log("this is data " +data);
-                    //console.log("this is data " +PriorityClient);
-                },
-                complete:function(data){
-                    //console.log("after lol");
-                    //console.log(data);
-                },
-                error: function(data){
-                    //console.log('error');
-                    //console.log(data);
-                }
-                
-        });
 
-        
-        socket.on('connect',function(){
-            socket.emit('envoiDePriorite',PriorityClient);
-        });
->>>>>>> 392f5b7551db74eb3b26fa7526b0ffd2e71b8587
+      socket.emit('CommencerRecherche');
 
-        socket.emit('CommencerRecherche');
+      socket.on('connectedToRoom',function(indiceRoomS){
+        console.log("You Are Connected to Room " + indiceRoomS);
+        indiceRoom = indiceRoomS ;
+        console.log(indiceRoom);
+      });
 
-        socket.on('connectedToRoom',function(indiceRoomS){
-            //console.log("You Are Connected to Room " + indiceRoomS);
-            indiceRoom = indiceRoomS ;
-            //console.log(indiceRoom);
-        });
-
-<<<<<<< HEAD
       socket.on('CommenceBientot',function(indiceRoom,pseudos){
         console.log("pseudo 2 est de :" + pseudos.p2);
         console.log("pseudo 1 est de :" + pseudos.p1);
-=======
-        
-        /*============================= Commence la partie !!!!!!! ================================ **/
->>>>>>> 392f5b7551db74eb3b26fa7526b0ffd2e71b8587
 
-        socket.on('CommenceBientot',function(indiceRoom){
+        $("body #rechercheMatch").append("<p id='PartieEnConst'>Votre partie va bientot commencer</p>");
 
-<<<<<<< HEAD
         $("body #PartieEnConst").css({
             'position':'relative',
             'top':'60%',
@@ -272,26 +197,8 @@ $(document).ready(function(){
             }
             
         });
-=======
-            $("body #rechercheMatch").append("<p id='PartieEnConst'>Votre partie va bientot commencer</p>");
->>>>>>> 392f5b7551db74eb3b26fa7526b0ffd2e71b8587
 
-            $("body #PartieEnConst").css({
-                'position':'relative',
-                'top':'60%',
-                'color':'white' 
-            });
-            
-            $.ajax({
-                url : "LoadGamePage.php",
-                method : "POST",
-                dataType: "text",
-                success:function(data){
-                    //console.log("this is data " +data);
-                    $('#main').html(data);
-                },
 
-<<<<<<< HEAD
         socket.emit("InsererPartie",indiceRoom);
        /* $.ajax({
             url : "InsererPartie.php",
@@ -354,84 +261,33 @@ $(document).ready(function(){
          socket.on('collision', function(message){
             alert(message);
          });
-=======
-                complete:function(data){
-                    socket.emit('demande_id');
-                    BoutonReady();
-                },
-                error: function(data){
-                        console.log('error');
-                        //console.log(data);
-                }
-                
-            });
-            //console.log("===========================LA PARTIE DOIT COMMENCER MNT===================");
-        });
-        
-        //nous donne l'id du joueur pour la partie en cours (sert pour initialiser la moto)
-        socket.on('id_joueur', function(id){
-            ID_joueur = id;
-            //console.log("id joueur est : "+ id);
-        });
 
-        socket.on('generer_partie',function(){
-            //console.log("je genere la partie");
-            GenerPlateau();
-        });
+         //nous donne l'id du joueur pour la partie en cours (sert pour initialiser la moto)
+         socket.on('id_joueur', function(id){
+          
+            id_player_html = id;
+            console.log("id joueur est : "+ id);
 
-        //il faut arriver à récupérer la moto du joueur adverse
-        socket.on('autre_joueur', function(motoE){
+         });
+
+         //quand les deux joueurs sont pret on lance la partie
+         socket.on('joueurs_pret', function(){
+
+            DemareJeu(id_player_html,svgContainer);
+         });
+
+         //il faut arriver à récupérer la moto du joueur adverse
+         socket.on('autre_joueur', function(motoE){
             moto2 = new Moto(motoE.id_player);
-            moto2.dessinerMoto();
-            console.log(moto2);
-            socket.emit('ok_pret', indiceRoom, TMP_PARTIE, INTERVAL);
-        });
-
-        //socket qui affiche le décompte avant le lancement de la manche
-        socket.on('decompte_avant_demarage_parti', function(seconde_left){
-            document.getElementById('timer_partie').innerHTML = seconde_left;
-        });
->>>>>>> 392f5b7551db74eb3b26fa7526b0ffd2e71b8587
-
-        //socket qui est appelé toutes les 20 ms pour raffraichir les motos
-        socket.on('frame', function(){
-            Frame(moto1);
-        });
-
-        //socket qui permet de voir le timer d'une manche
-        socket.on('timer_manche_affichage', function(seconde){
-            document.getElementById('tmp').innerHTML = seconde;
-        });
-
-        //quand les deux joueurs sont pret on lance la partie
-        socket.on('lance_partie', function(){
-            DemarePartie();
-        });
-
-         //nous alerte lors d'une collision de nous ou de l'autre joueur
-        socket.on('fin_manche', function(message){
-            console.log("=========================FIN DE MANCHE===============  " + message);
-            if(moto1.id_player != message){
-                score += 20;
-            }else{
-                if(message < 0){
-                    score+=10;
-                }
-            }
-            moto1 = null;
-            moto2 = null;
-            svgContainer = null;
-            pl = null;
-            var elem = document.getElementById('plateau_');
-            elem.parentNode.removeChild(elem);
-        });
-
+            moto2.dessinerMoto(svgContainer);
+         });
 
          /**
          lorsque on recoit le message du serveur comme quoi un joueur à bougé deux cas : 
          premier cas c'est nous alors on Update juste les deux motos
          deuxième cas on regarde si l'id de l'objet passé en paramètre est bien l'id de la moto adverse et dans ce cas on lui donne les arguments (de plus si la trainé est activé on la dessine)
          et ensuite on Update les deux motos
+
          */
         socket.on('update_joueur', function(moto){
             if(moto.id_player == moto2.id_player){
@@ -450,39 +306,9 @@ $(document).ready(function(){
             }
             Update(moto1);
             Update(moto2);
-        });
-
-        socket.on('nouvelP', function(message){
-            console.log("======================nouvelle manche=============================");
-            nbrManche--;
-            if(nbrManche <= 0){
-                document.getElementById('nbr_manche').innerHTML = 'Fin de la partie';
-                console.log("FIN DE PARTIE");
-                socket.emit('score', score, ID_joueur, indiceRoom);
-            }else{
-                BoutonReady();
-            }
-        });
-
-        socket.on('vainceur', function(sc1, sc2){
-            if(ID_joueur==1){
-                if(sc1 > sc2){
-                    document.getElementById('score').innerHTML = "Vous avez Gagnez !!";
-                }else if(sc1 < sc2){
-                    document.getElementById('score').innerHTML = "Vous avez perdu...";
-                }else{
-                    document.getElementById('score').innerHTML = "Egalité !!!";
-                }
-            }else{
-                if(sc1 < sc2){
-                    document.getElementById('score').innerHTML = "Vous avez Gagnez !!";
-                }else if(sc1 > sc2){
-                    document.getElementById('score').innerHTML = "Vous avez perdu...";
-                }else{
-                    document.getElementById('score').innerHTML = "Egalité !!!";
-                }
-            }
-        });
+         });
+        
+     
     });
 
 });
