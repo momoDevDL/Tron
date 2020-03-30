@@ -11,6 +11,8 @@
 function Plateau()
 {  
    this.grandeCases;//Grandes cases qui disparaissent au fil de la partie
+   this.matrice = [];// Matrice de stockage du Plateau
+   
 
    /*
    colorAire(x,y,L,l,color,etat)
@@ -22,7 +24,7 @@ function Plateau()
    color: couleur a utiliser
    La fonction colorie une aire de dimension L*l en partant de x y, de couleur col
    */
-  this.colorAire = function(x,y,L,l,color,etat)//Colore une aire de L*l (en nb de carre) qui commence a x y de la couleur color
+this.colorAire = function(x,y,L,l,color,etat)//Colore une aire de L*l (en nb de carre) qui commence a x y de la couleur color
   {
      let xi = x - (x%PL_L);
       y = y - (y%PL_L);
@@ -34,13 +36,32 @@ function Plateau()
           
            let id =xi+"_"+y;
            if(y == 0 || xi == 0 || xi == PL_NBCOL*PL_L-PL_L || y == PL_NBLIG*PL_L-PL_L )
-           d3.select("rect[id ='"+id+"']")//faire des test pour verifier que il ne faut pas inverser x et y
-           .attr("fill",neons)
-           .attr("stroke",neons);
+           {
+            d3.select("rect[id ='"+id+"']")
+            .attr("fill",neons)
+            .attr("stroke",neons);
+            this.matrice[xi/PL_L][y/PL_L]=
+            {
+               "x" : xi,
+               "y" : y,
+               "etat" : etat
+            }
+           }
+           
           else
-           d3.select("rect[id ='"+id+"']")//faire des test pour verifier que il ne faut pas inverser x et y
-           .attr("fill",color)
-           .attr("stroke",color);
+          {
+            d3.select("rect[id ='"+id+"']")
+            .attr("fill",color)
+            .attr("stroke",color);
+            this.matrice[xi/PL_L][y/PL_L]=
+             {
+                "x" : xi,
+                "y" : y,
+                "etat" : etat
+       
+             }
+          }
+           
 
            xi += PL_L;
            
@@ -51,6 +72,7 @@ function Plateau()
          
       }
    }
+
     
    /*
    transformeCase(x,y,col,etat)
@@ -60,17 +82,27 @@ function Plateau()
    etat: doit changer l'etat de la case par etat
    La fonction modifie la case de coord associé au point x y, la colorie et modifie son etat
    */
-  this.transformeCase = function(x,y,col,etat)
-  {
-  
-     x = (x - (x%PL_L));
-     y = (y - (y%PL_L));
-     let id =x+"_"+y;
-     d3.select("rect[id ='"+id+"']")
-     .attr("fill",col)
-     .attr("stroke",col)
-     .attr("etat",etat);
-  }
+   this.transformeCase = function(x,y,col,etat)
+   {
+      if(!(x<0 || y<0 || x >= PL_NBCOL*PL_L || y >= PL_NBLIG*PL_L ))
+      {
+         x = (x - (x%PL_L));
+         y = (y - (y%PL_L));
+         let id =x+"_"+y;
+        // console.log(id)
+         d3.select("rect[id ='"+id+"']")
+         .attr("fill",col)
+         .attr("stroke",col)
+   
+         this.matrice[x/PL_L][y/PL_L]=
+         {
+            "x" : x,
+            "y" : y,
+            "etat" : etat
+   
+         }
+      }
+   }
 
    /*
    reset()
@@ -103,15 +135,14 @@ function Plateau()
    etat: etat du carre
    La fonction cree un carre en x y de couleur col et d'etat etat
    */
-  this.creeCarre = function(L,x,y,etat)
+  this.creeCarre = function(L,x,y)
   {
      d3.select("svg").append("rect")
      .attr("y", y)
      .attr("x", x)
      .attr("width", L)
      .attr("height", L)
-     .attr("id",x+"_"+y)
-     .attr("etat",etat);
+     .attr("id",x+"_"+y);
    }
 
    /*
@@ -121,14 +152,15 @@ function Plateau()
    La fonction renvoie vrai si le carré associé a x y est un mur, faux sinon
    */
   this.isMur = function(x,y)
-  {
+   {
+      if(x<0 || y<0 || x >= PL_NBCOL*PL_L || y >= PL_NBLIG*PL_L ) return false;
       x = (x - (x%PL_L));
       y = (y - (y%PL_L));
-      let id =x+"_"+y;
-      //console.log(id)
-      //console.log(d3.select("rect[id ='"+id+"']").attr("etat"));
-      return (d3.select("rect[id ='"+id+"']").attr("etat") == "mur");
-  }
+      
+     // console.log(id)
+     // console.log(d3.select("rect[id ='"+id+"']").attr("etat"));
+      return this.matrice[x/PL_L][y/PL_L].etat=="mur";
+   }
 
   /*
   newGrandeCases(svgW,svgH,nbC_L,nbC_l)
@@ -202,36 +234,42 @@ function Plateau()
    La fonction cree le plateau de jeu a partir de nouvelles cases puis initialise les grandes cases
    */
   this.newPlateau = function(L,nbCol,nbLig)//CREE UN NOUVEAU PLATEAU GRAPHIQUE (OBJET D3) /!\ A N'UTILISER QU'UNE FOISN VOIR A METTRE CONSTRUCT
-  {
-   
-     let x = 0;
-     let y = 0;
-    
-      //creation des cases
-     for (let colonne = 0; colonne < nbCol; colonne++)
-     {
-        for (let ligne = 0; ligne < nbLig ; ligne++) 
-        {
-           if(ligne == 0 || colonne == 0 || ligne == (nbLig-1) || colonne == (nbCol-1) )
-           {
-              //console.log("===================creation de bordure========================= "+x+" ==== "+ y);
-              this.creeCarre(L,x,y,"mur");
-           }
-           else {
-            //console.log("===================creation de case vide========================= "+x+" ==== "+ y);
-
-            this.creeCarre(L,x,y,"vide");
-           }
-           
-              y += L;        
-        } 
+   {
+      let x = 0;
+      let y = 0;
+      for (let colonne = 0; colonne < nbCol; colonne++)
+      {
+         this.matrice[colonne]=[]
+         for (let ligne = 0; ligne < nbLig ; ligne++) 
+         {
+            if(ligne == 0 || colonne == 0 || ligne == (nbLig-1) || colonne == (nbCol-1) )
+            {
+               this.creeCarre(L,x,y);
+               this.matrice[colonne][ligne]=
+               {
+                  "x" : x,
+                  "y" : y,
+                  "etat" : "mur"
+               }
+            }
+            else
+            {
+               this.creeCarre(L,x,y);
+               this.matrice[colonne][ligne]=
+               {
+                  "x" : x,
+                  "y" : y,
+                  "etat" : "vide"
+               }       
+            } 
+            y += L; 
+         } 
         x += L;
         y = 0;
-     }
-     
-     //Grandes cases
-     this.newGrandeCases(PL_NBCOL*PL_L,PL_NBLIG*PL_L,5,5);
-  }
+       }
+ //Grandes cases
+ this.newGrandeCases(PL_NBCOL*PL_L,PL_NBLIG*PL_L,5,5);
+}
 
    /*
    incrementTMPS(x,y)
