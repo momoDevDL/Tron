@@ -1,12 +1,13 @@
+var IndRoom = -1;
 /**
  * InitGame()
  * ne prend aucun paramètre
  * résultat : initialise les motos donc créé les objets et les dessine sur la plateau.
  */
-function InitGame(id_,svgContainer){
+function InitGame(id_, idr){
     moto1 = new Moto(id_);//création de moto 1
-    moto1.dessinerMoto(svgContainer); //on dessine la moto numéro 1
-    console.log("moto1 id player : " + moto1.id_player);
+    moto1.dessinerMoto(); //on dessine la moto numéro 1
+    IndRoom = idr;
 }
 
 /*
@@ -18,6 +19,7 @@ function Moto(id_p){
 
     this.id_player = id_p; //identifiant du joueur
     this.speedX = 0; //vitesse de déplacement selon l'axe X
+    this.timerMur = 0;
     
 
     //vitesse de déplacement selon l'axe y 
@@ -44,7 +46,7 @@ function Moto(id_p){
     ne prend aucun paramètre
     resultat : dessine la moto avec d3.js celon les coordonnées X et Y de la moto et celon son attribut rot
     */
-    this.dessinerMoto= function(svgContainer){
+    this.dessinerMoto= function(){
         //on dessine la moto avec déjà les attributs rotation que l'on modifiera avec l'attribut this.rot
         this.rectangle = svgContainer.append("rect").attr("x", this.X).attr("y", this.Y).attr("width", MOT_Width).attr("height", MOT_Height).attr("fill", this.color).attr("id", "moto_html"+this.id_player).attr("transform", "rotate("+this.rot+","+(this.X+5)+","+(this.Y+25)+")");
     }
@@ -302,7 +304,7 @@ function collision(moto_m)
                    
                     if(pl.isMur(xi+j,y+i))
                     {
-                    alertcol();
+                        alertcol();
                         break;
                     }
                      //svgContainer.append("rect").attr("x", xi+j).attr("y", y+i).attr("width", 1).attr("height", 1).attr("fill", "green");
@@ -437,7 +439,7 @@ function collision(moto_m)
                     //svgContainer.append("rect").attr("x", x2+j*bidule+i*bidule).attr("y", y2-j*bidule+i*bidule).attr("width", 1).attr("height", 1).attr("fill", "green");   
               }
 
-              if(pl.isMur(x2+2*boui+i*bidule , y2+2*boui+i*bidule))
+              if(pl.isMur(x2+2*boui+i*bidule , y2-2*boui+i*bidule))
                   {
                       alertcol()
                       break;
@@ -581,24 +583,24 @@ function timerMurF(moto_m){
 
     //console.log("dans timerMurF");
 
-    if (timerMur > 0) timerMur -= (INTERVAL/1000);
+    if (moto_m.timerMur > 0) moto_m.timerMur -= (INTERVAL/1000);
 
-    let timeraffiche = (Math.floor(timerMur*1000))/1000;
+    let timeraffiche = (Math.floor(moto_m.timerMur*1000))/1000;
 
-    if (timerMur <= 0 && murActif == true)// Quand on a finis de poser un mur
+    if (moto_m.timerMur <= 0 && murActif == true)// Quand on a finis de poser un mur
     {
-        timerMur = TMP_RECHARGEMUR;
+        moto_m.timerMur = TMP_RECHARGEMUR;
         murActif = false;
         moto_m.train_act = false;
     }
-    if (timerMur <= 0 && murActif == false)//Quand ona fini de recharger le mur
+    if (moto_m.timerMur <= 0 && murActif == false)//Quand ona fini de recharger le mur
     {
-        timerMur = 0;
+        moto_m.timerMur = 0;
         murActif = false;
         moto_m.train_act = false;
     }
 
-    if (timerMur == 0)
+    if (moto_m.timerMur == 0)
     {
         document.getElementById("Space").innerText = "Pret";
         document.getElementById("etatSpace").innerText = "Ready";
@@ -633,19 +635,19 @@ function defEvent(motoPr)
          {  
             if(e.keyCode==32)
             {
-                
+
                 if (motoPr.train_act == true)
                     {
                         motoPr.train_act = false;
                         murActif = false;
-                        timerMur = TMP_RECHARGEMUR;
-                        console.log("descativ avance")
+                        motoPr.timerMur = TMP_RECHARGEMUR;
                     }
-                else if (motoPr.train_act == false && timerMur==0)
-                    { 
+                else if (motoPr.train_act == false && motoPr.timerMur==0)
+                    {
+                        //console.group("trainé=========================================================");
                         motoPr.train_act = true;
                         murActif = true;
-                        timerMur = TMP_POSMUR;
+                        motoPr.timerMur = TMP_POSMUR;
                     }
             } 
             var code = e.keyCode;
@@ -674,19 +676,23 @@ function defEvent(motoPr)
  * resultat : si la trainé de moto_m est active alors on dessine la traine et dans tous les cas la moto avance dans son orientation
  */
 function avancedefault(moto_m){
-    //console.log(moto_m.ori, moto_m.rot);
+    //console.log(moto_m.train_act);
 
     switch (moto_m.ori){
         case "N":
             if(moto_m.train_act){
+                //console.log("==============================================");
                 pl.transformeCase(moto_m.X+5,moto_m.Y+25,moto_m.color,"mur"); //permet de créer la trainée de la moto
+                //console.log(pl.transformeCase(moto_m.X+5,moto_m.Y+25,moto_m.color,"mur"));
             }
             moto_m.moveup();
         break;
 
         case "S":
             if(moto_m.train_act){
+                //console.log("==============================================");
                 pl.transformeCase(moto_m.X+5,moto_m.Y+25,moto_m.color,"mur"); //permet de créer la trainée de la moto
+                //console.log("trainé");
             }
             moto_m.movedown();
         break;
@@ -744,8 +750,7 @@ function avancedefault(moto_m){
 function alertcol()
 {
     //alert("collision");
-
-    socket.emit('collision','collision moto');   
+    socket.emit('collision',IndRoom);   
 }
 
 /**
@@ -757,13 +762,10 @@ function Frame(moto_m1)
 {
 
     Move(moto_m1);
-    //Move(moto_m2);
-    console.log(" l'indice de la room dans frame est  : "+ indiceRoom);
+    
     socket.emit('joueur_bouge', moto_m1,indiceRoom);
 
-    //collision(moto_m1);
-    //collision(moto_m2);
+    collision(moto_m1);
 
     timerMurF(moto_m1);
-    //timerMur(moto_m2);
 }

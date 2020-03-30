@@ -57,8 +57,7 @@ socket.on('envoiPseudo',function(data){
   /* Commencer la Recherche de joueur à la connection en regardant toutes les chambres
    deja existantes et créer une nouvelle chambre
   dont il est membre s'il trouve pas un joueur qui matche avec ça priorité de recherche
-    et sinon joindre une chambre et commencer une partie */ 
-    
+et sinon joindre une chambre et commencer une partie */ 
     socket.on('CommencerRecherche',function(){
     Rooms.forEach(element => {
         if(Priority == 'null'){
