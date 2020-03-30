@@ -11,10 +11,12 @@ echo   "
 </div> 
   
 </div>
-      <h3 id='tmp'>Temps de Jeu :</h3>
+      <div id='tmp'>Temps de Jeu :</div>
 
       <div id='damier'></div>
 
-      <button id='Space'>Space</button><label id='etatSpace'>Ready</label> 
-      <div id='timer_partie'> </div>";
+      <label id='etatSpace'></label> 
+      <div id='timer_partie'>Debut de la Manche dans : </div>
+      <div id='nbr_manche'>Nbre de manche : </div>
+      <div id='score'>Score : </div>";
 ?>
