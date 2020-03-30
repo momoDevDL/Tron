@@ -16,8 +16,9 @@
     var murActif = false;
     var pl ;
     var svgContainer;
-
-
+    var Pseudo;
+    var ID_Partie;
+    var pseudoAdv;
 $(document).ready(function(){
 
 
@@ -96,7 +97,7 @@ $(document).ready(function(){
 
        
 
-        socket = io('http://localhost:3333/first-namespace');
+        socket = io('http://10.138.123.54:3333/first-namespace');
 
 
       function DemareJeu(id_,svgContainer){
@@ -112,30 +113,34 @@ $(document).ready(function(){
      }
 
        
-          $.ajax({
-            url : "fetchPlayerPriority.php",
-            method : "POST",
-            dataType: "text",
-            success:function(data){
-                PriorityClient = data;
-                console.log("this is data " +data);
-                console.log("this is data " +PriorityClient);
+     $.ajax({
+       url : "fetchPlayerPseudo&Priority.php",
+       method : "POST",
+       dataType: "json",
+       success:function(data){
+           
+           PriorityClient = data.priorite;
+           Pseudo = data.pseudo ;
+           console.log("this is data : " +data);
+           console.log("this is data priority : " +PriorityClient);
+           console.log("this is data pseudo : " +Pseudo);
 
-            },
-            complete:function(data){
-                console.log("after lol");
-                console.log(data);
-            },
-            error: function(data){
-                    console.log('error');
-                    console.log(data);
-            }
-            
-        });
+       },
+       complete:function(data){
+           console.log("after lol");
+           console.log(data);
+       },
+       error: function(data){
+               console.log('error');
+               console.log(data);
+       }
+       
+   });
 
         
       socket.on('connect',function(){
         socket.emit('envoiDePriorite',PriorityClient);
+        socket.emit('envoiPseudo',Pseudo);
       });
 
       socket.emit('CommencerRecherche');
@@ -146,7 +151,9 @@ $(document).ready(function(){
         console.log(indiceRoom);
       });
 
-      socket.on('CommenceBientot',function(indiceRoom){
+      socket.on('CommenceBientot',function(indiceRoom,pseudos){
+        console.log("pseudo 2 est de :" + pseudos.p2);
+        console.log("pseudo 1 est de :" + pseudos.p1);
 
         $("body #rechercheMatch").append("<p id='PartieEnConst'>Votre partie va bientot commencer</p>");
 
@@ -156,26 +163,30 @@ $(document).ready(function(){
             'color':'white' 
         });
         
+     
+       
+        pseudoAdv = (pseudos.p2 == Pseudo ? pseudos.p1 : pseudos.p2);
+
         $.ajax({
             url : "LoadGamePage.php",
             method : "POST",
+            data : "pseudoAdv=" + pseudoAdv,
             dataType: "text",
             success:function(data){
-                
+
                 console.log("this is data " +data);
                 $('#main').html(data);
 
-
             },
             complete:function(data){
-                console.log("after lol");
+                
                 console.log(data);
                 pl = new Plateau();
                 svgContainer = d3.select('#damier').append('svg').attr('width',PL_NBCOL*PL_L).attr('height',PL_NBLIG*PL_L);
                 pl.newPlateau(PL_L,PL_NBCOL,PL_NBLIG);
                 pl.newGrandeCases(PL_NBCOL*PL_L,PL_NBLIG*PL_L,5,5);
                 console.log( " this is the pl " + pl);
-                console.log(" this is the svgContainer " +svgContainer);
+                console.log(" this is the svgContainer " + svgContainer);
                 console.log(" this is the end" );
                 socket.emit('CommencerPartie',indiceRoom);
             },
@@ -187,14 +198,64 @@ $(document).ready(function(){
         });
 
 
+        socket.emit("InsererPartie",indiceRoom);
+       /* $.ajax({
+            url : "InsererPartie.php",
+            method : "POST",
+            data : {pseudo1: pseudos.p1,pseudo2: pseudos.p2},
+            dataType: "text",
+            success:function(data){
+                console.log("L'id de la partie :"+data);
+            },
+            complete:function(data){
+                     console.log("L'id de la partie : "+data);
+                    if(data != "null"){
+                    ID_Partie = data;
+                    socket.emit('EnvoiIdPartieAutreJoueur',ID_Partie,indiceRoom);
+                    }
+            },
+            error: function(data){
+                    console.log('error');
+                    console.log(data);
+            }
+            
+        });
+*/  
         
-
-
         console.log("===========================LA PARTIE DOIT COMMENCER MNT===================");
       });
       
-
+        socket.on("BeginInsertPartie",function(pseudos){
+            console.log("============== Begin Insert ============\n")
+            $.ajax({
+                url : "InsererPartie.php",
+                method : "POST",
+                data : {pseudo1: pseudos.p1,pseudo2: pseudos.p2},
+                dataType: "text",
+                success:function(data){
+                    console.log("L'id de la partie :"+data);
+                    if(data != "null"){
+                        ID_Partie = data;
+                        socket.emit('EnvoiIdPartieAutreJoueur',ID_Partie,indiceRoom);
+                        }
+                },
+                complete:function(data){
+                    console.log("L'id de la partie :"+data);
+                    
+                },
+                error: function(data){
+                        console.log('error');
+                        console.log(data);
+                }
+                
+            });
+        });
       
+        socket.on("RecvIdPartie",function(id){
+            console.log("l'id reçu par l'autre joueur est : "+ id );
+            ID_Partie = id ;
+        });
+        
          //nous alerte lors d'une collision de nous ou de l'autre joueur
          socket.on('collision', function(message){
             alert(message);
