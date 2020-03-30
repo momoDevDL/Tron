@@ -10,13 +10,14 @@ var timer = TMP_PARTIE;
     
 let moto1;
 let moto2;
+let score = 0;
 
 var socket;
-var timerMur = 0;
 var murActif = false;
 var pl;
 var svgContainer;
 var tempPartie;
+var nbrManche = NBR_MANCHE;
 
 
 /** ========================================On prépare la page de jeu ================================ */
@@ -111,6 +112,8 @@ $(document).ready(function(){
 
 
         function GenerPlateau(){
+            document.getElementById('nbr_manche').innerHTML = nbrManche;
+            document.getElementById('score').innerHTML = score;
             var elem = document.getElementById("btn_ready");
             elem.parentNode.removeChild(elem);
             pl = new Plateau();
@@ -248,6 +251,13 @@ $(document).ready(function(){
          //nous alerte lors d'une collision de nous ou de l'autre joueur
         socket.on('fin_manche', function(message){
             console.log("=========================FIN DE MANCHE===============  " + message);
+            if(moto1.id_player != message){
+                score += 20;
+            }else{
+                if(message < 0){
+                    score+=10;
+                }
+            }
             moto1 = null;
             moto2 = null;
             svgContainer = null;
@@ -262,7 +272,6 @@ $(document).ready(function(){
          premier cas c'est nous alors on Update juste les deux motos
          deuxième cas on regarde si l'id de l'objet passé en paramètre est bien l'id de la moto adverse et dans ce cas on lui donne les arguments (de plus si la trainé est activé on la dessine)
          et ensuite on Update les deux motos
-
          */
         socket.on('update_joueur', function(moto){
             if(moto.id_player == moto2.id_player){
@@ -284,8 +293,35 @@ $(document).ready(function(){
         });
 
         socket.on('nouvelP', function(message){
-            //console.log("======================nouvelle partie =============================");
-            BoutonReady();
+            console.log("======================nouvelle manche=============================");
+            nbrManche--;
+            if(nbrManche <= 0){
+                document.getElementById('nbr_manche').innerHTML = 'Fin de la partie';
+                console.log("FIN DE PARTIE");
+                socket.emit('score', score, ID_joueur, indiceRoom);
+            }else{
+                BoutonReady();
+            }
+        });
+
+        socket.on('vainceur', function(sc1, sc2){
+            if(ID_joueur==1){
+                if(sc1 > sc2){
+                    document.getElementById('score').innerHTML = "Vous avez Gagnez !!";
+                }else if(sc1 < sc2){
+                    document.getElementById('score').innerHTML = "Vous avez perdu...";
+                }else{
+                    document.getElementById('score').innerHTML = "Egalité !!!";
+                }
+            }else{
+                if(sc1 < sc2){
+                    document.getElementById('score').innerHTML = "Vous avez Gagnez !!";
+                }else if(sc1 > sc2){
+                    document.getElementById('score').innerHTML = "Vous avez perdu...";
+                }else{
+                    document.getElementById('score').innerHTML = "Egalité !!!";
+                }
+            }
         });
     });
 
