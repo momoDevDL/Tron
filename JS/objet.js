@@ -19,6 +19,7 @@ function Moto(id_p){
 
     this.id_player = id_p; //identifiant du joueur
     this.speedX = 0; //vitesse de déplacement selon l'axe X
+    this.timerMur = 0;
     
 
     //vitesse de déplacement selon l'axe y 
@@ -429,7 +430,7 @@ function collision(moto_m)
 
               for (let j = 0; j < jmax; j++)
               {
-                  if(pl.isMur(x2+j*bidule+i*bidule,y2-j*bidule+i*bidule))
+                  if(pl.isMur(x2+j*bidule+i*bidule,y2-j*bidule))
                   {
                      alertcol()
                       break;
@@ -582,24 +583,24 @@ function timerMurF(moto_m){
 
     //console.log("dans timerMurF");
 
-    if (timerMur > 0) timerMur -= (INTERVAL/1000);
+    if (moto_m.timerMur > 0) moto_m.timerMur -= (INTERVAL/1000);
 
-    let timeraffiche = (Math.floor(timerMur*1000))/1000;
+    let timeraffiche = (Math.floor(moto_m.timerMur*1000))/1000;
 
-    if (timerMur <= 0 && murActif == true)// Quand on a finis de poser un mur
+    if (moto_m.timerMur <= 0 && murActif == true)// Quand on a finis de poser un mur
     {
-        timerMur = TMP_RECHARGEMUR;
+        moto_m.timerMur = TMP_RECHARGEMUR;
         murActif = false;
         moto_m.train_act = false;
     }
-    if (timerMur <= 0 && murActif == false)//Quand ona fini de recharger le mur
+    if (moto_m.timerMur <= 0 && murActif == false)//Quand ona fini de recharger le mur
     {
-        timerMur = 0;
+        moto_m.timerMur = 0;
         murActif = false;
         moto_m.train_act = false;
     }
 
-    if (timerMur == 0)
+    if (moto_m.timerMur == 0)
     {
         document.getElementById("Space").innerText = "Pret";
         document.getElementById("etatSpace").innerText = "Ready";
@@ -634,19 +635,19 @@ function defEvent(motoPr)
          {  
             if(e.keyCode==32)
             {
-                
+
                 if (motoPr.train_act == true)
                     {
                         motoPr.train_act = false;
                         murActif = false;
-                        timerMur = TMP_RECHARGEMUR;
-                        //console.log("descativ avance")
+                        motoPr.timerMur = TMP_RECHARGEMUR;
                     }
-                else if (motoPr.train_act == false && timerMur==0)
-                    { 
+                else if (motoPr.train_act == false && motoPr.timerMur==0)
+                    {
+                        //console.group("trainé=========================================================");
                         motoPr.train_act = true;
                         murActif = true;
-                        timerMur = TMP_POSMUR;
+                        motoPr.timerMur = TMP_POSMUR;
                     }
             } 
             var code = e.keyCode;
@@ -675,19 +676,23 @@ function defEvent(motoPr)
  * resultat : si la trainé de moto_m est active alors on dessine la traine et dans tous les cas la moto avance dans son orientation
  */
 function avancedefault(moto_m){
-    //console.log(moto_m.ori, moto_m.rot);
+    //console.log(moto_m.train_act);
 
     switch (moto_m.ori){
         case "N":
             if(moto_m.train_act){
+                //console.log("==============================================");
                 pl.transformeCase(moto_m.X+5,moto_m.Y+25,moto_m.color,"mur"); //permet de créer la trainée de la moto
+                //console.log(pl.transformeCase(moto_m.X+5,moto_m.Y+25,moto_m.color,"mur"));
             }
             moto_m.moveup();
         break;
 
         case "S":
             if(moto_m.train_act){
+                //console.log("==============================================");
                 pl.transformeCase(moto_m.X+5,moto_m.Y+25,moto_m.color,"mur"); //permet de créer la trainée de la moto
+                //console.log("trainé");
             }
             moto_m.movedown();
         break;
@@ -757,13 +762,10 @@ function Frame(moto_m1)
 {
 
     Move(moto_m1);
-    //Move(moto_m2);
-    //console.log(" l'indice de la room dans frame est  : "+ indiceRoom);
+    
     socket.emit('joueur_bouge', moto_m1,indiceRoom);
 
     collision(moto_m1);
-    //collision(moto_m2);
 
     timerMurF(moto_m1);
-    //timerMur(moto_m2);
 }
