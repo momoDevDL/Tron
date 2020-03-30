@@ -21,6 +21,7 @@ var indiceInsertion = 0;
 var Priority ;
 var id = 0;
 var motoMouv;
+var score = [0,0];
 
 var presD = 0; // pour la fct socket 'joueur_pret'
 var pres = 0; // pour la fct socket 'CommencerPartie'
@@ -108,13 +109,11 @@ nsp.on('connection', function (socket) {
     });
 
    //lors d'une collision un message est envoyé au client même et à l'autre client
-    socket.on('collision',(indiceRoom) =>{
+    socket.on('collision',function(moto_id,indiceRoom){
         coll += 1;
         if(coll == 1){
             clearInterval(motoMouv);
-            nsp.in(Rooms[indiceRoom].name).emit('fin_manche','coucou');
-            //console.log("Serveur : message nouvelle partie / "+indiceRoom);
-    
+            nsp.in(Rooms[indiceRoom].name).emit('fin_manche',moto_id);
             nsp.in(Rooms[indiceRoom].name).emit('nouvelP','coucou');
         }
     });
@@ -151,6 +150,11 @@ nsp.on('connection', function (socket) {
         //socket.broadcast.emit('update_joueur', moto);
     });
 
+    socket.on('score', function(sc, id_joueur, indiceRoom){
+        score[id_joueur-1] = sc;
+        nsp.in(Rooms[indiceRoom].name).emit('vainceur',score[0], score[1]);
+    });
+
 
    socket.on('envoiDePriorite',function(data){
        console.log("this is data " + data );
@@ -175,7 +179,7 @@ function TimerJeu(IR ,tempPartie, temp_refresh){
 
         if(second_ <= 0){
             clearInterval(motoMouv);
-            nsp.in(Rooms[IR].name).emit('fin_manche' , 'Temp écoulé');
+            nsp.in(Rooms[IR].name).emit('fin_manche' , -1);
             nsp.in(Rooms[IR].name).emit('nouvelP','coucou');
         }
     }, temp_refresh);
