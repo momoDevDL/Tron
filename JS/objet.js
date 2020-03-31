@@ -268,7 +268,7 @@ function Move(moto_m){
  * moto_m : est un objet de type Moto
  * resultat : permet de détecter une colision entre un mur/une trainé et la moto du joueur
  */
-function collision(moto_m)
+function collision(moto_m, moto_m1)
 {
     //console.log("je suis dans la fct collision");
     let x = (moto_m.X +5);
@@ -301,14 +301,17 @@ function collision(moto_m)
             {
                 for (let j = 0; j < jmax; j+=PL_L)
                 {
-                   
-                    if(pl.isMur(xi+j,y+i))
+                    if((pl.isMur(xi+j,y+i)))
                     {
-                        alertcol();
+                        alertcol(moto_m, 1);
                         break;
                     }
-                     //svgContainer.append("rect").attr("x", xi+j).attr("y", y+i).attr("width", 1).attr("height", 1).attr("fill", "green");
-                    
+
+                    if(moto_m1.X == xi+j && moto_m1.Y == y+i){
+                        alertcol(moto_m, -1);
+                        break;
+                    }
+                     //svgContainer.append("rect").attr("x", xi+j).attr("y", y+i).attr("width", 1).attr("height", 1).attr("fill", "green"); 
                 }
                
                
@@ -332,7 +335,12 @@ function collision(moto_m)
                    
                     if(pl.isMur(xi+j,y-i))
                     {
-                    alertcol();
+                    alertcol(moto_m,1);
+                        break;
+                    }
+
+                    if( (moto_m1.X == xi+j && moto_m1.Y == y-i)){
+                        alertcol(moto_m, -1);
                         break;
                     }
                     //  svgContainer.append("rect").attr("x", xi+j).attr("y", y-i).attr("width", 1).attr("height", 1).attr("fill", "cyan");
@@ -357,9 +365,9 @@ function collision(moto_m)
                 for (let j = 0; j < jmax; j+=PL_L)
                 {
                    
-                    if(pl.isMur(x+i,yi+j))
+                    if(pl.isMur(x+i,yi+j) || (moto_m1.X == x+i && moto_m1.Y == yj+j))
                     {
-                    alertcol()
+                    alertcol(moto_m)
                         break;
                     }
                     // svgContainer.append("rect").attr("x", x+i).attr("y", yi+j).attr("width", 1).attr("height", 1).attr("fill", "lime");
@@ -395,9 +403,9 @@ function collision(moto_m)
                 for (let j = 0; j < jmax; j+=PL_L)
                 {
                    
-                    if(pl.isMur(x-i,yi+j))
+                    if(pl.isMur(x-i,yi+j) || (moto_m1.X == x-i && moto_m1.Y == yi+j))
                     {
-                    alertcol()
+                    alertcol(moto_m)
                         break;
                     }
                     //  svgContainer.append("rect").attr("x", x-i).attr("y", yi+j).attr("width", 1).attr("height", 1).attr("fill", "purple");
@@ -432,7 +440,7 @@ function collision(moto_m)
               {
                   if(pl.isMur(x2+j*bidule+i*bidule,y2-j*bidule))
                   {
-                     alertcol()
+                     alertcol(moto_m)
                       break;
                   }
                   
@@ -441,7 +449,7 @@ function collision(moto_m)
 
               if(pl.isMur(x2+2*boui+i*bidule , y2-2*boui+i*bidule))
                   {
-                      alertcol()
+                      alertcol(moto_m)
                       break;
                   }
             //svgContainer.append("rect").attr("x", x2+2*boui+i*bidule).attr("y", y2-2*boui+i*bidule).attr("width", 1).attr("height", 1).attr("fill", "green");
@@ -471,7 +479,7 @@ function collision(moto_m)
                 
                     if(pl.isMur(x2+j*bidule-i*bidule,y2-j*bidule+i*bidule))
                     {
-                        alertcol()
+                        alertcol(moto_m)
                         break;
                     }
                     
@@ -480,7 +488,7 @@ function collision(moto_m)
 
                 if(pl.isMur(x2+2*boui-i*bidule,y2+2*boui+i*bidule))
                     {
-                        alertcol()
+                        alertcol(moto_m)
                         break;
                     }
                 // svgContainer.append("rect").attr("x", x2+2*boui-i*bidule).attr("y", y2+2*boui+i*bidule).attr("width", 1).attr("height", 1).attr("fill", "blue");
@@ -511,7 +519,7 @@ function collision(moto_m)
                  
                   if(pl.isMur(x2+j*bidule+i*bidule,y2-j*bidule-i*bidule))
                   {
-                     alertcol()
+                     alertcol(moto_m)
                       break;
                   }
                   
@@ -520,7 +528,7 @@ function collision(moto_m)
 
               if(pl.isMur(x2+2*boui+i*bidule,y2+2*boui-i*bidule))
                   {
-                      alertcol()
+                      alertcol(moto_m)
                       break;
                   }
             //   svgContainer.append("rect").attr("x", x2+2*boui+i*bidule).attr("y", y2+2*boui-i*bidule).attr("width", 1).attr("height", 1).attr("fill", "red");
@@ -551,7 +559,7 @@ function collision(moto_m)
                
                 if(pl.isMur(x2+j*bidule-i*bidule,y2-j*bidule-i*bidule))
                 {
-                    alertcol()
+                    alertcol(moto_m)
                     break;
                 }
                 
@@ -560,7 +568,7 @@ function collision(moto_m)
 
             if(pl.isMur(x2+2*boui-i*bidule,y2+2*boui-i*bidule))
                 {
-                    alertcol()
+                    alertcol(moto_m)
                     break;
                 }
             //  svgContainer.append("rect").attr("x", x2+2*boui-i*bidule).attr("y", y2-2*boui-i*bidule).attr("width", 1).attr("height", 1).attr("fill", "yellow");
@@ -744,13 +752,18 @@ function avancedefault(moto_m){
 
 /**
  * alertcol()
- * ne prend aucun paramètre
+ * prend deux paramètres : moto_c qui est la moto pour laquelle on detecte la collsion et indice qui aura comme valeur 1(collision avec un mur) ou -1 (collision avec un joueur egalite)
  * résultat : alerte le joueur qu'il y a eu une collision
  */
-function alertcol()
+function alertcol(moto_c, indice)
 {
     //alert("collision");
-    socket.emit('collision',IndRoom);   
+    if(indice < 0){
+        socket.emit('collision', indice, IndRoom);
+    }else{
+        socket.emit('collision',moto_c.id_player,IndRoom);
+    }
+    
 }
 
 /**
