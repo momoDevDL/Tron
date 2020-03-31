@@ -11,7 +11,7 @@ $res2= $dbh->query("SELECT * FROM UTILISATEUR WHERE PSEUDO='$PSEUDO_ADVERSAIRE'"
 
 foreach($res as $row){
 
-  $email = $row['EMAIL'];https://www.tutorialspoint.com/json/json_php_example.htm
+  $email = $row['EMAIL'];
   $role = $row['ROLE'];
   $niveau = $row['NIVEAU'];
   $mmr= $row['MMR'];
@@ -29,6 +29,8 @@ foreach($res2 as $row){
   $couleurM_adv = $row['COULEUR_MECHANT'];
   $avatar_adv = $row['AVATAR'];
 } 
+
+
 echo   "
 <div id='User-dashboard'>
 <p id='logo'>LCF</p>
@@ -56,8 +58,15 @@ echo   "
 
 <div id='game'>
 
-      <div id='damier'>
-      </div>
+<div id='tmp'>Temps de Jeu :</div>
+
+<div id='damier'></div>
+
+<label id='etatSpace'></label> 
+<div id='timer_partie'>Debut de la Manche dans : </div>
+<div id='nbr_manche'>Nbre de manche : </div>
+<div id='score'>Score : </div>
+
 
      <div id='User-info'>
 
