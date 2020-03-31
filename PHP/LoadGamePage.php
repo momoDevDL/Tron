@@ -66,11 +66,11 @@ echo   "
           <div id='avatar'>
               <img src=".$avatar." width='100px' height='100px'>
               </div>
-              <div class='niveauMmr'>
+              <div class='mmr'>
                   <p>Niveau : $niveau</p>
-              <p>MMR :$mmr</p>
+                  <p>MMR :$mmr</p>
               </div>
-              <div id='info-profile'>
+              <div id='info'>
               <p id='pseudo'>Pseudo : $PSEUDO</p>
               </div>
           </div>
@@ -80,11 +80,11 @@ echo   "
           <div id='avatar'>
               <img src=".$avatar_adv." width='100px' height='100px'>
               </div>
-              <div class='niveauMmr'>
+              <div class='mmr'>
                   <p>Niveau : $niveau_adv</p>
-              <p>MMR :$mmr_adv</p>
+                  <p>MMR :$mmr_adv</p>
               </div>
-              <div id='info-profile'>
+              <div id='info'>
               <p id='pseudo'>Pseudo : $PSEUDO_ADVERSAIRE</p>
               </div>
           </div>

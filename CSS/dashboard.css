@@ -494,26 +494,7 @@ padding-bottom: 12px;
   }
   
  
-  #game{
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      height: 100vh;
-      width: 100%;
-      justify-content: start;
-      background-color: #181818; 
-  }
-
-  #damier{
-      height: 100%;
-      width: 75%;
-      margin-top: 50px;
-      margin-bottom: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-  }
-
+ 
   svg{
 
       position: relative;
@@ -522,53 +503,74 @@ padding-bottom: 12px;
 
   }
 
-  #User-info{
-      width: 25%;
-      height: 100%;
-      background-color:transparent;
-  }
-
-  #homePlayerInfo{
+  
+ #game{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: 100vh;
     width: 100%;
-    height:max-content;
-    background-color: #bbb;
-    padding-top: 50px;
-  }
+    justify-content: start;
+    background-color: #181818; 
+}
 
-  #AwayPlayerInfo{
-    width: 100%;
-    height: max-content;
-    background-color:chocolate;
-    padding-top: 50px;
-  }
+#damier{
+    height: 100%;
+    width: 75%;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#User-info{
+    width: 25%;
+    height: 100%;
+    background-color:transparent;
+    position:relative;
+}
+
+#homePlayerInfo{
+  width: 100%;
+  height:max-content;
+  background-color: #bbb;
+  padding-top: 50px;
+}
+
+#AwayPlayerInfo{
+  width: 100%;
+  height: max-content;
+  background-color:chocolate;
+  padding-top: 50px;
+}
 
 
 #User-info #avatar{
-    width: 100%;
-    height: max-content;
+  width: 100%;
+  height: max-content;
 }
 
 #User-info #avatar img{
-    width: 150px;
-    height: 150px;
-    /*border: 6px solid rgb(0, 247, 255);
-    border-left: none;
-    border-top: none;*/
-    border: none;
-    border-radius: 100px;
-    position: relative;
+  width: 150px;
+  height: 150px;
+  border: 6px solid rgb(0, 247, 255);
+  border-radius: 100px;
+  position: relative;
 }
-#User-info .niveauMmr{
-    width: max-content;
-    height: max-content;
-    position: relative;
-    bottom: 60%;
-    left: 50%;
-    text-decoration: underline;
+
+#User-info .mmr{
+  width: max-content;
+  height: max-content;
+  position: relative;
+  left: 50%;
+  bottom: 70%;
 }
-#User-info #info-profile{
-    width:max-content;
-    position: relative;
-    left: 10%;
-    bottom: 20%;
+
+#User-info #info{
+  width: max-content;
+  height: max-content;
+  position: relative;
+  left: 5%;
+  bottom: 30%;
 }

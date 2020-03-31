@@ -98,7 +98,7 @@ $(document).ready(function(){
 
        
 
-        socket = io('http://10.138.123.54:3333/first-namespace');
+        socket = io('http://localhost:3333/first-namespace');
 
 
       function DemareJeu(id_,svgContainer){
