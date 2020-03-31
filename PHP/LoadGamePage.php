@@ -29,6 +29,8 @@ foreach($res2 as $row){
   $couleurM_adv = $row['COULEUR_MECHANT'];
   $avatar_adv = $row['AVATAR'];
 } 
+
+
 echo   "
 <div id='User-dashboard'>
 <p id='logo'>LCF</p>
@@ -56,8 +58,15 @@ echo   "
 
 <div id='game'>
 
-      <div id='damier'>
-      </div>
+<div id='tmp'>Temps de Jeu :</div>
+
+<div id='damier'></div>
+
+<label id='etatSpace'></label> 
+<div id='timer_partie'>Debut de la Manche dans : </div>
+<div id='nbr_manche'>Nbre de manche : </div>
+<div id='score'>Score : </div>
+
 
      <div id='User-info'>
 
@@ -81,8 +90,8 @@ echo   "
               <img src=".$avatar_adv." width='100px' height='100px'>
               </div>
               <div class='niveauMmr'>
-                  <p>Niveau : $niveau_adv</p>
-              <p>MMR :$mmr_adv</p>
+                  <p>Niveau :". $niveau_adv."</p>
+              <p>MMR :".$mmr_adv."</p>
               </div>
               <div id='info-profile'>
               <p id='pseudo'>Pseudo : $PSEUDO_ADVERSAIRE</p>
