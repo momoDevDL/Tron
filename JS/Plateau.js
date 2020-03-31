@@ -44,7 +44,7 @@ this.colorAire = function(x,y,L,l,color,etat)//Colore une aire de L*l (en nb de 
             {
                "x" : xi,
                "y" : y,
-               "etat" : etat
+               "etat" : "mur"
             }
            }
            
@@ -58,7 +58,6 @@ this.colorAire = function(x,y,L,l,color,etat)//Colore une aire de L*l (en nb de 
                 "x" : xi,
                 "y" : y,
                 "etat" : etat
-       
              }
           }
            
