@@ -106,13 +106,15 @@ $(document).ready(function(){
                 btn.setAttribute("id","btn_ready");
                 btn.setAttribute("onclick","socket.emit('joueur_pret')");
                 btn.innerHTML = 'Are You Ready ?';
-                document.body.appendChild(btn);
+                var elem = document.getElementById('damier');
+                elem.appendChild(btn);
         }
 
 
         function GenerPlateau(){
             document.getElementById('nbr_manche').innerHTML = nbrManche;
-            document.getElementById('score').innerHTML = score;
+            document.getElementById('playerOne').innerHTML = score;
+            document.getElementById('playerTwo').innerHTML = 0;
             var elem = document.getElementById("btn_ready");
             elem.parentNode.removeChild(elem);
             pl = new Plateau();
