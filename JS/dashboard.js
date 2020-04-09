@@ -102,11 +102,11 @@ $(document).ready(function(){
         socket = io('http://localhost:3333/first-namespace');
 
         function BoutonReady(){
-            var btn = document.createElement("button");
-            btn.setAttribute("id","btn_ready");
-            btn.setAttribute("onclick","socket.emit('joueur_pret')");
-            btn.innerHTML = 'Are You Ready ?';
-            document.body.appendChild(btn);
+                var btn = document.createElement("button");
+                btn.setAttribute("id","btn_ready");
+                btn.setAttribute("onclick","socket.emit('joueur_pret')");
+                btn.innerHTML = 'Are You Ready ?';
+                document.body.appendChild(btn);
         }
 
 
@@ -143,10 +143,16 @@ $(document).ready(function(){
            
            PriorityClient = data.priorite;
            Pseudo = data.pseudo ;
-           
+           console.log("this is data : " +data);
+           console.log("this is data priority : " +PriorityClient);
+           console.log("this is data pseudo : " +Pseudo);
+        console.log(Pseudo);
 
        },
        complete:function(data){
+        console.log("after lol");
+        console.log(data);
+
        },
        error: function(data){
                console.log('error');
@@ -158,18 +164,20 @@ $(document).ready(function(){
         
       socket.on('connect',function(){
         socket.emit('envoiDePriorite',PriorityClient);
-        //socket.emit('envoiPseudo',Pseudo);
+        socket.emit('envoiPseudo',Pseudo);
       });
 
       socket.emit('CommencerRecherche');
 
       socket.on('connectedToRoom',function(indiceRoomS){
-        //console.log("You Are Connected to Room " + indiceRoomS);
+        console.log("You Are Connected to Room " + indiceRoomS);
         indiceRoom = indiceRoomS ;
-        //console.log(indiceRoom);
+        console.log(indiceRoom);
       });
 
       socket.on('CommenceBientot',function(indiceRoom,pseudos){
+        console.log("pseudo 2 est de :" + pseudos.p2);
+        console.log("pseudo 1 est de :" + pseudos.p1);
 
         $("body #rechercheMatch").append("<p id='PartieEnConst'>Votre partie va bientot commencer</p>");
 
@@ -179,13 +187,14 @@ $(document).ready(function(){
             'color':'white' 
         });
 
+        pseudoAdv = (pseudos.p2 == Pseudo ? pseudos.p1 : pseudos.p2);
+
         $.ajax({
             url : "LoadGamePage.php",
             method : "POST",
             data : "pseudoAdv=" + pseudoAdv,
             dataType: "text",
             success:function(data){
-
                 //console.log("this is data " +data);
                 $('#main').html(data);
 
