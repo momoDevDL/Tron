@@ -136,7 +136,7 @@ et sinon inclu*/
    
     socket.on('joueur_pret', function(){
         presD += 1;
-        if(presD ==2) {
+        if(presD == 2) {
             console.log("un des joueur est pret");
             socket.emit('generer_partie');
             presD = 0;

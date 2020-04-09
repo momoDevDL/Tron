@@ -106,13 +106,13 @@ $(document).ready(function(){
                 btn.setAttribute("id","btn_ready");
                 btn.setAttribute("onclick","socket.emit('joueur_pret')");
                 btn.innerHTML = 'Are You Ready ?';
-                document.body.appendChild(btn);
+                $('#damier').append(btn);
         }
 
 
         function GenerPlateau(){
-            document.getElementById('nbr_manche').innerHTML = nbrManche;
-            document.getElementById('score').innerHTML = score;
+           // document.getElementById('nbr_manche').innerHTML = nbrManche;
+            //document.getElementById('score').innerHTML = score;
             var elem = document.getElementById("btn_ready");
             elem.parentNode.removeChild(elem);
             pl = new Plateau();
@@ -146,7 +146,7 @@ $(document).ready(function(){
            console.log("this is data : " +data);
            console.log("this is data priority : " +PriorityClient);
            console.log("this is data pseudo : " +Pseudo);
-        console.log(Pseudo);
+            console.log(Pseudo);
 
        },
        complete:function(data){
