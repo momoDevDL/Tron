@@ -34,17 +34,38 @@ foreach($res2 as $row){
 echo   "
 <div id='User-dashboard'>
 <p id='logo'>LCF</p>
-<p id='timer_partie'>Temps de jeux : </p>
-<p id='nbr_manche'>nbr de manche : </p>
-<p id='tmp'>Temp de partie </p>
 <span id='ScoreBanner'>
   <h3 id='score'> SCORE : </h3>
+  <span id='gameInfo_firstRow'>
+
+    <div id='timer'>
+      <h5>Decompte Demarrage :</h5>
+      <p id='timer_partie'> 00:00</p>
+    </div>
+
+    <div id='manche'>
+    <h5>nbr de manche :</h5>
+    <p id='nbr_manche'> 00:00 </p>
+    </div>
+  </span>
+
+  <span id='gameInfo_SecondRow'>
+
+    <div id='time'>
+    <h5>Temp de partie</h5>
+    <p id='tmp'> 00:00 </p>
+    </div>
+     
+  </span>
+
   <div id='container'>
-    
+  
       <div id='playerOne'>
+      0
      </div>
     
       <div id='playerTwo'>
+      0
      </div>
     
   </div>
@@ -58,7 +79,6 @@ echo   "
 </div>
 
 <div id='game'>
-
 
 <div id='damier'></div>
 

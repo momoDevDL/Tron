@@ -12,10 +12,7 @@ const nsp = io.of('/first-namespace');
 serveur.listen(3333,function(){
     console.log("serveur est en ecoute sur le port num : "+ 3333);
 });
-/*
-app.get('/',function(req,res){
-    res.send('<h1>HEllo World</h1>');
-});*/
+
 
 var Rooms = []
 
@@ -25,7 +22,6 @@ var pseudoPlayer1 = null;
 var pseudoPlayer2 = null;
 var id = 0;
 var motoMouv;
-var score = [0,0];
 
 var presD = 0; // pour la fct socket 'joueur_pret'
 var pres = 0; // pour la fct socket 'CommencerPartie'
@@ -55,12 +51,7 @@ socket.on('envoiPseudo',function(data){
     console.log("this is pseudo1 : " +pseudoPlayer1 +  " /  and this is pseudo2 : " + pseudoPlayer2);
 });
  
-    //lors d'une collision un message est envoyé au client même et à l'autre client
- /*  socket.on('collision', function(message){
-        socket.emit('collision', 'vous etes en collision !');
-        socket.broadcast.emit('collision', 'l\'autre joueur est en collision');
-    });*/
-
+   
 
   /* Commencer la Recherche de joueur à la connection en regardant toutes les chambrescréant une nouvelle chambre
   dont il est membre s'il trouve pas un joueur qui matche avec ça priorité de recherche
@@ -108,7 +99,7 @@ et sinon inclu*/
     });
 
     if(!inseré){
-        Rooms.push({name:'room'+indiceInsertion , size:2,'remaining':2,Priority:'null', p1: pseudoPlayer1,p2:pseudoPlayer2,idPartie:'null'});
+        Rooms.push({name:'room'+indiceInsertion , size:2,remaining:2,Priority:'null', p1: pseudoPlayer1,p2:pseudoPlayer2,idPartie:'null', score:[0,0] });
         socket.join(Rooms[indiceInsertion].name);
         Rooms[indiceInsertion].remaining-- ;
         Rooms[indiceInsertion].Priority = Priority;
@@ -123,7 +114,7 @@ et sinon inclu*/
 
     socket.on('EnvoiIdPartieAutreJoueur',(id,indiceRoom)=>{
         Rooms[indiceRoom].idPartie = id ;
-        console.log("===============Envoi ID PArtie Autre Joueur =========\n");
+        console.log("===============Envoi ID Partie à l'Autre Joueur =========\n");
         console.log(Rooms[indiceRoom]);
         socket.to(Rooms[indiceRoom].name).emit('RecvIdPartie',id);
         
@@ -133,13 +124,20 @@ et sinon inclu*/
         id = id+1;
         socket.emit('id_joueur', id);
     });
-   
+
+    socket.on('couleurAdversaire', function(coul,indiceR){
+        console.log("========================"+coul+"================");
+        socket.to(Rooms[indiceR].name).emit('couleurAdv', coul);  
+
+    });
+
     socket.on('joueur_pret', function(){
+        console.log("un des joueur est pret");
         presD += 1;
         if(presD == 2) {
-            console.log("un des joueur est pret");
-            socket.emit('generer_partie');
+            console.log("les des joueurs sont prets");
             presD = 0;
+            socket.emit('generer_partie');
         }
         
     });
@@ -193,13 +191,22 @@ et sinon inclu*/
     });
     //si un joueur bouge on l'envoi à tout les clients
     socket.on('joueur_bouge', function(moto,indice){
-        socket.to(Rooms[indice].name).emit('update_joueur', moto);
+        socket.to(Rooms[indice].name).emit('update_joueur', moto);  
         //socket.broadcast.emit('update_joueur', moto);
     });
 
+
+    socket.on('miseAjourScore', function(indiceRoom,sc,id_joueur){
+        //score[id_joueur-1] = sc:
+        Rooms[indiceRoom].score[id_joueur-1] = sc;
+        nsp.in(Rooms[indiceRoom].name).emit('nouveauScore',Rooms[indiceRoom].score[0], Rooms[indiceRoom].score[1]);
+    });
+
+
     socket.on('score', function(sc, id_joueur, indiceRoom){
-        score[id_joueur-1] = sc;
-        nsp.in(Rooms[indiceRoom].name).emit('vainceur',score[0], score[1]);
+        //score[id_joueur-1] = sc:
+        Rooms[indiceRoom].score[id_joueur-1] = sc;
+        nsp.in(Rooms[indiceRoom].name).emit('vainceur',Rooms[indiceRoom].score[0], Rooms[indiceRoom].score[1]);
     });
 
 

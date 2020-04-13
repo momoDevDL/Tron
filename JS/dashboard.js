@@ -9,7 +9,9 @@
     
     let moto1;
     let moto2;
-    let score = 0;
+    let couleurG;
+    let couleurM;
+    let score = [ 0 , 0 ];
     
     var socket;
     var timerMur = 0;
@@ -20,6 +22,7 @@
     var ID_Partie;
     var pseudoAdv;
     var nbrManche = NBR_MANCHE;
+    
 
 $(document).ready(function(){
 
@@ -73,6 +76,29 @@ $(document).ready(function(){
                     
             });               
     }); 
+
+   // $('body').on('load','#main',function(){
+        $.ajax({
+        url : "fetch_User_Colors.php",
+        method : "POST",
+        dataType: "json",
+        success:function(data){
+        console.log(data);
+        couleurG = data[0];
+        couleurM = data[1];
+        console.log(couleurG);
+        console.log(couleurM);
+        },
+        complete:function(data){
+            console.log("lol");
+            console.log(data);
+        },
+        error: function(data){
+                console.log('error');
+                console.log(data);
+        }
+    });
+//});
     
     
 
@@ -113,8 +139,12 @@ $(document).ready(function(){
 
         function GenerPlateau(){
             document.getElementById('nbr_manche').innerHTML = nbrManche;
-            document.getElementById('playerOne').innerHTML = score;
-            document.getElementById('playerTwo').innerHTML = 0;
+           
+            document.getElementById('playerOne').innerHTML = score[0];
+          
+            document.getElementById('playerTwo').innerHTML = score[1];
+            
+            
             var elem = document.getElementById("btn_ready");
             elem.parentNode.removeChild(elem);
             pl = new Plateau();
@@ -199,7 +229,7 @@ $(document).ready(function(){
             success:function(data){
                 //console.log("this is data " +data);
                 $('#main').html(data);
-
+                
             },
             complete:function(data){
                 socket.emit('demande_id');
@@ -246,14 +276,52 @@ $(document).ready(function(){
         });
       
         socket.on("RecvIdPartie",function(id){
-            console.log("l'id reçu par l'autre joueur est : "+ id );
+            console.log("l'id de la partie reçu par l'autre joueur est : "+ id );
             ID_Partie = id ;
         });
         
          //nous donne l'id du joueur pour la partie en cours (sert pour initialiser la moto)
         socket.on('id_joueur', function(id){
             ID_joueur = id;
+            if(ID_joueur == 1){
+                $('#playerOne').css(
+                    {
+                        'background-color':couleurG
+                    }
+                );
+                $('#homePlayerInfo').css(
+                    {
+                        'background-color':couleurG
+                    }
+                );
+                socket.emit('couleurAdversaire',couleurG,indiceRoom);
+            }else{
+                $('#playerOne').css(
+                    {
+                        'background-color':couleurM
+                    }
+                );
+                $('#homePlayerInfo').css(
+                    {
+                        'background-color':couleurM
+                    }
+                );
+                socket.emit('couleurAdversaire',couleurM,indiceRoom);
+            }
             //console.log("id joueur est : "+ id);
+        });
+
+        socket.on('couleurAdv',function(coul){
+            $('#playerTwo').css(
+                {
+                    'background-color':coul
+                }
+            );
+            $('#AwayPlayerInfo').css(
+                {
+                    'background-color':coul
+                }
+            );
         });
 
         socket.on('generer_partie',function(){
@@ -293,10 +361,12 @@ $(document).ready(function(){
         socket.on('fin_manche', function(message){
             console.log("=========================FIN DE MANCHE===============  " + message);
             if(moto1.id_player != message){
-                score += 20;
+                score[moto1.id_player-1]+= 20;
+                socket.emit('miseAjourScore',indiceRoom,score[moto1.id_player-1],ID_joueur);
             }else{
                 if(message < 0){
-                    score+=10;
+                    //score+=10;
+                    //socket.emit('miseAjourScore',indiceRoom,score,ID_joueur);
                 }
             }
             moto1 = null;
@@ -307,7 +377,13 @@ $(document).ready(function(){
             elem.parentNode.removeChild(elem);
         });
 
-
+        socket.on("nouveauScore",function(sc1,sc2){
+            console.log("============== mise a jour de score ============");
+            console.log(score);
+            score[0] = sc1 ;
+            score[1] = sc2 ;
+            console.log(score);
+        });
          /**
          lorsque on recoit le message du serveur comme quoi un joueur à bougé deux cas : 
          premier cas c'est nous alors on Update juste les deux motos
@@ -346,23 +422,59 @@ $(document).ready(function(){
         });
 
         socket.on('vainceur', function(sc1, sc2){
+            let gagnant ='null';
+            let sc = 0 ;
             if(ID_joueur==1){
                 if(sc1 > sc2){
                     document.getElementById('score').innerHTML = "Vous avez Gagnez !!";
+                    gagnant = Pseudo;
+                    sc = sc1;
                 }else if(sc1 < sc2){
                     document.getElementById('score').innerHTML = "Vous avez perdu...";
+                    gagnant = pseudoAdv;
+                    sc = sc2;
                 }else{
                     document.getElementById('score').innerHTML = "Egalité !!!";
                 }
             }else{
                 if(sc1 < sc2){
                     document.getElementById('score').innerHTML = "Vous avez Gagnez !!";
+                    gagnant = Pseudo;
+                    sc = sc2 ;
                 }else if(sc1 > sc2){
                     document.getElementById('score').innerHTML = "Vous avez perdu...";
+                    gagnant = pseudoAdv ;
+                    sc = sc1 ;
                 }else{
                     document.getElementById('score').innerHTML = "Egalité !!!";
                 }
             }
+
+            console.log(sc);
+
+            $.ajax({
+                url : "InsererGagnant.php",
+                method : "POST",
+                data : {vainceur:gagnant,idPartie:ID_Partie,scorefinal:sc},
+                dataType: "text",
+                
+                success:function(data){
+                    console.log('success');
+                    console.log('data');
+                },
+
+                complete:function(data){
+                    console.log("La BD est a jour : gagnant inséré ");
+                    console.log(data);
+                },
+
+                error: function(data){
+                        console.log('error');
+                        console.log(data);
+                }
+                
+            });
+
         });
      
     });
