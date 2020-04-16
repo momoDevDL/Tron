@@ -66,8 +66,11 @@ et sinon inclu*/
                     socket.join(element.name);
                     element.remaining-- ;
                     element.Priority = Priority;
+                    Priority = 'null';
                     element.p2 = pseudoPlayer2;
                     inseré = true;
+                    pseudoPlayer2 = null;
+                    pseudoPlayer1 = null;
                     nsp.in(element.name).emit('connectedToRoom',element.position,element.name);
                     nsp.in(element.name).emit('CommenceBientot',element.position,{p2:element.p2,p1:element.p1} );
                     socket.to(element.name).emit('BeginInsertPartie',{p2:element.p2,p1:element.p1});
@@ -82,8 +85,11 @@ et sinon inclu*/
                     socket.join(element.name);
                     element.remaining-- ;
                     element.Priority = Priority;
+                    Priority = 'null';
                     element.p2 = pseudoPlayer2;
                     inseré = true;
+                    pseudoPlayer2 = null;
+                    pseudoPlayer1 = null;
                     //enoyer au deux joueur le numero de la chambre dans laquelle ils joueront
                     nsp.in(element.name).emit('connectedToRoom',element.position,element.name);
                     //envoyer au deux joueur les pseudos pour et commencer le chargement de la page partie
@@ -101,12 +107,13 @@ et sinon inclu*/
     if(!inseré){
         console.log("INDICE INSERTION")
         indiceNouvelleRoom = Rooms.length;
-        Rooms.push({name:'room'+indiceInsertion , position:indiceNouvelleRoom ,size:2,remaining:2,Priority:'null', p1: pseudoPlayer1,p2:'null',idPartie:-1, score:[0,0] });
+        Rooms.push({name:'room'+indiceInsertion , position:indiceNouvelleRoom ,size:2,remaining:2,Priority:'null', p1:'null',p2:'null',idPartie:-1, score:[0,0] });
         socket.join(Rooms[indiceNouvelleRoom].name);
         Rooms[indiceNouvelleRoom].remaining-- ;
         Rooms[indiceNouvelleRoom].Priority = Priority;
+        Priority = 'null';
         Rooms[indiceNouvelleRoom].p1 = pseudoPlayer1;
-        inseré = true;  
+        inseré = true;
         nsp.in(Rooms[indiceNouvelleRoom].name).emit('connectedToRoom',indiceNouvelleRoom,Rooms[indiceNouvelleRoom].name);
         console.log('===============room Created================="=');
     }
@@ -235,10 +242,26 @@ et sinon inclu*/
         console.log("================== Joueur Veut REJOUER  ===============\n");
         console.log(idP);
         console.log(iR);
-        if(Rooms[iR]){
+        
+        if( typeof Rooms[iR] !== 'undefined'){
+            console.log("LA ROOM EXISTE");
             if(Rooms[iR].idPartie == idP){
+                console.log("Les ID SONT COMPATIBLES");
                 Rooms.splice(iR,1);
+
+                for(let i = iR ; i < Rooms.length;i++){
+
+                    Rooms[i].position -= 1;
+                    nsp.in(Rooms[i].name).emit("connectedToRoom",Rooms[i].position,Rooms[i].name);
+    
+                  }
+                console.log(Rooms);
+            }else{
+                console.log("Les ID SONT INCOMPATIBLES");
             }
+            
+        }else{
+            console.log("LA ROOM N'EXISTE PAS")
         }
         socket.emit("Replay");
     });
@@ -252,16 +275,19 @@ et sinon inclu*/
             if(Rooms[iR].idPartie == idP){
                 console.log("Les ID SONT COMPATIBLES");
                 Rooms.splice(iR,1);
-                Rooms.forEach(element =>{
-                    console.log(element);
-                    if(element >= iR){
-                        element.position -= 1;
-                        nsp.in(element.name).emit("connectedToRoom",element.position,element.name);
-                    }
-                });
+
+                for(let i = iR ; i < Rooms.length;i++){
+
+                    Rooms[i].position -= 1;
+                    nsp.in(Rooms[i].name).emit("connectedToRoom",Rooms[i].position,Rooms[i].name);
+    
+                  }
+
                 console.log(Rooms);
+            }else{
+                console.log("Les ID SONT INCOMPATIBLES");
             }
-            console.log("Les ID SONT INCOMPATIBLES");
+            
         }else{
             console.log("LA ROOM N'EXISTE PAS")
         }
