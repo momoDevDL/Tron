@@ -32,6 +32,15 @@ foreach($res2 as $row){
 
 
 echo   "
+<div id='FinDePartiePopUp' style='display:none;'>
+    <div id='popUp'>
+      <h3 id='popUpTitle' ></h3>
+      <div id='popUpAction'>
+      <button class='btn btn-primary' id='rejouer'>Rejouer</button>
+      <button class='btn btn-secondary' id='quitter'>Quitter</button>
+      </div>
+    </div>
+</div>
 <div id='User-dashboard'>
 <p id='logo'>LCF</p>
 <span id='ScoreBanner'>
@@ -80,7 +89,7 @@ echo   "
 
 <div id='game'>
 
-<div id='damier'></div>
+<div id='damier'> </div>
 
      <div id='User-info'>
 

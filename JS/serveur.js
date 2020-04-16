@@ -9,17 +9,17 @@ var serveur = require('http').createServer(app);
 var io = require("socket.io")(serveur);
 const nsp = io.of('/first-namespace');
 
-serveur.listen(3333,function(){
-    console.log("serveur est en ecoute sur le port num : "+ 3333);
+serveur.listen(2589,function(){
+    console.log("serveur est en ecoute sur le port num : "+ 2589);
 });
 
 
 var Rooms = []
-
-var indiceInsertion = 0;
-var Priority ;
 var pseudoPlayer1 = null;
 var pseudoPlayer2 = null;
+var indiceInsertion = 0;
+var Priority ;
+
 var id = 0;
 var motoMouv;
 
@@ -31,9 +31,9 @@ var coll = 0;
 
 nsp.on('connection', function (socket) {
 
-
+    
     var inseré = false ;
-   console.log('connetion');
+    console.log('connetion');
   
    
    socket.on('envoiDePriorite',function(data){
@@ -68,8 +68,8 @@ et sinon inclu*/
                     element.Priority = Priority;
                     element.p2 = pseudoPlayer2;
                     inseré = true;
-                    nsp.in(element.name).emit('connectedToRoom',indiceInsertion);
-                    nsp.in(element.name).emit('CommenceBientot',indiceInsertion,{p2:element.p2,p1:element.p1} );
+                    nsp.in(element.name).emit('connectedToRoom',element.position,element.name);
+                    nsp.in(element.name).emit('CommenceBientot',element.position,{p2:element.p2,p1:element.p1} );
                     socket.to(element.name).emit('BeginInsertPartie',{p2:element.p2,p1:element.p1});
                 }
             }
@@ -85,9 +85,9 @@ et sinon inclu*/
                     element.p2 = pseudoPlayer2;
                     inseré = true;
                     //enoyer au deux joueur le numero de la chambre dans laquelle ils joueront
-                    nsp.in(element.name).emit('connectedToRoom',indiceInsertion);
+                    nsp.in(element.name).emit('connectedToRoom',element.position,element.name);
                     //envoyer au deux joueur les pseudos pour et commencer le chargement de la page partie
-                    nsp.in(element.name).emit('CommenceBientot',indiceInsertion,{p2:element.p2,p1:element.p1});
+                    nsp.in(element.name).emit('CommenceBientot',element.position,{p2:element.p2,p1:element.p1});
                     //envoyer à l'autre joueur deja present dans la room les pseudos pour inserer la partie dans la BD
                     socket.to(element.name).emit('BeginInsertPartie',{p2:element.p2,p1:element.p1});
                 }
@@ -99,13 +99,15 @@ et sinon inclu*/
     });
 
     if(!inseré){
-        Rooms.push({name:'room'+indiceInsertion , size:2,remaining:2,Priority:'null', p1: pseudoPlayer1,p2:pseudoPlayer2,idPartie:'null', score:[0,0] });
-        socket.join(Rooms[indiceInsertion].name);
-        Rooms[indiceInsertion].remaining-- ;
-        Rooms[indiceInsertion].Priority = Priority;
-        Rooms[indiceInsertion].p1 = pseudoPlayer1;
-        inseré = true;
-        nsp.in(Rooms[indiceInsertion].name).emit('connectedToRoom',indiceInsertion);
+        console.log("INDICE INSERTION")
+        indiceNouvelleRoom = Rooms.length;
+        Rooms.push({name:'room'+indiceInsertion , position:indiceNouvelleRoom ,size:2,remaining:2,Priority:'null', p1: pseudoPlayer1,p2:'null',idPartie:-1, score:[0,0] });
+        socket.join(Rooms[indiceNouvelleRoom].name);
+        Rooms[indiceNouvelleRoom].remaining-- ;
+        Rooms[indiceNouvelleRoom].Priority = Priority;
+        Rooms[indiceNouvelleRoom].p1 = pseudoPlayer1;
+        inseré = true;  
+        nsp.in(Rooms[indiceNouvelleRoom].name).emit('connectedToRoom',indiceNouvelleRoom,Rooms[indiceNouvelleRoom].name);
         console.log('===============room Created================="=');
     }
 
@@ -122,7 +124,13 @@ et sinon inclu*/
 
     socket.on('demande_id',function(){
         id = id+1;
-        socket.emit('id_joueur', id);
+        idc = id;
+        if(id == 2){
+            id = 0;
+        }
+
+        socket.emit('id_joueur', idc);
+        
     });
 
     socket.on('couleurAdversaire', function(coul,indiceR){
@@ -217,11 +225,56 @@ et sinon inclu*/
    });
 
 
+   
+
+    socket.on('FinDePartie',()=>{
+        socket.emit("QuitterOuRejouer");
+    });
+
+    socket.on('Rejouer',function(idP,iR){
+        console.log("================== Joueur Veut REJOUER  ===============\n");
+        console.log(idP);
+        console.log(iR);
+        if(Rooms[iR]){
+            if(Rooms[iR].idPartie == idP){
+                Rooms.splice(iR,1);
+            }
+        }
+        socket.emit("Replay");
+    });
+
+    socket.on('Quitter',function(idP,iR){
+        console.log("================== Joueur A QUITTER ===============\n");
+        console.log(idP);
+        console.log(iR);
+        if( typeof Rooms[iR] !== 'undefined'){
+            console.log("LA ROOM EXISTE");
+            if(Rooms[iR].idPartie == idP){
+                console.log("Les ID SONT COMPATIBLES");
+                Rooms.splice(iR,1);
+                Rooms.forEach(element =>{
+                    console.log(element);
+                    if(element >= iR){
+                        element.position -= 1;
+                        nsp.in(element.name).emit("connectedToRoom",element.position,element.name);
+                    }
+                });
+                console.log(Rooms);
+            }
+            console.log("Les ID SONT INCOMPATIBLES");
+        }else{
+            console.log("LA ROOM N'EXISTE PAS")
+        }
+        socket.emit("redirectToDashBoard");
+    });
+
+    
     socket.on('disconnect',function(){
         console.log('disconnected');
     });
 
 });
+
 
 
 function TimerJeu(IR ,tempPartie, temp_refresh){

@@ -26,8 +26,6 @@
 
 $(document).ready(function(){
 
-
-
     $('body').on("click","#modifyProfile",function(){
         let niveau = $('.niveauMmr p:first').html();
         let mmr =$('.niveauMmr p:last').html();
@@ -125,7 +123,7 @@ $(document).ready(function(){
 
        
 
-        socket = io('http://localhost:3333/first-namespace');
+        socket = io('http://localhost:2589/first-namespace');
 
         function BoutonReady(){
                 var btn = document.createElement("button");
@@ -139,11 +137,13 @@ $(document).ready(function(){
 
         function GenerPlateau(){
             document.getElementById('nbr_manche').innerHTML = nbrManche;
-           
+           if(ID_joueur == 1){
             document.getElementById('playerOne').innerHTML = score[0];
-          
             document.getElementById('playerTwo').innerHTML = score[1];
-            
+           }else{
+            document.getElementById('playerOne').innerHTML = score[1];
+            document.getElementById('playerTwo').innerHTML = score[0];
+           }
             
             var elem = document.getElementById("btn_ready");
             elem.parentNode.removeChild(elem);
@@ -160,9 +160,7 @@ $(document).ready(function(){
             //console.log(svgContainer);
             InitGame(ID_joueur, indiceRoom);
             defEvent(moto1);
-
             //console.log("l'indice de la room est :" + indiceRoom);
-
             socket.emit('envoi_de_notre_moto',moto1,indiceRoom);
         }
 
@@ -201,8 +199,8 @@ $(document).ready(function(){
 
       socket.emit('CommencerRecherche');
 
-      socket.on('connectedToRoom',function(indiceRoomS){
-        console.log("You Are Connected to Room " + indiceRoomS);
+      socket.on('connectedToRoom',function(indiceRoomS,NomRoom){
+        console.log("You Are Connected to Room " + NomRoom);
         indiceRoom = indiceRoomS ;
         console.log(indiceRoom);
       });
@@ -243,7 +241,7 @@ $(document).ready(function(){
         });
 
 
-        socket.emit("InsererPartie",indiceRoom);
+        
        
         
         console.log("===========================LA PARTIE DOIT COMMENCER MNT===================");
@@ -425,28 +423,30 @@ $(document).ready(function(){
             let gagnant ='null';
             let sc = 0 ;
             if(ID_joueur==1){
+                document.getElementById('FinDePartiePopUp').style.display = 'block';
                 if(sc1 > sc2){
-                    document.getElementById('score').innerHTML = "Vous avez Gagnez !!";
+                    document.getElementById('popUpTitle').innerHTML = "Vous avez Gagnez !!";
                     gagnant = Pseudo;
                     sc = sc1;
                 }else if(sc1 < sc2){
-                    document.getElementById('score').innerHTML = "Vous avez perdu...";
+                    document.getElementById('popUpTitle').innerHTML = "Vous avez perdu...";
                     gagnant = pseudoAdv;
                     sc = sc2;
                 }else{
-                    document.getElementById('score').innerHTML = "Egalité !!!";
+                    document.getElementById('popUpTitle').innerHTML = "Egalité !!!";
                 }
             }else{
+                document.getElementById('FinDePartiePopUp').style.display = 'block';
                 if(sc1 < sc2){
-                    document.getElementById('score').innerHTML = "Vous avez Gagnez !!";
+                    document.getElementById('popUpTitle').innerHTML = "Vous avez Gagnez !!";
                     gagnant = Pseudo;
                     sc = sc2 ;
                 }else if(sc1 > sc2){
-                    document.getElementById('score').innerHTML = "Vous avez perdu...";
+                    document.getElementById('popUpTitle').innerHTML = "Vous avez perdu...";
                     gagnant = pseudoAdv ;
                     sc = sc1 ;
                 }else{
-                    document.getElementById('score').innerHTML = "Egalité !!!";
+                    document.getElementById('popUpTitle').innerHTML = "Egalité !!!";
                 }
             }
 
@@ -475,8 +475,83 @@ $(document).ready(function(){
                 
             });
 
+            socket.emit("FinDePartie");
+
         });
+
+            socket.on('QuitterOuRejouer',()=>{
+
+                console.log("ID_PARTIE = "+ ID_Partie);
+                console.log("INDICE ROOM = "+ indiceRoom);
+                
+                $('body').on('click','#rejouer',()=>{
+                    console.log('RejouerClicked');
+                    console.log(ID_Partie);
+                    console.log(indiceRoom);
+                    socket.emit("Rejouer",ID_Partie,indiceRoom);
+                });
+
+                $('body').on('click','#quitter',()=>{
+                    console.log('QuitterClicked');
+                    console.log(ID_Partie);
+                    console.log(indiceRoom);
+                    socket.emit("Quitter",ID_Partie,indiceRoom);
+                });
+
+            });
+
+            socket.on('redirectToDashBoard',()=>{
+                window.location.replace('../PHP/dashboardUser.php');
+            });
+            
+            socket.on('Replay',()=>{
+                $.ajax({
+                    /*creer la variable SESSION['replay] = true si elle n'existe pas 
+                    et sinon la remettre a true*/
+                    url : "CreerSessionVarReplay.php",
+                    method : "POST",
+                
+                    success:function(data){
+                        console.log('success');
+                        console.log(data);
+                        if(data == 'true')
+                        /*redirection vers le dashboard pour recommencer la recherche */
+                              window.location.replace('../PHP/dashboardUser.php');
+                              else
+                              console.log("Une Erreur est survenue lors de script de creation de la variable ");
+                    },
+    
+                    complete:function(data){
+                        console.log('completed');
+                        console.log(data);
+                    },
+    
+                    error: function(data){
+                            console.log('error');
+                            console.log(data);
+                    }
+                });
+
+            
+            });
+
+          
      
     });
 
+      /*function qui va declencher une nouvelle recherche si 
+            la var global Replay == true;*/
+
+            function replay(){
+                console.log(Replay);
+                if( Replay == 'true' ){
+                    Replay = 'false';   
+                 document.getElementById('1V1').click();
+                 console.log("click event triggered \n");
+                }else{
+                    console.log(" User chose not to replay \n");
+                }
+
+             };
+             replay();
 });

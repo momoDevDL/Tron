@@ -28,14 +28,14 @@ function Moto(id_p){
         this.Y = 400;
         this.speedY = -1;
         this.ori = "N";
-        this.color = "black"; //couleur de la moto du joueur
+        this.color = couleurG; //couleur de la moto du joueur
         this.rot = 0;//cet attribut nous permet de savoir l'angle de rotation de la moto
     }else{
         this.X = 300;
         this.Y = 200;
         this.speedY = 1;
         this.ori = "S";
-        this.color = "red"; //couleur de la moto du joueur
+        this.color = couleurM; //couleur de la moto du joueur
         this.rot = 180;//cet attribut nous permet de savoir l'angle de rotation de la moto
     }
     this.rectangle = null; /*cet attribut vas nous servire pour stocker le dessin de la moto*/

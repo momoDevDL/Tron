@@ -15,7 +15,7 @@ const PL_NBLIG =100;//Valeurs aime : 100
 
 //TEMPS DE JEU
 
-const NBR_MANCHE = 3; //nbre de manche dans une partie
+const NBR_MANCHE = 1; //nbre de manche dans une partie
 const INTERVAL = 20;
 const TMP_PARTIE = 10000;// 10 secondes pour une partie pour le moment
 const TMP_POSMUR = 5;// en s

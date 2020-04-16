@@ -39,6 +39,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Orbitron&display=swap" rel="stylesheet">  
     <link rel="stylesheet" href="../CSS/dashboard.css">
+    <script type="text/javascript">
+    var Replay = '<?php if( isset($_SESSION['replay'])){
+        $replay = $_SESSION['replay'] ;
+        $_SESSION['replay'] = 'false';
+       echo $replay == 'false' ? 'false' : 'true' ;
+    }?>';
+    </script>
     <script src="../JS/node_modules/socket.io-client/dist/socket.io.js"></script>
     <script src="../JS/jquery-3.4.1.min.js"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
