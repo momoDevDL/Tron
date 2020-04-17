@@ -72,7 +72,7 @@ et sinon inclu*/
                     pseudoPlayer2 = null;
                     pseudoPlayer1 = null;
                     nsp.in(element.name).emit('connectedToRoom',element.position,element.name);
-                    nsp.in(element.name).emit('CommenceBientot',element.position,{p2:element.p2,p1:element.p1} );
+                    nsp.in(element.name).emit('CommenceBientot',{p2:element.p2,p1:element.p1} );
                     socket.to(element.name).emit('BeginInsertPartie',{p2:element.p2,p1:element.p1});
                 }
             }
@@ -88,12 +88,12 @@ et sinon inclu*/
                     Priority = 'null';
                     element.p2 = pseudoPlayer2;
                     inseré = true;
-                    pseudoPlayer2 = null;
+                    pseudoPlayer2 = null; /*on remet les pseudos a null pour permettre de nouvelles connexion */
                     pseudoPlayer1 = null;
                     //enoyer au deux joueur le numero de la chambre dans laquelle ils joueront
                     nsp.in(element.name).emit('connectedToRoom',element.position,element.name);
                     //envoyer au deux joueur les pseudos pour et commencer le chargement de la page partie
-                    nsp.in(element.name).emit('CommenceBientot',element.position,{p2:element.p2,p1:element.p1});
+                    nsp.in(element.name).emit('CommenceBientot',{p2:element.p2,p1:element.p1});
                     //envoyer à l'autre joueur deja present dans la room les pseudos pour inserer la partie dans la BD
                     socket.to(element.name).emit('BeginInsertPartie',{p2:element.p2,p1:element.p1});
                 }
@@ -105,13 +105,19 @@ et sinon inclu*/
     });
 
     if(!inseré){
-        console.log("INDICE INSERTION")
+        console.log("INDICE INSERTION" + indiceInsertion);
         indiceNouvelleRoom = Rooms.length;
+
+         /*on donne comme position de la room la taille de l'ensemble des rooms et
+         comme nom l'indice insertion qui represente le nombre de room créér depuis
+         le lancemant de serveur , on garantit ainsi des noms differents des rooms,Aussi 
+        un acces correct pour toute modification a la room avec la variable position*/
+
         Rooms.push({name:'room'+indiceInsertion , position:indiceNouvelleRoom ,size:2,remaining:2,Priority:'null', p1:'null',p2:'null',idPartie:-1, score:[0,0] });
         socket.join(Rooms[indiceNouvelleRoom].name);
         Rooms[indiceNouvelleRoom].remaining-- ;
         Rooms[indiceNouvelleRoom].Priority = Priority;
-        Priority = 'null';
+        Priority = 'null'; /*je remet la priorité a null pareil comme les pseudos pour permettre de nouvelles cnnx */
         Rooms[indiceNouvelleRoom].p1 = pseudoPlayer1;
         inseré = true;
         nsp.in(Rooms[indiceNouvelleRoom].name).emit('connectedToRoom',indiceNouvelleRoom,Rooms[indiceNouvelleRoom].name);
@@ -132,10 +138,10 @@ et sinon inclu*/
     socket.on('demande_id',function(){
         id = id+1;
         idc = id;
+        /* remettre l'id a zero pour permettre la cnnx de nouvelles paires des joueurs*/
         if(id == 2){
             id = 0;
         }
-
         socket.emit('id_joueur', idc);
         
     });
@@ -188,7 +194,7 @@ et sinon inclu*/
     socket.on('ok_pret', function(IR, tmppartie, temp_refresh){
         Ppret +=1;
         if(Ppret == 2){
-            var seconde_left = 10;
+            var seconde_left = 5;
             var interval = setInterval(function(){
 
                 nsp.in(Rooms[IR].name).emit('decompte_avant_demarage_parti', seconde_left);
@@ -219,21 +225,17 @@ et sinon inclu*/
 
 
     socket.on('score', function(sc, id_joueur, indiceRoom){
-        //score[id_joueur-1] = sc:
-        Rooms[indiceRoom].score[id_joueur-1] = sc;
+        Rooms[indiceRoom].score[id_joueur-1] = sc[id_joueur-1];
         nsp.in(Rooms[indiceRoom].name).emit('vainceur',Rooms[indiceRoom].score[0], Rooms[indiceRoom].score[1]);
     });
 
 
-   socket.on('envoiDePriorite',function(data){
-       console.log("this is data " + data );
-        Priority = data ;
-       console.log("this is data " +Priority);
+   socket.on('JQuit',function(sc,idj,iR){
+    Rooms[iR].score[0] = sc[0];
+    Rooms[iR].score[1] = sc[1];
+    nsp.in(Rooms[iR].name).emit('Joueur_A_Quitter',Rooms[iR].score[0], Rooms[iR].score[1],idj);
    });
-
-
    
-
     socket.on('FinDePartie',()=>{
         socket.emit("QuitterOuRejouer");
     });
@@ -242,7 +244,7 @@ et sinon inclu*/
         console.log("================== Joueur Veut REJOUER  ===============\n");
         console.log(idP);
         console.log(iR);
-        
+        console.log(Rooms);
         if( typeof Rooms[iR] !== 'undefined'){
             console.log("LA ROOM EXISTE");
             if(Rooms[iR].idPartie == idP){
@@ -263,6 +265,7 @@ et sinon inclu*/
         }else{
             console.log("LA ROOM N'EXISTE PAS")
         }
+    
         socket.emit("Replay");
     });
 
@@ -270,6 +273,7 @@ et sinon inclu*/
         console.log("================== Joueur A QUITTER ===============\n");
         console.log(idP);
         console.log(iR);
+        console.log(Rooms);
         if( typeof Rooms[iR] !== 'undefined'){
             console.log("LA ROOM EXISTE");
             if(Rooms[iR].idPartie == idP){
@@ -295,6 +299,10 @@ et sinon inclu*/
     });
 
     
+    socket.on('clearInterval',function(){
+        clearInterval(motoMouv);
+    });
+
     socket.on('disconnect',function(){
         console.log('disconnected');
     });
@@ -306,6 +314,7 @@ et sinon inclu*/
 function TimerJeu(IR ,tempPartie, temp_refresh){
     var second_ = tempPartie;
     motoMouv = setInterval(function(){
+        if(typeof Rooms[IR] !== 'undefined'){
         nsp.in(Rooms[IR].name).emit('timer_manche_affichage' , second_/1000);
         nsp.in(Rooms[IR].name).emit('frame');
         second_ -= temp_refresh;
@@ -315,5 +324,6 @@ function TimerJeu(IR ,tempPartie, temp_refresh){
             nsp.in(Rooms[IR].name).emit('fin_manche' , -1);
             nsp.in(Rooms[IR].name).emit('nouvelP','coucou');
         }
+    }
     }, temp_refresh);
 }

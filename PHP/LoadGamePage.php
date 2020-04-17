@@ -80,7 +80,7 @@ echo   "
   </div>
 </span>      
 <div id='logOut'>
-    <a href='dashboardUser.php'>Quitter</a>
+    <a id='btnQuit'>Quitter</a>
 </div> 
   
 </div>
@@ -95,7 +95,7 @@ echo   "
 
           <div id='homePlayerInfo'>
           
-          <div id='avatar'>
+              <div id='avatar'>
               <img src=".$avatar." width='100px' height='100px'>
               </div>
               <div class='mmr'>

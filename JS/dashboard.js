@@ -205,7 +205,7 @@ $(document).ready(function(){
         console.log(indiceRoom);
       });
 
-      socket.on('CommenceBientot',function(indiceRoom,pseudos){
+      socket.on('CommenceBientot',function(pseudos){
         console.log("pseudo 2 est de :" + pseudos.p2);
         console.log("pseudo 1 est de :" + pseudos.p1);
 
@@ -218,33 +218,30 @@ $(document).ready(function(){
         });
 
         pseudoAdv = (pseudos.p2 == Pseudo ? pseudos.p1 : pseudos.p2);
-
-        $.ajax({
-            url : "LoadGamePage.php",
-            method : "POST",
-            data : "pseudoAdv=" + pseudoAdv,
-            dataType: "text",
-            success:function(data){
-                //console.log("this is data " +data);
-                $('#main').html(data);
+        setTimeout(() => {
+            $.ajax({
+                url : "LoadGamePage.php",
+                method : "POST",
+                data : "pseudoAdv=" + pseudoAdv,
+                dataType: "text",
+                success:function(data){
+                    //console.log("this is data " +data);
+                    $('#main').html(data);
+                    socket.emit('demande_id');
+                },
+                complete:function(data){
+                    
+                    BoutonReady();
+                },
+                error: function(data){
+                        console.log('error');
+                        console.log(data);
+                }
                 
-            },
-            complete:function(data){
-                socket.emit('demande_id');
-                BoutonReady();
-            },
-            error: function(data){
-                    console.log('error');
-                    console.log(data);
-            }
-            
-        });
-
-
+            });
+        }, 3000);
         
-       
-        
-        console.log("===========================LA PARTIE DOIT COMMENCER MNT===================");
+            console.log("===========================LA PARTIE DOIT COMMENCER MNT===================");
       });
       
         socket.on("BeginInsertPartie",function(pseudos){
@@ -359,7 +356,7 @@ $(document).ready(function(){
         socket.on('fin_manche', function(message){
             console.log("=========================FIN DE MANCHE===============  " + message);
             if(moto1.id_player != message){
-                score[moto1.id_player-1]+= 20;
+                score[moto1.id_player-1]+= 1;
                 socket.emit('miseAjourScore',indiceRoom,score[moto1.id_player-1],ID_joueur);
             }else{
                 if(message < 0){
@@ -517,7 +514,7 @@ $(document).ready(function(){
                         if(data == 'true')
                         /*redirection vers le dashboard pour recommencer la recherche */
                               window.location.replace('../PHP/dashboardUser.php');
-                              else
+                         else
                               console.log("Une Erreur est survenue lors de script de creation de la variable ");
                     },
     
@@ -535,9 +532,88 @@ $(document).ready(function(){
             
             });
 
-          
-     
+            $('body').on('click','#btnQuit',()=>{
+                socket.emit('JQuit', score, ID_joueur,indiceRoom);
+            });
+
+            socket.on('Joueur_A_Quitter',function(sc1,sc2,idJoueur){
+                socket.emit('clearInterval');
+
+                score[0] = sc1;
+                score[1] = sc2;
+                let gagnant ='null';
+                
+                if(ID_joueur == idJoueur){
+                document.getElementById('FinDePartiePopUp').style.display = 'block';
+                $('#popUp').css({
+                    'position':'relative',
+                    'left':'20%',
+                    'padding':'25px 25px 25px 25px',
+                    'color':'white'
+                });
+
+                document.getElementById('popUpAction').innerHTML = '<p>Vous Quitter la partie Avant la fin Vous etes donc consideré perdant</p><p>Vous Allez etre redirigé vers votre dashboard</p>';
+                document.getElementById('popUpTitle').innerHTML = "Vous Avez Perdu ..!";
+                setTimeout(() => {
+                    window.location.replace("../PHP/dashboardUser.php");
+                }, 6000);
+                }else{
+                    gagnant = Pseudo;
+
+                    $.ajax({
+                        url : "InsererGagnant.php",
+                        method : "POST",
+                        data : {vainceur:gagnant,idPartie:ID_Partie,scorefinal:score[ID_joueur-1]},
+                        dataType: "text",
+                        
+                        success:function(data){
+                            console.log('success');
+                            console.log('data');
+                        },
+        
+                        complete:function(data){
+                            console.log("La BD est a jour : gagnant inséré ");
+                            console.log(data);
+                        },
+        
+                        error: function(data){
+                                console.log('error');
+                                console.log(data);
+                        }
+                        
+                    });
+                    document.getElementById('FinDePartiePopUp').style.display = 'block';
+                    document.getElementById('popUpTitle').innerHTML = "l'adversaire A Quitter \n Vous Avez Gagnez ! Félicitations !";
+
+                    $('#popUp').css({
+                        'position':'relative',
+                        'left':'20%',
+                        'padding':'25px 25px 25px 25px',
+                        'color':'white'
+                    });
+    
+                    $('body').on('click','#rejouer',()=>{
+                        console.log('RejouerClicked');
+                        console.log(ID_Partie);
+                        console.log(indiceRoom);
+                        socket.emit("Rejouer",ID_Partie,indiceRoom);
+                    });
+    
+                    $('body').on('click','#quitter',()=>{
+                        console.log('QuitterClicked');
+                        console.log(ID_Partie);
+                        console.log(indiceRoom);
+                        socket.emit("Quitter",ID_Partie,indiceRoom);
+                    });
+    
+                    
+                }
+            });
     });
+
+        
+
+    
 
       /*function qui va declencher une nouvelle recherche si 
             la var global Replay == true;*/
