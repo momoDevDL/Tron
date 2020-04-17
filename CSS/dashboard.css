@@ -438,6 +438,9 @@ padding-bottom: 12px;
     left:25%;
   }
   
+  #btnQuit{
+      cursor: pointer;
+  }
   
   #score{
     padding-top:0;
