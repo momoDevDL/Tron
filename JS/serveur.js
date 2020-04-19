@@ -9,8 +9,8 @@ var serveur = require('http').createServer(app);
 var io = require("socket.io")(serveur);
 const nsp = io.of('/first-namespace');
 
-serveur.listen(2589,function(){
-    console.log("serveur est en ecoute sur le port num : "+ 2589);
+serveur.listen(3333,function(){
+    console.log("serveur est en ecoute sur le port num : "+ 3333);
 });
 
 
@@ -25,8 +25,7 @@ var motoMouv;
 
 var presD = 0; // pour la fct socket 'joueur_pret'
 var pres = 0; // pour la fct socket 'CommencerPartie'
-var Ppret = 0; //pour la fct socket 'ok_pret'
-var coll = 0;
+var Ppret = 0; //pour la fct socket 'ok_pret'0;
 
 
 nsp.on('connection', function (socket) {
@@ -175,14 +174,6 @@ et sinon inclu*/
     });
 
    //lors d'une collision un message est envoyé au client même et à l'autre client
-    socket.on('collision',function(moto_id,indiceRoom){
-        coll += 1;
-        if(coll == 1){
-            clearInterval(motoMouv);
-            nsp.in(Rooms[indiceRoom].name).emit('fin_manche',moto_id);
-            nsp.in(Rooms[indiceRoom].name).emit('nouvelP','coucou');
-        }
-    });
 
     //quand un des clients est prêt on l'envoie à l'autre joueur
     socket.on('envoi_de_notre_moto', function(moto,indice){
@@ -211,8 +202,14 @@ et sinon inclu*/
         
     });
     //si un joueur bouge on l'envoi à tout les clients
-    socket.on('joueur_bouge', function(moto,indice){
-        socket.to(Rooms[indice].name).emit('update_joueur', moto);  
+    socket.on('joueur_bouge', function(moto,indice, coll, ind, id_player){
+        console.log(coll);
+        if(coll){
+            clearInterval(motoMouv);
+            nsp.in(Rooms[indice].name).emit('fin_manche',ind, id_player);
+        }else{
+            socket.to(Rooms[indice].name).emit('update_joueur', moto);
+        }
         //socket.broadcast.emit('update_joueur', moto);
     });
 
@@ -319,15 +316,12 @@ function TimerJeu(IR ,tempPartie, temp_refresh){
     var second_ = tempPartie;
     motoMouv = setInterval(function(){
         if(typeof Rooms[IR] !== 'undefined'){
-        nsp.in(Rooms[IR].name).emit('timer_manche_affichage' , second_/1000);
-        nsp.in(Rooms[IR].name).emit('frame');
-        second_ -= temp_refresh;
-
-        if(second_ <= 0){
-            clearInterval(motoMouv);
-            nsp.in(Rooms[IR].name).emit('fin_manche' , -1);
-            nsp.in(Rooms[IR].name).emit('nouvelP','coucou');
+            nsp.in(Rooms[IR].name).emit('frame', second_/1000);
+            second_ -= temp_refresh;
+            if(second_ <= 0){
+                clearInterval(motoMouv);
+                nsp.in(Rooms[IR].name).emit('fin_manche' , -1);
+            }
         }
-    }
     }, temp_refresh);
 }
