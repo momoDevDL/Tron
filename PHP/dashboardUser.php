@@ -2,13 +2,9 @@
     require_once('ConnexionBD.php');
     if(!isset($_SESSION)){session_start();}
     $PSEUDO= isset($_SESSION['id_utilisateur']) ? $_SESSION['id_utilisateur'] : 0;
-   // $res= $dbh->query("SELECT EMAIL FROM UTILISATEUR WHERE PSEUDO='$PSEUDO'");
-    
+    $ROLE =  isset($_SESSION['id_role']) ? $_SESSION['id_role'] : 0;
     $res2= $dbh->query("SELECT * FROM UTILISATEUR WHERE PSEUDO='$PSEUDO'");
-    /*$res3= $dbh->query("SELECT NIVEAU FROM UTILISATEUR WHERE PSEUDO='$PSEUDO'");
-    $res4= $dbh->query("SELECT MMR FROM UTILISATEUR WHERE PSEUDO='$PSEUDO'");
-    $res5= $dbh->query("SELECT COULEUR_GENTIL FROM UTILISATEUR WHERE PSEUDO='$PSEUDO'");
-    $res6= $dbh->query("SELECT COULEUR_MECHANT FROM UTILISATEUR WHERE PSEUDO='$PSEUDO'");*/
+    
     
     foreach($res2 as $row){
         $PSEUDO = $row['PSEUDO'];
@@ -65,14 +61,19 @@
     <div id="User-dashboard">
         <p id="logo">LCF</p>
         <div id="links">
-            <a href="../index.php">Acceuil</a>
+        <a href="../index.php">Acceuil</a>
             <a>Jouer Vs IA</a>
             <a id="1V1">Jouer En Ligne</a>
             <a>Mes Tournois</a>
-            <a id="Joueur">Mon profile</a>
+            <?php 
+                if($ROLE == 'ADMIN'){
+                    echo " <a href='ListOfPlayers.php' id='ListeJoueurs'>Liste des joueurs</a>
+                    <a id='PartiesEnCours'>Parties En cours</a> ";
+                }
+            ?>
         </div>
         <div id="logOut">
-            <a href="logout.php">Se deconnecter</a>
+        <a href="logout.php">Se deconnecter</a>
         </div> 
           
     </div>
@@ -139,8 +140,8 @@
         </div>
     </div>
 
-     <div class="StatsRow">
-        <div class="statsCards">
+    <div class="StatsRow">
+    <div class="statsCards">
             <div class="statsData">
             <p>
                 <?php

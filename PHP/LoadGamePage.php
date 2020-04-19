@@ -95,16 +95,16 @@ echo   "
 
           <div id='homePlayerInfo'>
           
-              <div id='avatar'>
-              <img src=".$avatar." width='100px' height='100px'>
-              </div>
-              <div class='mmr'>
-                  <p>Niveau : $niveau</p>
-                  <p>MMR :$mmr</p>
-              </div>
-              <div id='info'>
-              <p id='pseudo'>Pseudo : $PSEUDO</p>
-              </div>
+          <div id='avatar'>
+          <img src=".$avatar." width='100px' height='100px'>
+          </div>
+          <div class='mmr'>
+              <p>Niveau : $niveau</p>
+              <p>MMR :$mmr</p>
+          </div>
+          <div id='info'>
+          <p id='pseudo'>Pseudo : $PSEUDO</p>
+          </div>
           </div>
           
           <div id='AwayPlayerInfo'>

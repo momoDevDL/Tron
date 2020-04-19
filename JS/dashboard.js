@@ -75,7 +75,7 @@ $(document).ready(function(){
             });               
     }); 
 
-   // $('body').on('load','#main',function(){
+  
         $.ajax({
         url : "fetch_User_Colors.php",
         method : "POST",
@@ -96,34 +96,69 @@ $(document).ready(function(){
                 console.log(data);
         }
     });
-//});
+
     
-    
+    $('body').on('click','#PartiesEnCours',()=>{
+        socket = io('http://localhost:2589/first-namespace');
+
+        socket.on('connect_error',()=>{
+            console.log(socket.connected);
+            if(socket.connected == false){
+                socket.close();
+                alert('Erreur de connexion au serveur');
+            }
+        });
+
+        socket.on('connect',()=>{
+            console.log(socket.connected);
+            socket.emit('AdminRequestRooms');
+        });
+
+        let RefreshInfo = setInterval(()=>{
+            socket.emit('AdminRequestRooms');
+        },60000);
+
+        socket.on('Rooms',(Rooms)=>{
+            console.log(Rooms);
+            $.ajax({
+                url : "Rooms.php",
+                method : "POST",
+                data:{R:JSON.stringify(Rooms)},
+                dataType: "text",
+                success:function(data){
+                    console.log('success');
+                    console.log(data);
+                    $('#main').html(data);
+                },
+                complete:function(data){
+                 console.log("completed");
+                 console.log(data);
+                 
+                },
+                error: function(data){
+                        console.log('error');
+                        
+                }
+                
+            });
+        });
+    });
 
     $('body').on('click','#1V1',function(){
         
-        $('#rechercheMatch').css({
-            'position':'fixed',
-            'width':'100%', 
-            'height':'100vh',
-            'z-index':'3',
-            'font-size':'24px',
-            'background-color':'rgba(62, 74, 75, 0.7)',
-            'text-align':'center',
-            'justify-content':'center',
-        });
-
-        $('#rechercheMatch p').css({
-            'color':'white',
-            'position':'relative',
-            'top':'50%'            
-        });
-
-        $('#rechercheMatch').fadeIn(); 
+ 
 
        
 
         socket = io('http://localhost:2589/first-namespace');
+        
+        socket.on('connect_error',()=>{
+            console.log(socket.connected);
+            if(socket.connected == false){
+                socket.close();
+                alert('Erreur de connexion au serveur, Veuillez Reessayer');
+            }
+        });
 
         function BoutonReady(){
                 var btn = document.createElement("button");
@@ -165,34 +200,52 @@ $(document).ready(function(){
         }
 
        
-     $.ajax({
-       url : "fetchPlayerPseudo&Priority.php",
-       method : "POST",
-       dataType: "json",
-       success:function(data){
-           
-           PriorityClient = data.priorite;
-           Pseudo = data.pseudo ;
-           console.log("this is data : " +data);
-           console.log("this is data priority : " +PriorityClient);
-           console.log("this is data pseudo : " +Pseudo);
-            console.log(Pseudo);
-
-       },
-       complete:function(data){
-        console.log("after lol");
-        console.log(data);
-
-       },
-       error: function(data){
-               console.log('error');
-               
-       }
-       
-   });
+        $.ajax({
+            url : "fetchPlayerPseudo&Priority.php",
+            method : "POST",
+            dataType: "json",
+            success:function(data){
+                
+                PriorityClient = data.priorite;
+                Pseudo = data.pseudo ;
+                console.log("this is data : " +data);
+                console.log("this is data priority : " +PriorityClient);
+                console.log("this is data pseudo : " +Pseudo);
+                 console.log(Pseudo);
+     
+            },
+            complete:function(data){
+             console.log("after lol");
+             console.log(data);
+     
+            },
+            error: function(data){
+                    console.log('error');
+                    
+            }
+            
+        });
 
         
       socket.on('connect',function(){
+        $('#rechercheMatch').css({
+            'position':'fixed',
+            'width':'100%', 
+            'height':'100vh',
+            'z-index':'3',
+            'font-size':'24px',
+            'background-color':'rgba(62, 74, 75, 0.7)',
+            'text-align':'center',
+            'justify-content':'center',
+        });
+
+        $('#rechercheMatch p').css({
+            'color':'white',
+            'position':'relative',
+            'top':'50%'            
+        });
+
+        $('#rechercheMatch').fadeIn(); 
         socket.emit('envoiDePriorite',PriorityClient);
         socket.emit('envoiPseudo',Pseudo);
       });

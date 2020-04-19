@@ -341,6 +341,62 @@ padding-bottom: 12px;
 }
 
 
+#sectionRooms{
+    height: 100vh;
+    background-color: #181818;
+}
+
+.RoomsRow{
+    width: 100%;
+    height: max-content;
+    align-content: center;
+    display: flex;
+    flex-direction: row;
+    background-color: #181818;
+    justify-content: space-around;
+}
+
+.RoomsCards{
+    width: 20%;
+    height: 20%;
+    background-color: aliceblue;
+    border: none;
+    text-align: center;
+    margin-top: 1em;
+}
+
+.RoomsCards:hover{
+    box-shadow: -8px 8px 10px 4px rgb(8, 158, 163);
+    
+}
+
+.RoomsData p{
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    font-size: 25px;
+    columns: #111111;;
+}
+.RoomsTitle p{
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    font-size: 18px;
+}
+.RoomsData{
+    width: 100%;
+    height: max-content;
+    background-color: aliceblue;
+}
+
+.RoomsTitle{
+    width: 100%;
+    height: 50%;
+    background-color: #181818;
+    color: rgb(0, 247, 255);
+    border-bottom: 5px solid rgb(0, 247, 255);
+    border-top: 5px solid rgb(0, 247, 255);
+
+}
+
 #Contact{
     background-color: #181818;
     height: 50vh;
@@ -427,7 +483,7 @@ padding-bottom: 12px;
   }
 
 
-/*======================CSS PARTIE=============================*/
+/*======================CSS PARTIES=============================*/
 
 #ScoreBanner{
     background-color:#181818;
@@ -668,3 +724,42 @@ padding-bottom: 12px;
     flex-direction: row;
     justify-content: space-around;
 }
+
+
+/*====================== CSS LISTE JOUEURS ================ */
+#PlayersList{
+    width:100%;
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    background-color:#181818;
+  }
+  #PlayersCard{
+    width:300px;
+    height:max-content;
+    background-color:white;
+    margin-right: 3em;
+    margin-bottom: 3em;
+  }
+  #infoPlayer{
+      width: 100%;
+      height: 50%;
+      background-color: aliceblue;
+  }
+  #PseudoPlayer{
+       width: 100%;
+      height: 50%;
+      background-color: #181818;
+      color: rgb(0, 247, 255);
+      border-bottom: 5px solid rgb(0, 247, 255);
+      border-top: 5px solid rgb(0, 247, 255);
+      text-align: center;
+      padding-top:0.5em;
+      padding-bottom: 0.5em;
+  }
+  
+  #PlayerAvatar{
+      width: 100%;
+  }
+  

@@ -303,6 +303,10 @@ et sinon inclu*/
         clearInterval(motoMouv);
     });
 
+    socket.on('AdminRequestRooms',()=>{
+        socket.emit('Rooms',Rooms);
+    });
+
     socket.on('disconnect',function(){
         console.log('disconnected');
     });
