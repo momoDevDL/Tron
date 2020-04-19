@@ -81,19 +81,19 @@ $(document).ready(function(){
         method : "POST",
         dataType: "json",
         success:function(data){
-        console.log(data);
+        //console.log(data);
         couleurG = data[0];
         couleurM = data[1];
-        console.log(couleurG);
-        console.log(couleurM);
+        //console.log(couleurG);
+        //console.log(couleurM);
         },
         complete:function(data){
-            console.log("lol");
-            console.log(data);
+            //console.log("lol");
+            //console.log(data);
         },
         error: function(data){
-                console.log('error');
-                console.log(data);
+                //console.log('error');
+                //console.log(data);
         }
     });
 
@@ -102,7 +102,7 @@ $(document).ready(function(){
         socket = io('http://localhost:2589/first-namespace');
 
         socket.on('connect_error',()=>{
-            console.log(socket.connected);
+            //console.log(socket.connected);
             if(socket.connected == false){
                 socket.close();
                 alert('Erreur de connexion au serveur');
@@ -110,7 +110,7 @@ $(document).ready(function(){
         });
 
         socket.on('connect',()=>{
-            console.log(socket.connected);
+            //console.log(socket.connected);
             socket.emit('AdminRequestRooms');
         });
 
@@ -119,24 +119,24 @@ $(document).ready(function(){
         },60000);
 
         socket.on('Rooms',(Rooms)=>{
-            console.log(Rooms);
+            //console.log(Rooms);
             $.ajax({
                 url : "Rooms.php",
                 method : "POST",
                 data:{R:JSON.stringify(Rooms)},
                 dataType: "text",
                 success:function(data){
-                    console.log('success');
-                    console.log(data);
+                    //console.log('success');
+                    //console.log(data);
                     $('#main').html(data);
                 },
                 complete:function(data){
-                 console.log("completed");
-                 console.log(data);
+                 //console.log("completed");
+                 //console.log(data);
                  
                 },
                 error: function(data){
-                        console.log('error');
+                        //console.log('error');
                         
                 }
                 
@@ -150,10 +150,10 @@ $(document).ready(function(){
 
        
 
-        socket = io('http://localhost:2589/first-namespace');
+        socket = io('http://localhost:3333/first-namespace');
         
         socket.on('connect_error',()=>{
-            console.log(socket.connected);
+            //console.log(socket.connected);
             if(socket.connected == false){
                 socket.close();
                 alert('Erreur de connexion au serveur, Veuillez Reessayer');
@@ -208,19 +208,19 @@ $(document).ready(function(){
                 
                 PriorityClient = data.priorite;
                 Pseudo = data.pseudo ;
-                console.log("this is data : " +data);
-                console.log("this is data priority : " +PriorityClient);
-                console.log("this is data pseudo : " +Pseudo);
-                 console.log(Pseudo);
+                //console.log("this is data : " +data);
+                //console.log("this is data priority : " +PriorityClient);
+                //console.log("this is data pseudo : " +Pseudo);
+                 //console.log(Pseudo);
      
             },
             complete:function(data){
-             console.log("after lol");
-             console.log(data);
+             //console.log("after lol");
+             //console.log(data);
      
             },
             error: function(data){
-                    console.log('error');
+                    //console.log('error');
                     
             }
             
@@ -253,14 +253,14 @@ $(document).ready(function(){
       socket.emit('CommencerRecherche');
 
       socket.on('connectedToRoom',function(indiceRoomS,NomRoom){
-        console.log("You Are Connected to Room " + NomRoom);
+        //console.log("You Are Connected to Room " + NomRoom);
         indiceRoom = indiceRoomS ;
-        console.log(indiceRoom);
+        //console.log(indiceRoom);
       });
 
       socket.on('CommenceBientot',function(pseudos){
-        console.log("pseudo 2 est de :" + pseudos.p2);
-        console.log("pseudo 1 est de :" + pseudos.p1);
+        //console.log("pseudo 2 est de :" + pseudos.p2);
+        //console.log("pseudo 1 est de :" + pseudos.p1);
 
         $("body #rechercheMatch").append("<p id='PartieEnConst'>Votre partie va bientot commencer</p>");
 
@@ -287,44 +287,44 @@ $(document).ready(function(){
                     BoutonReady();
                 },
                 error: function(data){
-                        console.log('error');
-                        console.log(data);
+                        //console.log('error');
+                        //console.log(data);
                 }
                 
             });
         }, 3000);
         
-            console.log("===========================LA PARTIE DOIT COMMENCER MNT===================");
+            //console.log("===========================LA PARTIE DOIT COMMENCER MNT===================");
       });
       
         socket.on("BeginInsertPartie",function(pseudos){
-            console.log("============== Begin Insert ============\n")
+            //console.log("============== Begin Insert ============\n")
             $.ajax({
                 url : "InsererPartie.php",
                 method : "POST",
                 data : {pseudo1: pseudos.p1,pseudo2: pseudos.p2},
                 dataType: "text",
                 success:function(data){
-                    console.log("L'id de la partie :"+data);
+                    //console.log("L'id de la partie :"+data);
                     if(data != "null"){
                         ID_Partie = data;
                         socket.emit('EnvoiIdPartieAutreJoueur',ID_Partie,indiceRoom);
                         }
                 },
                 complete:function(data){
-                    console.log("L'id de la partie :"+data);
+                    //console.log("L'id de la partie :"+data);
                     
                 },
                 error: function(data){
-                        console.log('error');
-                        console.log(data);
+                        //console.log('error');
+                        //console.log(data);
                 }
                 
             });
         });
       
         socket.on("RecvIdPartie",function(id){
-            console.log("l'id de la partie reçu par l'autre joueur est : "+ id );
+            //console.log("l'id de la partie reçu par l'autre joueur est : "+ id );
             ID_Partie = id ;
         });
         
@@ -381,7 +381,7 @@ $(document).ready(function(){
         socket.on('autre_joueur', function(motoE){
             moto2 = new Moto(motoE.id_player);
             moto2.dessinerMoto();
-            console.log(moto2);
+            //(moto2);
             socket.emit('ok_pret', indiceRoom, TMP_PARTIE, INTERVAL);
         });
 
@@ -391,12 +391,8 @@ $(document).ready(function(){
         });
 
         //socket qui est appelé toutes les 20 ms pour raffraichir les motos
-        socket.on('frame', function(){
-            Frame(moto1, moto2);
-        });
-
-        //socket qui permet de voir le timer d'une manche
-        socket.on('timer_manche_affichage', function(seconde){
+        socket.on('frame', function(seconde){
+            Frame(moto1);
             document.getElementById('tmp').innerHTML = seconde;
         });
 
@@ -406,16 +402,21 @@ $(document).ready(function(){
         });
 
          //nous alerte lors d'une collision de nous ou de l'autre joueur
-        socket.on('fin_manche', function(message){
-            console.log("=========================FIN DE MANCHE===============  " + message);
-            if(moto1.id_player != message){
+        socket.on('fin_manche', function(ind, jid){
+            //console.log("=========================FIN DE MANCHE===============  ");
+            var ind2 = 0;
+            if(jid == moto1.id_player){
+                ind2 = ind;
+            }else{
+                ind2 -= ind;
+            }
+            if(ind2 < 0){
+                score[moto1.id_player-1]+= 0;
+                socket.emit('miseAjourScore',indiceRoom,score[moto1.id_player-1],ID_joueur);
+            }
+            if(ind2 >=0){
                 score[moto1.id_player-1]+= 1;
                 socket.emit('miseAjourScore',indiceRoom,score[moto1.id_player-1],ID_joueur);
-            }else{
-                if(message < 0){
-                    //score+=10;
-                    //socket.emit('miseAjourScore',indiceRoom,score,ID_joueur);
-                }
             }
             moto1 = null;
             moto2 = null;
@@ -423,14 +424,22 @@ $(document).ready(function(){
             pl = null;
             var elem = document.getElementById('plateau_');
             elem.parentNode.removeChild(elem);
+            nouvellePartie();
         });
 
         socket.on("nouveauScore",function(sc1,sc2){
-            console.log("============== mise a jour de score ============");
-            console.log(score);
+            //console.log("============== mise a jour de score ============");
+            //console.log(score);
             score[0] = sc1 ;
             score[1] = sc2 ;
-            console.log(score);
+            if(ID_joueur == 1){
+                document.getElementById('playerOne').innerHTML = score[0];
+                document.getElementById('playerTwo').innerHTML = score[1];
+               }else{
+                document.getElementById('playerOne').innerHTML = score[1];
+                document.getElementById('playerTwo').innerHTML = score[0];
+               }
+            //console.log(score);
         });
          /**
          lorsque on recoit le message du serveur comme quoi un joueur à bougé deux cas : 
@@ -457,17 +466,17 @@ $(document).ready(function(){
             Update(moto2);
         });
 
-        socket.on('nouvelP', function(message){
-            console.log("======================nouvelle manche=============================");
+        function nouvellePartie(){
+            //onsole.log("======================nouvelle manche=============================");
             nbrManche--;
             if(nbrManche <= 0){
                 document.getElementById('nbr_manche').innerHTML = 'Fin de la partie';
-                console.log("FIN DE PARTIE");
+                //console.log("FIN DE PARTIE");
                 socket.emit('score', score, ID_joueur, indiceRoom);
             }else{
                 BoutonReady();
             }
-        });
+        }
 
         socket.on('vainceur', function(sc1, sc2){
             let gagnant ='null';
@@ -500,7 +509,7 @@ $(document).ready(function(){
                 }
             }
 
-            console.log(sc);
+            //console.log(sc);
 
             $.ajax({
                 url : "InsererGagnant.php",
@@ -509,18 +518,18 @@ $(document).ready(function(){
                 dataType: "text",
                 
                 success:function(data){
-                    console.log('success');
-                    console.log('data');
+                    //console.log('success');
+                    //console.log('data');
                 },
 
                 complete:function(data){
-                    console.log("La BD est a jour : gagnant inséré ");
-                    console.log(data);
+                    //console.log("La BD est a jour : gagnant inséré ");
+                    //console.log(data);
                 },
 
                 error: function(data){
-                        console.log('error');
-                        console.log(data);
+                        //console.log('error');
+                        //console.log(data);
                 }
                 
             });
@@ -531,20 +540,20 @@ $(document).ready(function(){
 
             socket.on('QuitterOuRejouer',()=>{
 
-                console.log("ID_PARTIE = "+ ID_Partie);
-                console.log("INDICE ROOM = "+ indiceRoom);
+                //console.log("ID_PARTIE = "+ ID_Partie);
+                //console.log("INDICE ROOM = "+ indiceRoom);
                 
                 $('body').on('click','#rejouer',()=>{
-                    console.log('RejouerClicked');
-                    console.log(ID_Partie);
-                    console.log(indiceRoom);
+                    //console.log('RejouerClicked');
+                    //console.log(ID_Partie);
+                    //console.log(indiceRoom);
                     socket.emit("Rejouer",ID_Partie,indiceRoom);
                 });
 
                 $('body').on('click','#quitter',()=>{
-                    console.log('QuitterClicked');
-                    console.log(ID_Partie);
-                    console.log(indiceRoom);
+                    //console.log('QuitterClicked');
+                    //console.log(ID_Partie);
+                    //console.log(indiceRoom);
                     socket.emit("Quitter",ID_Partie,indiceRoom);
                 });
 
@@ -562,23 +571,22 @@ $(document).ready(function(){
                     method : "POST",
                 
                     success:function(data){
-                        console.log('success');
-                        console.log(data);
+                        //console.log('success');
+                        //console.log(data);
                         if(data == 'true')
                         /*redirection vers le dashboard pour recommencer la recherche */
                               window.location.replace('../PHP/dashboardUser.php');
-                         else
-                              console.log("Une Erreur est survenue lors de script de creation de la variable ");
+                              //console.log("Une Erreur est survenue lors de script de creation de la variable ");
                     },
     
                     complete:function(data){
-                        console.log('completed');
-                        console.log(data);
+                        //console.log('completed');
+                        //console.log(data);
                     },
     
                     error: function(data){
-                            console.log('error');
-                            console.log(data);
+                            //console.log('error');
+                            //console.log(data);
                     }
                 });
 
@@ -620,18 +628,18 @@ $(document).ready(function(){
                         dataType: "text",
                         
                         success:function(data){
-                            console.log('success');
-                            console.log('data');
+                            //console.log('success');
+                            //console.log('data');
                         },
         
                         complete:function(data){
-                            console.log("La BD est a jour : gagnant inséré ");
-                            console.log(data);
+                            //console.log("La BD est a jour : gagnant inséré ");
+                            //console.log(data);
                         },
         
                         error: function(data){
-                                console.log('error');
-                                console.log(data);
+                                //console.log('error');
+                                //console.log(data);
                         }
                         
                     });
@@ -646,16 +654,11 @@ $(document).ready(function(){
                     });
     
                     $('body').on('click','#rejouer',()=>{
-                        console.log('RejouerClicked');
-                        console.log(ID_Partie);
-                        console.log(indiceRoom);
+                 
                         socket.emit("Rejouer",ID_Partie,indiceRoom);
                     });
     
                     $('body').on('click','#quitter',()=>{
-                        console.log('QuitterClicked');
-                        console.log(ID_Partie);
-                        console.log(indiceRoom);
                         socket.emit("Quitter",ID_Partie,indiceRoom);
                     });
     
@@ -672,13 +675,11 @@ $(document).ready(function(){
             la var global Replay == true;*/
 
             function replay(){
-                console.log(Replay);
+
                 if( Replay == 'true' ){
                     Replay = 'false';   
                  document.getElementById('1V1').click();
-                 console.log("click event triggered \n");
                 }else{
-                    console.log(" User chose not to replay \n");
                 }
 
              };
