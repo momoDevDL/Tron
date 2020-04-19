@@ -150,7 +150,7 @@ $(document).ready(function(){
 
        
 
-        socket = io('http://localhost:2589/first-namespace');
+        socket = io('149.202.72.201/first-namespace');
         
         socket.on('connect_error',()=>{
             console.log(socket.connected);
@@ -392,7 +392,7 @@ $(document).ready(function(){
 
         //socket qui est appelé toutes les 20 ms pour raffraichir les motos
         socket.on('frame', function(){
-            Frame(moto1, moto2);
+            Frame(moto1);
         });
 
         //socket qui permet de voir le timer d'une manche

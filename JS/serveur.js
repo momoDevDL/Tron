@@ -9,6 +9,7 @@ var serveur = require('http').createServer(app);
 var io = require("socket.io")(serveur);
 const nsp = io.of('/first-namespace');
 
+
 serveur.listen(2589,function(){
     console.log("serveur est en ecoute sur le port num : "+ 2589);
 });
@@ -31,9 +32,9 @@ var coll = 0;
 
 nsp.on('connection', function (socket) {
 
-    
-    var inseré = false ;
     console.log('connetion');
+    var inseré = false ;
+    
   
    
    socket.on('envoiDePriorite',function(data){
