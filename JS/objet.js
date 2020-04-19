@@ -1,4 +1,6 @@
 var IndRoom = -1;
+var colli = false;
+var ind = 90;
 /**
  * InitGame()
  * ne prend aucun paramètre
@@ -268,11 +270,11 @@ function Move(moto_m){
  * moto_m : est un objet de type Moto
  * resultat : permet de détecter une colision entre un mur/une trainé et la moto du joueur
  */
-function collision(moto_m, moto_m1)
+function collision(moto_m1)
 {
     //console.log("je suis dans la fct collision");
-    let x = (moto_m.X +5);
-    let y = (moto_m.Y +25);
+    let x = (moto_m1.X +5);
+    let y = (moto_m1.Y +25);
 
     let safeZoneOffset = Math.sqrt(2*(PL_L*PL_L)) + 1;
 
@@ -287,7 +289,7 @@ function collision(moto_m, moto_m1)
     let boui;
   let bidule;
 
-    switch (moto_m.ori){
+    switch (moto_m1.ori){
         
         case "N":
             //x et y deviennent le point en haut a gauche de la moto, quel que soit soit son orientation
@@ -303,12 +305,7 @@ function collision(moto_m, moto_m1)
                 {
                     if((pl.isMur(xi+j,y+i)))
                     {
-                        alertcol(moto_m, 1);
-                        break;
-                    }
-
-                    if(moto_m1.X == xi+j && moto_m1.Y == y+i){
-                        alertcol(moto_m, -1);
+                        alertcol(moto_m1, -1);
                         break;
                     }
                      //svgContainer.append("rect").attr("x", xi+j).attr("y", y+i).attr("width", 1).attr("height", 1).attr("fill", "green"); 
@@ -335,14 +332,10 @@ function collision(moto_m, moto_m1)
                    
                     if(pl.isMur(xi+j,y-i))
                     {
-                    alertcol(moto_m,1);
+                    alertcol(moto_m1,-1);
                         break;
                     }
 
-                    if( (moto_m1.X == xi+j && moto_m1.Y == y-i)){
-                        alertcol(moto_m, -1);
-                        break;
-                    }
                     //  svgContainer.append("rect").attr("x", xi+j).attr("y", y-i).attr("width", 1).attr("height", 1).attr("fill", "cyan");
                     
                 }
@@ -365,9 +358,9 @@ function collision(moto_m, moto_m1)
                 for (let j = 0; j < jmax; j+=PL_L)
                 {
                    
-                    if(pl.isMur(x+i,yi+j) || (moto_m1.X == x+i && moto_m1.Y == yj+j))
+                    if(pl.isMur(x+i,yi+j))
                     {
-                    alertcol(moto_m)
+                    alertcol(moto_m1, -1)
                         break;
                     }
                     // svgContainer.append("rect").attr("x", x+i).attr("y", yi+j).attr("width", 1).attr("height", 1).attr("fill", "lime");
@@ -403,9 +396,9 @@ function collision(moto_m, moto_m1)
                 for (let j = 0; j < jmax; j+=PL_L)
                 {
                    
-                    if(pl.isMur(x-i,yi+j) || (moto_m1.X == x-i && moto_m1.Y == yi+j))
+                    if(pl.isMur(x-i,yi+j))
                     {
-                    alertcol(moto_m)
+                    alertcol(moto_m1, -1)
                         break;
                     }
                     //  svgContainer.append("rect").attr("x", x-i).attr("y", yi+j).attr("width", 1).attr("height", 1).attr("fill", "purple");
@@ -440,7 +433,7 @@ function collision(moto_m, moto_m1)
               {
                   if(pl.isMur(x2+j*bidule+i*bidule,y2-j*bidule))
                   {
-                     alertcol(moto_m)
+                     alertcol(moto_m1, -1)
                       break;
                   }
                   
@@ -449,7 +442,7 @@ function collision(moto_m, moto_m1)
 
               if(pl.isMur(x2+2*boui+i*bidule , y2-2*boui+i*bidule))
                   {
-                      alertcol(moto_m)
+                      alertcol(moto_m1, -1)
                       break;
                   }
             //svgContainer.append("rect").attr("x", x2+2*boui+i*bidule).attr("y", y2-2*boui+i*bidule).attr("width", 1).attr("height", 1).attr("fill", "green");
@@ -479,7 +472,7 @@ function collision(moto_m, moto_m1)
                 
                     if(pl.isMur(x2+j*bidule-i*bidule,y2-j*bidule+i*bidule))
                     {
-                        alertcol(moto_m)
+                        alertcol(moto_m1, -1)
                         break;
                     }
                     
@@ -488,7 +481,7 @@ function collision(moto_m, moto_m1)
 
                 if(pl.isMur(x2+2*boui-i*bidule,y2+2*boui+i*bidule))
                     {
-                        alertcol(moto_m)
+                        alertcol(moto_m1, -1)
                         break;
                     }
                 // svgContainer.append("rect").attr("x", x2+2*boui-i*bidule).attr("y", y2+2*boui+i*bidule).attr("width", 1).attr("height", 1).attr("fill", "blue");
@@ -519,7 +512,7 @@ function collision(moto_m, moto_m1)
                  
                   if(pl.isMur(x2+j*bidule+i*bidule,y2-j*bidule-i*bidule))
                   {
-                     alertcol(moto_m)
+                     alertcol(moto_m1, -1)
                       break;
                   }
                   
@@ -528,7 +521,7 @@ function collision(moto_m, moto_m1)
 
               if(pl.isMur(x2+2*boui+i*bidule,y2+2*boui-i*bidule))
                   {
-                      alertcol(moto_m)
+                      alertcol(moto_m1, -1)
                       break;
                   }
             //   svgContainer.append("rect").attr("x", x2+2*boui+i*bidule).attr("y", y2+2*boui-i*bidule).attr("width", 1).attr("height", 1).attr("fill", "red");
@@ -559,7 +552,7 @@ function collision(moto_m, moto_m1)
                
                 if(pl.isMur(x2+j*bidule-i*bidule,y2-j*bidule-i*bidule))
                 {
-                    alertcol(moto_m)
+                    alertcol(moto_m1, -1)
                     break;
                 }
                 
@@ -568,7 +561,7 @@ function collision(moto_m, moto_m1)
 
             if(pl.isMur(x2+2*boui-i*bidule,y2+2*boui-i*bidule))
                 {
-                    alertcol(moto_m)
+                    alertcol(moto_m1,-1)
                     break;
                 }
             //  svgContainer.append("rect").attr("x", x2+2*boui-i*bidule).attr("y", y2-2*boui-i*bidule).attr("width", 1).attr("height", 1).attr("fill", "yellow");
@@ -579,7 +572,7 @@ function collision(moto_m, moto_m1)
 
        
     
-        }   
+    }   
 }
 
 /**
@@ -607,22 +600,6 @@ function timerMurF(moto_m){
         murActif = false;
         moto_m.train_act = false;
     }
-
-    if (moto_m.timerMur == 0)
-    {
-        document.getElementById("Space").innerText = "Pret";
-        document.getElementById("etatSpace").innerText = "Ready";
-    }
-    else if(murActif)
-    {
-        document.getElementById("Space").innerText = "EN COURS";
-        document.getElementById("etatSpace").innerText = "Temps de pose restant : "+timeraffiche+" s";
-    }
-    else if(!murActif)
-    {
-        document.getElementById("Space").innerText = "Rechargement";
-        document.getElementById("etatSpace").innerText = "Temps de recharge restant restant : "+timeraffiche+" s";
-    }   
 }
 
 /**
@@ -757,13 +734,9 @@ function avancedefault(moto_m){
  */
 function alertcol(moto_c, indice)
 {
-    //alert("collision");
-    if(indice < 0){
-        socket.emit('collision', indice, IndRoom);
-    }else{
-        socket.emit('collision',moto_c.id_player,IndRoom);
-    }
-    
+    //socket.emit('collision', indice,moto_c.id_player, IndRoom);
+    colli = true;
+    ind = indice
 }
 
 /**
@@ -773,12 +746,18 @@ function alertcol(moto_c, indice)
  */
 function Frame(moto_m1)
 {
+    colli = false;
+    ind = 99;
 
-    Move(moto_m1);
     
-    socket.emit('joueur_bouge', moto_m1,indiceRoom);
+    Move(moto_m1);
+
+    console.log(moto_m1.X);
+
 
     collision(moto_m1);
 
     timerMurF(moto_m1);
+
+    socket.emit('joueur_bouge', moto_m1,indiceRoom, colli, ind, moto_m1.id_player);
 }
