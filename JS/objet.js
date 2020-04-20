@@ -608,8 +608,8 @@ function collisionJoueur(moto1,moto2)
     // console.log("Y : "+ PtsJoueuradv[1]["y"])
     // console.log("=================================");
     // console.log("FINNNNN");
-    if(Check)return true;
-    else if(moto1.ori == "N" || moto1.ori == "S" || moto1.ori == "O" || moto1.ori == "E" ) return false;
+    if(Check && (moto1.ori == "N" || moto1.ori == "S" || moto1.ori == "O" || moto1.ori == "E" ))return true;
+    else if(!Check ) return false;
     
     else
     {
