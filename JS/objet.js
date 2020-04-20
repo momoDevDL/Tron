@@ -737,22 +737,14 @@ function collisionJoueur(moto1,moto2)
         ymax = Math.max(collider[i]["y"],ymax);
         xmin = Math.min(collider[i]["x"],xmin);
         ymin = Math.min(collider[i]["y"],ymin);
-        //svgContainer.append("rect").attr("x", collider[i]["x"]).attr("y", collider[i]["y"]).attr("width", 1).attr("height", 1).attr("fill", "green");
     }
     let Check = false;
     for(let i = 0; i < 4;i++)
     {
         if(PtsJoueuradv[i]["x"]>=xmin && PtsJoueuradv[i]["x"]<=xmax && PtsJoueuradv[i]["y"]>=ymin && PtsJoueuradv[i]["y"]<=ymax) Check = true;
     }
-    // console.log(xmin); 
-    // console.log(xmax);
-    // console.log(ymin);
-    // console.log(ymax);
-    // console.log("X : "+ PtsJoueuradv[1]["x"])
-    // console.log("Y : "+ PtsJoueuradv[1]["y"])
-    // console.log("=================================");
-    // console.log("FINNNNN");
-    if(Check && (moto1.ori == "N" || moto1.ori == "S" || moto1.ori == "O" || moto1.ori == "E" )) alertcolJoueur(moto2, -1);
+
+    if(Check && (moto1.ori == "N" || moto1.ori == "S" || moto1.ori == "O" || moto1.ori == "E" )) return true;
     else if(!Check ) return false;
     
     else
@@ -772,108 +764,36 @@ function collisionJoueur(moto1,moto2)
         }
         for(let i = 0; i < 4;i++)
         {
-            if(distance(xmax,ymax,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])>Xymax,Yxmax,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])alertcolJoueur(moto2, -1);
-            if(distance(xmin,ymin,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])>Xymin,Yxmin,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])alertcolJoueur(moto2, -1);
-            if(distance(xmax,ymin,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])>Xymin,Yxmax,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])alertcolJoueur(moto2, -1);
-            if(distance(xmin,ymax,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])>Xymax,Yxmin,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])alertcolJoueur(moto2, -1);
+            if(distance(xmax,ymax,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])>Xymax,Yxmax,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])return true;
+            if(distance(xmin,ymin,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])>Xymin,Yxmin,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])return true;
+            if(distance(xmax,ymin,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])>Xymin,Yxmax,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])return true;
+            if(distance(xmin,ymax,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])>Xymax,Yxmin,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])return true;
         }
-        
     }
-    
-        
-    
 }
 
-
-/**
- *  ptsJoueur(moto)
- * moto : objet de type moto
- * resultat : tab un tableau de dictionnaire avec x et y une liste de point representant les 4 angles de la moto
- */
-function ptsJoueur(moto)
-{
-    let x = moto.X +5 ; let y = moto.Y + 25;
-    let tab = [];
-    let x1 = 0;
-    let y1 = -25;
-    let teta = Math.PI / 4;
-    let x2 =(x1*Math.cos(teta)-y1*Math.sin(teta));
-    let y2 =(x1*Math.sin(teta)+y1*Math.cos(teta));
-    let boui = Math.sqrt(((MOT_Width/2)*(MOT_Width/2))/2); 
-    switch(moto.ori)
-    {
-        case "N" : 
-            tab.push({"x":x-5,"y":y-25});
-            tab.push({"x":x+5,"y":y-25});
-            tab.push({"x":x-5,"y":y+5});
-            tab.push({"x":x+5,"y":y+5});
-            break;
-        case "S" : 
-            tab.push({"x":x-5,"y":y-5});
-            tab.push({"x":x+5,"y":y-5});
-            tab.push({"x":x-5,"y":y+25});
-            tab.push({"x":x+5,"y":y+25});
-            break;
-        case "E" : 
-            tab.push({"x":x+25,"y":y-5});
-            tab.push({"x":x+25,"y":y+5});
-            tab.push({"x":x-5,"y":y-5});
-            tab.push({"x":x-5,"y":y+5});
-            break;
-        case "O" : 
-            tab.push({"x":x-25,"y":y-5});
-            tab.push({"x":x-25,"y":y+5});
-            tab.push({"x":x+5,"y":y-5});
-            tab.push({"x":x+5,"y":y+5});
-            break;
-
-        case "NE" : 
-           
-            x2 = x+x2-boui;
-            y2 = y+y2-boui;
-            tab.push({"x":x2,"y":y2});
-            tab.push({"x":x2+2*boui,"y":y2+2*boui});
-            tab.push({"x":x2-6*boui,"y":y2+6*boui});
-            tab.push({"x":x2-4*boui,"y":y2+8*boui});
-            break;
-        case "NO" : 
-            
-            x2 = x-x2-boui;
-            y2 = y+y2+boui;
-            tab.push({"x":x2,"y":y2});
-            tab.push({"x":x2+2*boui,"y":y2-2*boui});
-            tab.push({"x":x2+6*boui,"y":y2+6*boui});
-            tab.push({"x":x2+8*boui,"y":y2+4*boui});
-            break;
-        case "SE" : 
-            
-            x2 = x+x2-boui;
-            y2 = y-y2+boui;
-            tab.push({"x":x2,"y":y2});
-            tab.push({"x":x2+2*boui,"y":y2-2*boui});
-            tab.push({"x":x2-6*boui,"y":y2-6*boui});
-            tab.push({"x":x2-4*boui,"y":y2-8*boui});
-            break;
-        case "SO" : 
-            
-            x2 = x-x2-boui;
-            y2 = y-y2-boui;
-            tab.push({"x":x2,"y":y2});
-            tab.push({"x":x2+2*boui,"y":y2+2*boui});
-            tab.push({"x":x2+6*boui,"y":y2-6*boui});
-            tab.push({"x":x2+8*boui,"y":y2-4*boui});
-            break;
-
-        
-    }
-    return tab;
-}
-
-
-function alertcolJoueur(moto_c, indice){
+function alertcolJoueur(moto_m1, moto_m2, coll12, coll21){
     colli = true;
     ind = indice;
     moto_id_coll = moto_c.id_player;
+
+    if(coll12 == true && coll21 == true){
+        colli = true;
+        ind = 0;
+        moto_id_coll = -1;
+    }
+
+    if(coll12 == true && coll21 == false){
+        colli = true;
+        ind = -1;
+        moto_id_coll = moto_m2.id_player;
+    }
+
+    if(false == true && coll21 == true){
+        colli = true;
+        ind = -1;
+        moto_id_coll = moto_m1.id_player;
+    }
 }
 
 /**
@@ -891,7 +811,10 @@ function Frame(moto_m1, moto_m2)
 
     collision(moto_m1);
 
-    collisionJoueur(moto_m1, moto_m2);
+    let coll_m1_m2 = collisionJoueur(moto_m1, moto_m2);
+    let coll_m2_m1 = collisionJoueur(moto_m2, moto_m1);
+
+    alertcolJoueur(moto_m1, moto_m2, coll_m1_m2, coll_m2_m1);
 
     timerMurF(moto_m1);
 
