@@ -576,6 +576,71 @@ function collision(moto_m1)
 }
 
 /**
+ *  collisionJoueur(moto1,moto2)
+ *  moto1 moto2 : les deux motos
+ *  resultat : renvoie vrai si joueur2 touche joueur 1
+ */
+function collisionJoueur(moto1,moto2)
+{
+    let xmax = 0,xmin = 9999,ymax = 0,ymin = 999999;
+    let collider = ptsJoueur(moto1);
+    let PtsJoueuradv = ptsJoueur(moto2);
+    for(let i = 0; i < 4;i++)
+    {
+        xmax = Math.max(collider[i]["x"],xmax);
+        ymax = Math.max(collider[i]["y"],ymax);
+        xmin = Math.min(collider[i]["x"],xmin);
+        ymin = Math.min(collider[i]["y"],ymin);
+        //svgContainer.append("rect").attr("x", collider[i]["x"]).attr("y", collider[i]["y"]).attr("width", 1).attr("height", 1).attr("fill", "green");
+    }
+    let Check = false;
+    for(let i = 0; i < 4;i++)
+    {
+        if(PtsJoueuradv[i]["x"]>=xmin && PtsJoueuradv[i]["x"]<=xmax && PtsJoueuradv[i]["y"]>=ymin && PtsJoueuradv[i]["y"]<=ymax) Check = true;
+        
+
+    }
+    // console.log(xmin); 
+    // console.log(xmax);
+    // console.log(ymin);
+    // console.log(ymax);
+    // console.log("X : "+ PtsJoueuradv[1]["x"])
+    // console.log("Y : "+ PtsJoueuradv[1]["y"])
+    // console.log("=================================");
+    // console.log("FINNNNN");
+    if(Check)return true;
+    else if(moto1.ori == "N" || moto1.ori == "S" || moto1.ori == "O" || moto1.ori == "E" ) return false;
+    
+    else
+    {
+        
+            let Yxmax ;
+            let Xymax ;
+            let Yxmin ;
+            let Xymin ;
+        for(let i = 0; i < 4;i++)
+        {
+            if(collider[i]["x"] = xmax)Yxmax = collider[i]["y"];
+            else if(collider[i]["x"] = xmin)Yxmin = collider[i]["y"];
+            else if(collider[i]["y"] = ymax)Xymax = collider[i]["x"];
+            else if(collider[i]["y"] = ymin)Xymin = collider[i]["x"];
+            
+        }
+        for(let i = 0; i < 4;i++)
+        {
+            if(distance(xmax,ymax,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])>Xymax,Yxmax,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])return true;
+            if(distance(xmin,ymin,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])>Xymin,Yxmin,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])return true;
+            if(distance(xmax,ymin,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])>Xymin,Yxmax,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])return true;
+            if(distance(xmin,ymax,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])>Xymax,Yxmin,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])return true;
+        }
+        
+    }
+    
+        
+    
+}
+
+/**
  * timerMur(moto_m)
  * moto_m est un objet de type moto
  * permet de mettre en place le timer pour le mur
