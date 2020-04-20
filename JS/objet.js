@@ -1,6 +1,7 @@
 var IndRoom = -1;
 var colli = false;
 var ind = 90;
+var moto_id_coll = -1;
 /**
  * InitGame()
  * ne prend aucun paramètre
@@ -309,14 +310,10 @@ function collision(moto_m1)
                         break;
                     }
                      //svgContainer.append("rect").attr("x", xi+j).attr("y", y+i).attr("width", 1).attr("height", 1).attr("fill", "green"); 
-                }
-               
-               
-                  
+                }        
             }
-           
-           
-            break;
+
+        break;
         case "S":
             x -=5;y+=25;
             // xi = (x - (x%PL_L));
@@ -335,40 +332,29 @@ function collision(moto_m1)
                     alertcol(moto_m1,-1);
                         break;
                     }
-
                     //  svgContainer.append("rect").attr("x", xi+j).attr("y", y-i).attr("width", 1).attr("height", 1).attr("fill", "cyan");
-                    
-                }
-               
-               
-                  
+                }   
             }
            
-            break;
+        break;
         case "O":
             x -=25;y-=5;
             yi = y;
             if(y%PL_L==0)jmax=MOT_Width;
             else jmax = MOT_Width+PL_L;
 
-            
-
             for (let i = 0; i < 25-safeZoneOffset; i+=PL_L)           
             {
                 for (let j = 0; j < jmax; j+=PL_L)
                 {
-                   
                     if(pl.isMur(x+i,yi+j))
                     {
                     alertcol(moto_m1, -1)
                         break;
                     }
-                    // svgContainer.append("rect").attr("x", x+i).attr("y", yi+j).attr("width", 1).attr("height", 1).attr("fill", "lime");
-                    
+                    // svgContainer.append("rect").attr("x", x+i).attr("y", yi+j).attr("width", 1).attr("height", 1).attr("fill", "lime"); 
                 }
-               
-               
-                  
+  
             }
            
             break;
@@ -576,71 +562,6 @@ function collision(moto_m1)
 }
 
 /**
- *  collisionJoueur(moto1,moto2)
- *  moto1 moto2 : les deux motos
- *  resultat : renvoie vrai si joueur2 touche joueur 1
- */
-function collisionJoueur(moto1,moto2)
-{
-    let xmax = 0,xmin = 9999,ymax = 0,ymin = 999999;
-    let collider = ptsJoueur(moto1);
-    let PtsJoueuradv = ptsJoueur(moto2);
-    for(let i = 0; i < 4;i++)
-    {
-        xmax = Math.max(collider[i]["x"],xmax);
-        ymax = Math.max(collider[i]["y"],ymax);
-        xmin = Math.min(collider[i]["x"],xmin);
-        ymin = Math.min(collider[i]["y"],ymin);
-        //svgContainer.append("rect").attr("x", collider[i]["x"]).attr("y", collider[i]["y"]).attr("width", 1).attr("height", 1).attr("fill", "green");
-    }
-    let Check = false;
-    for(let i = 0; i < 4;i++)
-    {
-        if(PtsJoueuradv[i]["x"]>=xmin && PtsJoueuradv[i]["x"]<=xmax && PtsJoueuradv[i]["y"]>=ymin && PtsJoueuradv[i]["y"]<=ymax) Check = true;
-        
-
-    }
-    // console.log(xmin); 
-    // console.log(xmax);
-    // console.log(ymin);
-    // console.log(ymax);
-    // console.log("X : "+ PtsJoueuradv[1]["x"])
-    // console.log("Y : "+ PtsJoueuradv[1]["y"])
-    // console.log("=================================");
-    // console.log("FINNNNN");
-    if(Check && (moto1.ori == "N" || moto1.ori == "S" || moto1.ori == "O" || moto1.ori == "E" ))return true;
-    else if(!Check ) return false;
-    
-    else
-    {
-        
-            let Yxmax ;
-            let Xymax ;
-            let Yxmin ;
-            let Xymin ;
-        for(let i = 0; i < 4;i++)
-        {
-            if(collider[i]["x"] = xmax)Yxmax = collider[i]["y"];
-            else if(collider[i]["x"] = xmin)Yxmin = collider[i]["y"];
-            else if(collider[i]["y"] = ymax)Xymax = collider[i]["x"];
-            else if(collider[i]["y"] = ymin)Xymin = collider[i]["x"];
-            
-        }
-        for(let i = 0; i < 4;i++)
-        {
-            if(distance(xmax,ymax,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])>Xymax,Yxmax,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])return true;
-            if(distance(xmin,ymin,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])>Xymin,Yxmin,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])return true;
-            if(distance(xmax,ymin,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])>Xymin,Yxmax,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])return true;
-            if(distance(xmin,ymax,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])>Xymax,Yxmin,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])return true;
-        }
-        
-    }
-    
-        
-    
-}
-
-/**
  * timerMur(moto_m)
  * moto_m est un objet de type moto
  * permet de mettre en place le timer pour le mur
@@ -801,7 +722,72 @@ function alertcol(moto_c, indice)
 {
     //socket.emit('collision', indice,moto_c.id_player, IndRoom);
     colli = true;
-    ind = indice
+    ind = indice;
+
+}
+
+function collisionJoueur(moto1,moto2)
+{
+    let xmax = 0,xmin = 9999,ymax = 0,ymin = 999999;
+    let collider = ptsJoueur(moto1);
+    let PtsJoueuradv = ptsJoueur(moto2);
+    for(let i = 0; i < 4;i++)
+    {
+        xmax = Math.max(collider[i]["x"],xmax);
+        ymax = Math.max(collider[i]["y"],ymax);
+        xmin = Math.min(collider[i]["x"],xmin);
+        ymin = Math.min(collider[i]["y"],ymin);
+        //svgContainer.append("rect").attr("x", collider[i]["x"]).attr("y", collider[i]["y"]).attr("width", 1).attr("height", 1).attr("fill", "green");
+    }
+    let Check = false;
+    for(let i = 0; i < 4;i++)
+    {
+        if(PtsJoueuradv[i]["x"]>=xmin && PtsJoueuradv[i]["x"]<=xmax && PtsJoueuradv[i]["y"]>=ymin && PtsJoueuradv[i]["y"]<=ymax) Check = true;
+    }
+    // console.log(xmin); 
+    // console.log(xmax);
+    // console.log(ymin);
+    // console.log(ymax);
+    // console.log("X : "+ PtsJoueuradv[1]["x"])
+    // console.log("Y : "+ PtsJoueuradv[1]["y"])
+    // console.log("=================================");
+    // console.log("FINNNNN");
+    if(Check && (moto1.ori == "N" || moto1.ori == "S" || moto1.ori == "O" || moto1.ori == "E" )) alertcolJoueur(moto2, -1);
+    else if(!Check ) return false;
+    
+    else
+    {
+        
+            let Yxmax ;
+            let Xymax ;
+            let Yxmin ;
+            let Xymin ;
+        for(let i = 0; i < 4;i++)
+        {
+            if(collider[i]["x"] = xmax)Yxmax = collider[i]["y"];
+            else if(collider[i]["x"] = xmin)Yxmin = collider[i]["y"];
+            else if(collider[i]["y"] = ymax)Xymax = collider[i]["x"];
+            else if(collider[i]["y"] = ymin)Xymin = collider[i]["x"];
+            
+        }
+        for(let i = 0; i < 4;i++)
+        {
+            if(distance(xmax,ymax,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])>Xymax,Yxmax,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])alertcolJoueur(moto2, -1);
+            if(distance(xmin,ymin,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])>Xymin,Yxmin,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])alertcolJoueur(moto2, -1);
+            if(distance(xmax,ymin,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])>Xymin,Yxmax,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])alertcolJoueur(moto2, -1);
+            if(distance(xmin,ymax,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])>Xymax,Yxmin,PtsJoueuradv[i]["x"],PtsJoueuradv[i]["y"])alertcolJoueur(moto2, -1);
+        }
+        
+    }
+    
+        
+    
+}
+
+function alertcolJoueur(moto_c, indice){
+    colli = true;
+    ind = indice;
+    moto_id_coll = moto_c.id_player;
 }
 
 /**
@@ -809,20 +795,19 @@ function alertcol(moto_c, indice)
  * moto_m1/2 sont deux objets de type moto
  * resultat : on met en mouvement toutes les motos et on détecte si il y a une collision et de plus on met leur chrono sur les murs
  */
-function Frame(moto_m1)
+function Frame(moto_m1, moto_m2)
 {
     colli = false;
     ind = 99;
+    moto_id_coll = -1;
 
-    
     Move(moto_m1);
-
-    console.log(moto_m1.X);
-
 
     collision(moto_m1);
 
+    collisionJoueur(moto_m1, moto_m2);
+
     timerMurF(moto_m1);
 
-    socket.emit('joueur_bouge', moto_m1,indiceRoom, colli, ind, moto_m1.id_player);
+    socket.emit('joueur_bouge', moto_m1,indiceRoom, colli, ind, moto_id_coll);
 }
