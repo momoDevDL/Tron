@@ -12,7 +12,8 @@ function Plateau()
 {  
    this.grandeCases;//Grandes cases qui disparaissent au fil de la partie
    this.matrice = [];// Matrice de stockage du Plateau
-   
+   this.nbgrandecasesDesactive = -1;
+   this.caseAlerte = 0;
 
    /*
    colorAire(x,y,L,l,color,etat)
@@ -270,7 +271,7 @@ this.colorAire = function(x,y,L,l,color,etat)//Colore une aire de L*l (en nb de 
  this.newGrandeCases(PL_NBCOL*PL_L,PL_NBLIG*PL_L,5,5);
 }
 
-   /*
+  /*
    incrementTMPS(x,y)
    x : coord x
    y : coord y
@@ -283,9 +284,10 @@ this.colorAire = function(x,y,L,l,color,etat)//Colore une aire de L*l (en nb de 
 
       for(let i in this.grandeCases)
       {
-         if(this.grandeCases[i].x <= x && this.grandeCases[i].x + width > x)
+         if(this.grandeCases[i].x <= x && this.grandeCases[i].x + (width*PL_L) > x)
           {
-             if(this.grandeCases[i].y <= y && this.grandeCases[i].y + height > y)
+            
+             if(this.grandeCases[i].y <= y && this.grandeCases[i].y + (height*PL_L) > y)
              {
                 this.grandeCases[i].temps ++;
                 return;
@@ -298,26 +300,75 @@ this.colorAire = function(x,y,L,l,color,etat)//Colore une aire de L*l (en nb de 
   }
 
   /*
+   choisi la grande case a alerter et lance l'alerte
+   */
+  this.alertGrandeCase = function()
+  {
+      let max = 0;
+      for(let i in this.grandeCases)
+      {
+         if(this.grandeCases[max].temps < this.grandeCases[i].temps)
+         {
+            max = i;
+         }
+      }
+      this.caseAlerte = max;
+
+      let x = this.grandeCases[max]['x'];
+      let y = this.grandeCases[max]['y'];
+      let L = this.grandeCases[max]['h'];
+      let l = this.grandeCases[max]['w'];
+      let color = "#E44F3F66";
+
+      d3.select("svg").append("rect")
+      .attr("y", y)
+      .attr("x", x)
+      .attr("width", l*PL_L)
+      .attr("height", L*PL_L)
+      .attr("fill",color)
+      .attr("stroke",neons);
+      
+  }
+
+  /*
    desactiveGrandeCase()
    La fonction desactive la grande case qui a le compteur temps le plus faible
    */
   this.desactiveGrandeCase = function()
   {
-   let max = 0;
-   for(let i in this.grandeCases)
-   {
-      if(this.grandeCases[max].temps < this.grandeCases[i].temps)
-      {
-         max = i;
-      }
-   }
+   let max = this.caseAlerte;
    let x = this.grandeCases[max]['x'];
    let y = this.grandeCases[max]['y'];
-   let h = this.grandeCases[max]['h'];
-   let w = this.grandeCases[max]['w'];
-   this.colorAire(x,y,h,w,case_des,"mur");
-
+   let L = this.grandeCases[max]['h'];
+   let l = this.grandeCases[max]['w'];
+   
+   d3.select("svg").append("rect")
+   .attr("y", y)
+   .attr("x", x)
+   .attr("width", l*PL_L)
+   .attr("height", L*PL_L)
+   .attr("fill",case_des)
+   .attr("stroke",neons);
+   
    this.grandeCases[max].temps = -9999;
+
+   let xi = x - (x%PL_L);
+   for(let i = 0; i < L ; i++)
+      {
+         for(let j = 0; j < l ; j++)
+         {          
+            this.matrice[xi/PL_L][y/PL_L]=
+            {
+               "x" : xi,
+               "y" : y,
+               "etat" : "mur"
+            }    
+           xi += PL_L; 
+         }
+         xi = x - (x%PL_L);
+         y += PL_L;
+         
+      }
    
   }
   
