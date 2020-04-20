@@ -723,7 +723,7 @@ function alertcol(moto_c, indice)
     //socket.emit('collision', indice,moto_c.id_player, IndRoom);
     colli = true;
     ind = indice;
-
+    moto_id_coll = moto_c.id_player;
 }
 
 function collisionJoueur(moto1,moto2)
