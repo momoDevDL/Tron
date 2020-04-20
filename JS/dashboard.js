@@ -35,6 +35,7 @@ $(document).ready(function(){
         let couleur_g = $('#couleur_g').text();
         let couleur_m = $('#couleur_m').text();
         let avatar = $('#avatar img').attr('src');
+
         $.ajax({
             url:"modifyProfileScript.php",
             method:"POST",
@@ -54,7 +55,7 @@ $(document).ready(function(){
         });
     });
 
-    $('body').on('click',"#Joueur",function(e){
+ /*   $('body').on('click',"#Joueur",function(e){
         $.ajax({
                     url : "fetch_All_Users.php",
                     method : "POST",
@@ -69,11 +70,11 @@ $(document).ready(function(){
                     },
                     error: function(data){
                             console.log('error');
-                            //console.log(data);
+                            console.log(data);
                     }
                     
             });               
-    }); 
+    }); */
 
   
         $.ajax({
@@ -81,19 +82,19 @@ $(document).ready(function(){
         method : "POST",
         dataType: "json",
         success:function(data){
-        //console.log(data);
+        console.log(data);
         couleurG = data[0];
         couleurM = data[1];
-        //console.log(couleurG);
-        //console.log(couleurM);
+        console.log(couleurG);
+        console.log(couleurM);
         },
         complete:function(data){
-            //console.log("lol");
-            //console.log(data);
+            console.log("recuperation des couleurs fini");
+            console.log(data);
         },
         error: function(data){
-                //console.log('error');
-                //console.log(data);
+                console.log('error');
+                console.log(data);
         }
     });
 
@@ -102,7 +103,7 @@ $(document).ready(function(){
         socket = io('http://localhost:2589/first-namespace');
 
         socket.on('connect_error',()=>{
-            //console.log(socket.connected);
+            console.log(socket.connected);
             if(socket.connected == false){
                 socket.close();
                 alert('Erreur de connexion au serveur');
@@ -110,7 +111,7 @@ $(document).ready(function(){
         });
 
         socket.on('connect',()=>{
-            //console.log(socket.connected);
+            console.log(socket.connected);
             socket.emit('AdminRequestRooms');
         });
 
@@ -119,24 +120,24 @@ $(document).ready(function(){
         },60000);
 
         socket.on('Rooms',(Rooms)=>{
-            //console.log(Rooms);
+            console.log(Rooms);
             $.ajax({
                 url : "Rooms.php",
                 method : "POST",
                 data:{R:JSON.stringify(Rooms)},
                 dataType: "text",
                 success:function(data){
-                    //console.log('success');
-                    //console.log(data);
+                    console.log('success getting the rooms');
+                    console.log(data);
                     $('#main').html(data);
                 },
                 complete:function(data){
-                 //console.log("completed");
-                 //console.log(data);
+                 console.log("completed getting the Rooms");
+                 console.log(data);
                  
                 },
                 error: function(data){
-                        //console.log('error');
+                    console.log('error');
                         
                 }
                 
@@ -144,16 +145,39 @@ $(document).ready(function(){
         });
     });
 
+    $.ajax({
+        url : "fetchPlayerPseudo&Priority.php",
+        method : "POST",
+        dataType: "json",
+        success:function(data){
+            
+            PriorityClient = data.priorite;
+            Pseudo = data.pseudo ;
+            console.log("this is data : " +data);
+            console.log("this is data priority : " +PriorityClient);
+            console.log("this is data pseudo : " +Pseudo);
+            console.log(Pseudo);
+ 
+        },
+        complete:function(data){
+         console.log("fetch of priority completed");
+         console.log(data);
+ 
+        },
+        error: function(data){
+            console.log('error fetching priority');
+                
+        }
+        
+    });
+
     $('body').on('click','#1V1',function(){
         
  
-
-       
-
-        socket = io('localhost:2589/first-namespace');
+        socket = io('134.209.249.236:2589/first-namespace');
         
         socket.on('connect_error',()=>{
-            //console.log(socket.connected);
+            console.log(socket.connected);
             if(socket.connected == false){
                 socket.close();
                 alert('Erreur de connexion au serveur, Veuillez Reessayer');
@@ -186,13 +210,13 @@ $(document).ready(function(){
             svgContainer = d3.select('#damier').append('svg').attr('width',PL_NBCOL*PL_L).attr('height',PL_NBLIG*PL_L).attr('id','plateau_');
             pl.newPlateau(PL_L,PL_NBCOL,PL_NBLIG);
             pl.newGrandeCases(PL_NBCOL*PL_L,PL_NBLIG*PL_L,5,5);
-            //console.log(svgContainer);
+            
             socket.emit('CommencerPartie',indiceRoom);
 
         }
 
         function DemarePartie(){
-            //console.log(svgContainer);
+            
             InitGame(ID_joueur, indiceRoom);
             defEvent(moto1);
             //console.log("l'indice de la room est :" + indiceRoom);
@@ -200,32 +224,7 @@ $(document).ready(function(){
         }
 
        
-        $.ajax({
-            url : "fetchPlayerPseudo&Priority.php",
-            method : "POST",
-            dataType: "json",
-            success:function(data){
-                
-                PriorityClient = data.priorite;
-                Pseudo = data.pseudo ;
-                //console.log("this is data : " +data);
-                //console.log("this is data priority : " +PriorityClient);
-                //console.log("this is data pseudo : " +Pseudo);
-                 //console.log(Pseudo);
-     
-            },
-            complete:function(data){
-             //console.log("after lol");
-             //console.log(data);
-     
-            },
-            error: function(data){
-                    //console.log('error');
-                    
-            }
-            
-        });
-
+        
         
       socket.on('connect',function(){
         $('#rechercheMatch').css({
@@ -253,14 +252,14 @@ $(document).ready(function(){
       socket.emit('CommencerRecherche');
 
       socket.on('connectedToRoom',function(indiceRoomS,NomRoom){
-        //console.log("You Are Connected to Room " + NomRoom);
+        console.log("You Are Connected to Room " + NomRoom);
         indiceRoom = indiceRoomS ;
         //console.log(indiceRoom);
       });
 
       socket.on('CommenceBientot',function(pseudos){
-        //console.log("pseudo 2 est de :" + pseudos.p2);
-        //console.log("pseudo 1 est de :" + pseudos.p1);
+        console.log("pseudo 2 est de :" + pseudos.p2);
+        console.log("pseudo 1 est de :" + pseudos.p1);
 
         $("body #rechercheMatch").append("<p id='PartieEnConst'>Votre partie va bientot commencer</p>");
 
@@ -312,19 +311,19 @@ $(document).ready(function(){
                         }
                 },
                 complete:function(data){
-                    //console.log("L'id de la partie :"+data);
+                    console.log("L'id de la partie :"+data);
                     
                 },
                 error: function(data){
-                        //console.log('error');
-                        //console.log(data);
+                        console.log('error');
+                        console.log(data);
                 }
                 
             });
         });
       
         socket.on("RecvIdPartie",function(id){
-            //console.log("l'id de la partie reçu par l'autre joueur est : "+ id );
+            console.log("l'id de la partie reçu par l'autre joueur est : "+ id );
             ID_Partie = id ;
         });
         
@@ -356,7 +355,7 @@ $(document).ready(function(){
                 );
                 socket.emit('couleurAdversaire',couleurM,indiceRoom);
             }
-            //console.log("id joueur est : "+ id);
+            console.log("id joueur est : "+ id);
         });
 
         socket.on('couleurAdv',function(coul){
@@ -373,7 +372,7 @@ $(document).ready(function(){
         });
 
         socket.on('generer_partie',function(){
-            //console.log("je genere la partie");
+            console.log("je genere la partie");
             GenerPlateau();
         });
 
@@ -392,7 +391,7 @@ $(document).ready(function(){
 
         //socket qui est appelé toutes les 20 ms pour raffraichir les motos
         socket.on('frame', function(seconde){
-            Frame(moto1);
+            Frame(moto1,moto2);
             document.getElementById('tmp').innerHTML = seconde;
         });
 
