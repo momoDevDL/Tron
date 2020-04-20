@@ -784,6 +784,92 @@ function collisionJoueur(moto1,moto2)
     
 }
 
+
+/**
+ *  ptsJoueur(moto)
+ * moto : objet de type moto
+ * resultat : tab un tableau de dictionnaire avec x et y une liste de point representant les 4 angles de la moto
+ */
+function ptsJoueur(moto)
+{
+    let x = moto.X +5 ; let y = moto.Y + 25;
+    let tab = [];
+    let x1 = 0;
+    let y1 = -25;
+    let teta = Math.PI / 4;
+    let x2 =(x1*Math.cos(teta)-y1*Math.sin(teta));
+    let y2 =(x1*Math.sin(teta)+y1*Math.cos(teta));
+    let boui = Math.sqrt(((MOT_Width/2)*(MOT_Width/2))/2); 
+    switch(moto.ori)
+    {
+        case "N" : 
+            tab.push({"x":x-5,"y":y-25});
+            tab.push({"x":x+5,"y":y-25});
+            tab.push({"x":x-5,"y":y+5});
+            tab.push({"x":x+5,"y":y+5});
+            break;
+        case "S" : 
+            tab.push({"x":x-5,"y":y-5});
+            tab.push({"x":x+5,"y":y-5});
+            tab.push({"x":x-5,"y":y+25});
+            tab.push({"x":x+5,"y":y+25});
+            break;
+        case "E" : 
+            tab.push({"x":x+25,"y":y-5});
+            tab.push({"x":x+25,"y":y+5});
+            tab.push({"x":x-5,"y":y-5});
+            tab.push({"x":x-5,"y":y+5});
+            break;
+        case "O" : 
+            tab.push({"x":x-25,"y":y-5});
+            tab.push({"x":x-25,"y":y+5});
+            tab.push({"x":x+5,"y":y-5});
+            tab.push({"x":x+5,"y":y+5});
+            break;
+
+        case "NE" : 
+           
+            x2 = x+x2-boui;
+            y2 = y+y2-boui;
+            tab.push({"x":x2,"y":y2});
+            tab.push({"x":x2+2*boui,"y":y2+2*boui});
+            tab.push({"x":x2-6*boui,"y":y2+6*boui});
+            tab.push({"x":x2-4*boui,"y":y2+8*boui});
+            break;
+        case "NO" : 
+            
+            x2 = x-x2-boui;
+            y2 = y+y2+boui;
+            tab.push({"x":x2,"y":y2});
+            tab.push({"x":x2+2*boui,"y":y2-2*boui});
+            tab.push({"x":x2+6*boui,"y":y2+6*boui});
+            tab.push({"x":x2+8*boui,"y":y2+4*boui});
+            break;
+        case "SE" : 
+            
+            x2 = x+x2-boui;
+            y2 = y-y2+boui;
+            tab.push({"x":x2,"y":y2});
+            tab.push({"x":x2+2*boui,"y":y2-2*boui});
+            tab.push({"x":x2-6*boui,"y":y2-6*boui});
+            tab.push({"x":x2-4*boui,"y":y2-8*boui});
+            break;
+        case "SO" : 
+            
+            x2 = x-x2-boui;
+            y2 = y-y2-boui;
+            tab.push({"x":x2,"y":y2});
+            tab.push({"x":x2+2*boui,"y":y2+2*boui});
+            tab.push({"x":x2+6*boui,"y":y2-6*boui});
+            tab.push({"x":x2+8*boui,"y":y2-4*boui});
+            break;
+
+        
+    }
+    return tab;
+}
+
+
 function alertcolJoueur(moto_c, indice){
     colli = true;
     ind = indice;
