@@ -1,7 +1,5 @@
-var IndRoom = -1;
-var colli = false;
-var ind = 90;
-var moto_id_coll = -1;
+
+
 /**
  * InitGame()
  * ne prend aucun paramètre
@@ -9,8 +7,7 @@ var moto_id_coll = -1;
  */
 function InitGame(id_, idr){
     moto1 = new Moto(id_);//création de moto 1
-    moto1.dessinerMoto(); //on dessine la moto numéro 1
-    IndRoom = idr;
+    moto1.dessinerMoto(); //on dessine la moto numéro 1    
 }
 
 /*
@@ -155,7 +152,7 @@ function direction(touches)
  * -> on donner l'angle de rotation à la moto ici 45d
  * -> on appel lé méthode moveUPLEFT() de moto_m
  */
-function rotation(moto_m){
+function Move(moto_m){
     var dir =  direction(touches);
     moto_m.speedX = 0; //la direction est mise à 0 en X et Y
     moto_m.speedY = 0;
@@ -255,15 +252,6 @@ function rotation(moto_m){
           
 }
 
-/**
- * Move()
- * ne prend aucun paramètre pour le moment mais devrait prendre les deux motos en paramètre
- * résulatat : on regarde si l'utilisateur souhaite faire une rotation (changer de sens), et on appel les fonctions Update de chaque moto
- */
-function Move(moto_m){
-    //on rafracihi la moto
-    rotation(moto_m); //à chaque frame on regarde si on touche a été enfoncé et on effectue la rotation et le changement de direction 
-}
 
 /**
  *
@@ -289,6 +277,7 @@ function collision(moto_m1)
     let y2;
     let boui;
   let bidule;
+  let collision = false;
 
     switch (moto_m1.ori){
         
@@ -305,9 +294,9 @@ function collision(moto_m1)
                 for (let j = 0; j < jmax; j+=PL_L)
                 {
                     if((pl.isMur(xi+j,y+i)))
-                    {
-                        alertcol(moto_m1, -1);
-                        break;
+                    {   
+                        collision = true ;
+                        break
                     }
                      //svgContainer.append("rect").attr("x", xi+j).attr("y", y+i).attr("width", 1).attr("height", 1).attr("fill", "green"); 
                 }        
@@ -329,7 +318,7 @@ function collision(moto_m1)
                    
                     if(pl.isMur(xi+j,y-i))
                     {
-                    alertcol(moto_m1,-1);
+                        collision = true;
                         break;
                     }
                     //  svgContainer.append("rect").attr("x", xi+j).attr("y", y-i).attr("width", 1).attr("height", 1).attr("fill", "cyan");
@@ -349,7 +338,7 @@ function collision(moto_m1)
                 {
                     if(pl.isMur(x+i,yi+j))
                     {
-                    alertcol(moto_m1, -1)
+                        collision = true;
                         break;
                     }
                     // svgContainer.append("rect").attr("x", x+i).attr("y", yi+j).attr("width", 1).attr("height", 1).attr("fill", "lime"); 
@@ -384,7 +373,7 @@ function collision(moto_m1)
                    
                     if(pl.isMur(x-i,yi+j))
                     {
-                    alertcol(moto_m1, -1)
+                        collision(true);
                         break;
                     }
                     //  svgContainer.append("rect").attr("x", x-i).attr("y", yi+j).attr("width", 1).attr("height", 1).attr("fill", "purple");
@@ -419,8 +408,8 @@ function collision(moto_m1)
               {
                   if(pl.isMur(x2+j*bidule+i*bidule,y2-j*bidule))
                   {
-                     alertcol(moto_m1, -1)
-                      break;
+                    collision = true;
+                    break;
                   }
                   
                     //svgContainer.append("rect").attr("x", x2+j*bidule+i*bidule).attr("y", y2-j*bidule+i*bidule).attr("width", 1).attr("height", 1).attr("fill", "green");   
@@ -428,8 +417,8 @@ function collision(moto_m1)
 
               if(pl.isMur(x2+2*boui+i*bidule , y2-2*boui+i*bidule))
                   {
-                      alertcol(moto_m1, -1)
-                      break;
+                    collision = true;
+                    break;
                   }
             //svgContainer.append("rect").attr("x", x2+2*boui+i*bidule).attr("y", y2-2*boui+i*bidule).attr("width", 1).attr("height", 1).attr("fill", "green");
                 }
@@ -458,7 +447,7 @@ function collision(moto_m1)
                 
                     if(pl.isMur(x2+j*bidule-i*bidule,y2-j*bidule+i*bidule))
                     {
-                        alertcol(moto_m1, -1)
+                        collision = true;
                         break;
                     }
                     
@@ -467,7 +456,7 @@ function collision(moto_m1)
 
                 if(pl.isMur(x2+2*boui-i*bidule,y2+2*boui+i*bidule))
                     {
-                        alertcol(moto_m1, -1)
+                        collision = true;
                         break;
                     }
                 // svgContainer.append("rect").attr("x", x2+2*boui-i*bidule).attr("y", y2+2*boui+i*bidule).attr("width", 1).attr("height", 1).attr("fill", "blue");
@@ -498,8 +487,8 @@ function collision(moto_m1)
                  
                   if(pl.isMur(x2+j*bidule+i*bidule,y2-j*bidule-i*bidule))
                   {
-                     alertcol(moto_m1, -1)
-                      break;
+                    collision = true;
+                    break;
                   }
                   
                 //    svgContainer.append("rect").attr("x", x2+j*bidule+i*bidule).attr("y", y2+j*bidule-i*bidule).attr("width", 1).attr("height", 1).attr("fill", "red");   
@@ -507,7 +496,7 @@ function collision(moto_m1)
 
               if(pl.isMur(x2+2*boui+i*bidule,y2+2*boui-i*bidule))
                   {
-                      alertcol(moto_m1, -1)
+                      collision = true;
                       break;
                   }
             //   svgContainer.append("rect").attr("x", x2+2*boui+i*bidule).attr("y", y2+2*boui-i*bidule).attr("width", 1).attr("height", 1).attr("fill", "red");
@@ -538,7 +527,7 @@ function collision(moto_m1)
                
                 if(pl.isMur(x2+j*bidule-i*bidule,y2-j*bidule-i*bidule))
                 {
-                    alertcol(moto_m1, -1)
+                    collision = true ;
                     break;
                 }
                 
@@ -547,7 +536,7 @@ function collision(moto_m1)
 
             if(pl.isMur(x2+2*boui-i*bidule,y2+2*boui-i*bidule))
                 {
-                    alertcol(moto_m1,-1)
+                    collision = true;
                     break;
                 }
             //  svgContainer.append("rect").attr("x", x2+2*boui-i*bidule).attr("y", y2-2*boui-i*bidule).attr("width", 1).attr("height", 1).attr("fill", "yellow");
@@ -556,9 +545,9 @@ function collision(moto_m1)
         default: console.log("pas d'oritentation");
         break;
 
-       
     
     }   
+    return collision ;
 }
 
 /**
@@ -713,17 +702,15 @@ function avancedefault(moto_m){
     }
 }
 
+
+
 /**
- * alertcol()
- * prend deux paramètres : moto_c qui est la moto pour laquelle on detecte la collsion et indice qui aura comme valeur 1(collision avec un mur) ou -1 (collision avec un joueur egalite)
- * résultat : alerte le joueur qu'il y a eu une collision
+ *  distance(x1,y1,x2,y2)
+ *  resultat : renvoie la distance au carre entre le point x1,y1 et le point x2,y2
  */
-function alertcol(moto_c, indice)
+function distance(x1,y1,x2,y2)
 {
-    //socket.emit('collision', indice,moto_c.id_player, IndRoom);
-    colli = true;
-    ind = indice;
-    moto_id_coll = moto_c.id_player;
+    return Math.pow(x1-x2,2)+Math.pow(y1-y2,2);
 }
 
 function collisionJoueur(moto1,moto2)
@@ -858,30 +845,6 @@ function ptsJoueur(moto)
 
 
 
-function alertcolJoueur(moto_m1, moto_m2, coll12, coll21){
-    colli = true;
-    ind = indice;
-    moto_id_coll = moto_c.id_player;
-
-    if(coll12 == true && coll21 == true){
-        colli = true;
-        ind = 0;
-        moto_id_coll = -1;
-    }
-
-    if(coll12 == true && coll21 == false){
-        colli = true;
-        ind = -1;
-        moto_id_coll = moto_m2.id_player;
-    }
-
-    if(false == true && coll21 == true){
-        colli = true;
-        ind = -1;
-        moto_id_coll = moto_m1.id_player;
-    }
-}
-
 /**
  * Frame(moto_m1, moto_m2)
  * moto_m1/2 sont deux objets de type moto
@@ -889,20 +852,13 @@ function alertcolJoueur(moto_m1, moto_m2, coll12, coll21){
  */
 function Frame(moto_m1, moto_m2)
 {
-    colli = false;
-    ind = 99;
-    moto_id_coll = -1;
+    let colli = false ;
 
     Move(moto_m1);
 
-    collision(moto_m1);
-
-    let coll_m1_m2 = collisionJoueur(moto_m1, moto_m2);
-    let coll_m2_m1 = collisionJoueur(moto_m2, moto_m1);
-
-    alertcolJoueur(moto_m1, moto_m2, coll_m1_m2, coll_m2_m1);
-
+    colli = ( collision(moto_m1) || collisionJoueur(moto_m1, moto_m2) ) ;
+    
     timerMurF(moto_m1);
-
-    socket.emit('joueur_bouge', moto_m1,indiceRoom, colli, ind, moto_id_coll);
+   
+    socket.emit('joueur_bouge', moto_m1,indiceRoom, colli);
 }

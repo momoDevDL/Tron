@@ -1,17 +1,17 @@
 
-
-    var PriorityClient ; // variable qui va contenir la priorité de joueur  
+var PriorityClient ; // variable qui va contenir la priorité de joueur  
     let indiceRoom = -1 ;
     let ID_joueur = -1;
 
     var touches = [];
     var timer = TMP_PARTIE;
+    var motoMouv;
     
     let moto1;
     let moto2;
     let couleurG;
     let couleurM;
-    let score = [ 0 , 0 ]; // [score de J2 ,score de J1]
+    let score = [ 0 , 0 ];
     
     var socket;
     var timerMur = 0;
@@ -22,7 +22,6 @@
     var ID_Partie;
     var pseudoAdv;
     var nbrManche = NBR_MANCHE;
-    var finManche = false;
     
 
 $(document).ready(function(){
@@ -174,7 +173,15 @@ $(document).ready(function(){
 
 
         function GenerPlateau(){
-            document.getElementById('nbr_manche').innerHTML = nbrManche;    
+            document.getElementById('nbr_manche').innerHTML = nbrManche;
+           if(ID_joueur == 1){
+            document.getElementById('playerOne').innerHTML = score[0];
+            document.getElementById('playerTwo').innerHTML = score[1];
+           }else{
+            document.getElementById('playerOne').innerHTML = score[1];
+            document.getElementById('playerTwo').innerHTML = score[0];
+           }
+            
             var elem = document.getElementById("btn_ready");
             elem.parentNode.removeChild(elem);
             pl = new Plateau();
@@ -358,7 +365,7 @@ $(document).ready(function(){
         socket.on('moto_autre_joueur', function(motoE){
             moto2 = new Moto(motoE.id_player);
             moto2.dessinerMoto();
-            socket.emit('ok_pret', indiceRoom, TMP_PARTIE, INTERVAL);
+            socket.emit('ok_pret', indiceRoom);
         });
 
         //socket qui affiche le décompte avant le lancement de la manche
@@ -367,36 +374,50 @@ $(document).ready(function(){
         });
 
         //socket qui est appelé toutes les 20 ms pour raffraichir les motos
-        socket.on('frame', function(seconde){
-            Frame(moto1,moto2);
-            document.getElementById('tmp').innerHTML = seconde;
+        socket.on('frame', function(){   
+            var start = new Date().getTime();
+            var time = 0 ;
+            var second = TMP_PARTIE;
+            function movementPerFrame(){
+                time += INTERVAL;
+                Frame(moto1,moto2);
+                    second -= INTERVAL;
+                    document.getElementById('tmp').innerHTML = second;
+                        if(second <= 0){
+                            clearTimeout(motoMouv);
+                            socket.emit('fin' ,indiceRoom);
+                        }
+                var diff = (new Date().getTime()-start) - time;
+                motoMouv=setTimeout(movementPerFrame,INTERVAL - diff);
+            }
+            motoMouv = setTimeout(movementPerFrame,INTERVAL);
+               
+                
         });
 
         //quand les deux joueurs sont pret on lance la partie
         socket.on('lance_partie', function(){
-
             DemarePartie();
         });
 
          //nous alerte lors d'une collision de nous ou de l'autre joueur
-        socket.on('fin_manche', function(sc1,sc2){
-
-            console.log("=========================FIN DE MANCHE===============  ");
-            console.log(sc1);
-            console.log(sc2);
-            console.log(ID_joueur);
-            score[0] += sc1;
-            score[1] += sc2;
-            if(ID_joueur == 1){    
-                console.log(score);
-                document.getElementById('playerOne').innerHTML = score[0];
-                document.getElementById('playerTwo').innerHTML = score[1];
+        socket.on('fin_manche', function(ind, jid){
+            clearInterval(motoMouv);
+            //console.log("=========================FIN DE MANCHE===============  ");
+            var ind2 = 0;
+            if(jid == moto1.id_player){
+                ind2 = ind;
             }else{
-                console.log(score); 
-                document.getElementById('playerOne').innerHTML = score[1];
-                document.getElementById('playerTwo').innerHTML = score[0];
+                ind2 -= ind;
             }
-            
+            if(ind2 < 0){
+                score[moto1.id_player-1]+= 0;
+                socket.emit('miseAjourScore',indiceRoom,score[moto1.id_player-1],ID_joueur);
+            }
+            if(ind2 >=0){
+                score[moto1.id_player-1]+= 1;
+                socket.emit('miseAjourScore',indiceRoom,score[moto1.id_player-1],ID_joueur);
+            }
             moto1 = null;
             moto2 = null;
             svgContainer = null;
@@ -406,6 +427,20 @@ $(document).ready(function(){
             nouvellePartie();
         });
 
+        socket.on("nouveauScore",function(sc1,sc2){
+            //console.log("============== mise a jour de score ============");
+            //console.log(score);
+            score[0] = sc1 ;
+            score[1] = sc2 ;
+            if(ID_joueur == 1){
+                document.getElementById('playerOne').innerHTML = score[0];
+                document.getElementById('playerTwo').innerHTML = score[1];
+               }else{
+                document.getElementById('playerOne').innerHTML = score[1];
+                document.getElementById('playerTwo').innerHTML = score[0];
+               }
+            //console.log(score);
+        });
         
          /**
          lorsque on recoit le message du serveur comme quoi un joueur à bougé deux cas : 
@@ -439,7 +474,7 @@ $(document).ready(function(){
                     pl.transformeCase(moto2.X+5,moto2.Y+25,moto2.color,'mur'); //permet de créer la trainée de la moto
                 }
             }
-            Update(moto2);  Update(moto1);
+            Update(moto2); Update(moto1);
         });
 
         function nouvellePartie(){
@@ -515,7 +550,8 @@ $(document).ready(function(){
         });
 
             socket.on('QuitterOuRejouer',()=>{
-                socket.emit('clearInterval');
+               // socket.emit('clearInterval');
+               clearInterval(motoMouv);
                 //console.log("ID_PARTIE = "+ ID_Partie);
                 //console.log("INDICE ROOM = "+ indiceRoom);
                 
@@ -570,6 +606,7 @@ $(document).ready(function(){
             });
 
             $('body').on('click','#btnQuit',()=>{
+                clearInterval(motoMouv);
                 socket.emit('JQuit', score, ID_joueur,indiceRoom);
             });
 

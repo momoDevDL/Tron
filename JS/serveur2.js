@@ -1,12 +1,7 @@
-var nomsJoueurs = [];
-var nbJoueursConnectes = 0;
-
-
 
 var serveur = require('http').createServer();
 var io = require("socket.io")(serveur);
 const nsp = io.of('/first-namespace');
-
 
 
 serveur.listen(8888,function(){
@@ -15,15 +10,11 @@ serveur.listen(8888,function(){
 
 
 var Rooms = [];
-//var pseudoPlayer1 = null;
-//var pseudoPlayer2 = null;
 var indiceInsertion = 0;
-//var Priority ;
+
 
 var id = 0;
 var motoMouv;
-
-
 
 nsp.on('connection', function (socket) {
 
@@ -65,7 +56,7 @@ et sinon inclu*/
          le lancemant de serveur , on garantit ainsi des noms differents des rooms,Aussi 
         un acces correct pour toute modification a la room avec la variable position*/
 
-        Rooms.push({name:'room'+indiceInsertion , position:indiceNouvelleRoom ,size:2,remaining:1,Priority:Priority, p1:Pseudo,p2:'null',idPartie:-1, score:[0,0],pret:0 ,plateauGenerer:0,motoPret:0,finMouv:0,moto1:0,moto2:0,collJ1:-1,collJ2:-1});
+        Rooms.push({name:'room'+indiceInsertion , position:indiceNouvelleRoom ,size:2,remaining:1,Priority:Priority, p1:Pseudo,p2:'null',idPartie:-1, score:[0,0],pret:0 ,plateauGenerer:0,motoPret:0,finMouv:0,moto1:0,moto2:0});
         socket.join(Rooms[indiceNouvelleRoom].name);
         indiceInsertion++;
     
@@ -135,8 +126,8 @@ et sinon inclu*/
 
                 if(seconde_left <= 0){
                     clearInterval(interval);
-                    TimerJeu(IR, tmpPartie, temp_refresh);
-                   
+                    //TimerJeu(IR, tmpPartie, temp_refresh);
+                    nsp.in(Rooms[IR].name).emit('frame');
                 }
             }, 1000);
         }
@@ -144,57 +135,33 @@ et sinon inclu*/
     });
    
 
-    socket.on('joueur_bouge', function(moto,indice,coll){
-
-        /*console.log("========================================");
-        console.log("Coll");
+    socket.on('joueur_bouge', function(moto,indice, coll, ind, id_player){
         console.log(coll);
-        console.log(Rooms[indice].collJ1);
-        console.log(Rooms[indice].collJ2);
-        console.log(moto.id_player);
-        console.log("========================================");*/
         Rooms[indice].finMouv += 1;
-    
-        if(moto.id_player == 1){
-        Rooms[indice].moto1 = moto ;
-        Rooms[indice].collJ1 = coll ;
-        }else{
-        Rooms[indice].moto2 = moto ;
-        Rooms[indice].collJ2 = coll ;
-        }
+     
 
-        if(Rooms[indice].finMouv >= 2 &&  Rooms[indice].collJ1 != -1 && Rooms[indice].collJ2 != -1 ){   
-
+        if(Rooms[indice].finMouv == 2){
+            if(moto.id_player == 1)
+            Rooms[indice].moto1 = moto ;
+            else
+            Rooms[indice].moto2 = moto ;
             Rooms[indice].finMouv = 0;
-            
-            if(Rooms[indice].collJ1 || Rooms[indice].collJ2){
-                clearInterval(motoMouv);
-                let scoreJ1 = 0;
-                let scoreJ2 = 0; 
-                if(Rooms[indice].collJ1 == Rooms[indice].collJ2){
-                scoreJ1 = 0 ;
-                scoreJ2 = 0 ;
-                 }else{
-                scoreJ1 = Rooms[indice].collJ1 ? 0 : 1;
-                scoreJ2 = Rooms[indice].collJ2 ? 0 : 1; 
-                }
-                Rooms[indice].score[0] += scoreJ1;
-                Rooms[indice].score[1] += scoreJ2;
-                Rooms[indice].collJ1 = -1;
-                Rooms[indice].collJ2 = -1;
-                       
-            nsp.in(Rooms[indice].name).emit('fin_manche',scoreJ1,scoreJ2);
-
-            }else{
-                Rooms[indice].collJ1 = -1;
-                Rooms[indice].collJ2 = -1;
-                nsp.in(Rooms[indice].name).emit('update_joueur',Rooms[indice].moto1,Rooms[indice].moto2);
-            }
+    
+        if(coll){
+            clearInterval(motoMouv);
+            nsp.in(Rooms[indice].name).emit('fin_manche',ind, id_player);
+        }else{
+            nsp.in(Rooms[indice].name).emit('update_joueur',Rooms[indice].moto1,Rooms[indice].moto2);
+        }
         }
     });
 
 
- 
+    socket.on('miseAjourScore', function(indiceRoom,sc,id_joueur){
+        Rooms[indiceRoom].score[id_joueur-1] = sc;
+        nsp.in(Rooms[indiceRoom].name).emit('nouveauScore',Rooms[indiceRoom].score[0], Rooms[indiceRoom].score[1]);
+    });
+
 
     socket.on('score', function(sc, id_joueur, indiceRoom){
         Rooms[indiceRoom].score[id_joueur-1] = sc[id_joueur-1];
