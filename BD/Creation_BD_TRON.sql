@@ -169,6 +169,8 @@ CREATE TABLE LOGERROR  (
 
 
 
+
+
 /*---------------------------INSERTION--------------------*/
 
 INSERT INTO UTILISATEUR VALUES('Momoman852',md5('momo'),'ADMIN','mohamedmasbahaboulaich@outlook.fr',0,1.00,NULL,1500,'rgb(255, 51, 0)','rgb(0, 0, 102)',"NIVEAU", "../IMAGES/31543101_102282713975787_7975195690995286016_o.jpg");

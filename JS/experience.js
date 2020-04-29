@@ -15,9 +15,36 @@ function gainExperience(experienceJoueur1, boostJ1, experienceJoueur2, boostJ2, 
 	}
 	gainJ1 = gainJ1 * boostJ1;
 	gainJ2 = gainJ2 * boostJ2;
-	
-	var miseAJourExperienceJ1 = experienceJoueur1 + gainJ1;
-	var miseAJourExperienceJ2 = experienceJoueur2 + gainJ2;
+
+	var miseAJourExperienceJ1 = max((experienceJoueur1 + gainJ1),358144);
+	var miseAJourExperienceJ2 = max((experienceJoueur2 + gainJ2),358144);
 	
 	return {miseAJourExperienceJ1: miseAJourExperienceJ1, miseAJourExperienceJ2: miseAJourExperienceJ2};
+}
+
+function niveau(experience){
+	var niveau = 1;
+	var exp = experience;
+	
+	while (exp > 0){
+		if(niveau < 8){
+			exp = exp - 256;
+		}else if(niveau < 16){
+			exp = exp - 512;
+		}else if(niveau < 32){
+			exp = exp - 1024;
+		}else if(niveau < 64){
+			exp = exp - 2048;
+		}else if(niveau < 128){
+			exp = exp - 4096;
+		}else {
+			exp = exp - 8192;
+		}
+		niveau++;
+	}
+	if (exp < 0){
+		niveau--;
+	}
+	
+	return niveau;
 }
