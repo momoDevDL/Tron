@@ -11,7 +11,7 @@
         $email = $row['EMAIL'];
         $role = $row['ROLE'];
         $niveau = $row['NIVEAU'];
-        $mmr= $row['MMR'];
+        $elo= $row['ELO'];
         $couleurG = $row['COULEUR_GENTIL'];
         $couleurM = $row['COULEUR_MECHANT'];
         $mdp= $row['PASSWORD'];
@@ -41,10 +41,18 @@
         $_SESSION['replay'] = 'false';
        echo $replay == 'false' ? 'false' : 'true' ;
     }?>';
+    var NB_partJoue =<?php $sql2= "SELECT COUNT(*) as NBPARTIETOTAL FROM PARTIE WHERE JOUEUR_1 = '$PSEUDO' OR JOUEUR_2 = '$PSEUDO' ";
+    $res2= $dbh->query($sql2);
+    foreach($res2 as $row2)
+    $ptot = $row2['NBPARTIETOTAL'];
+    echo $ptot; 
+    ?>;
+    var Elo = <?php echo $elo; ?>;
     </script>
     <script src="../JS/node_modules/socket.io-client/dist/socket.io.js"></script>
     <script src="../JS/jquery-3.4.1.min.js"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="../JS/elo.js"></script>
     <script src="../JS/config.js"></script>
      <script src="../JS/objet.js"></script>
      <script src="../JS/Plateau.js"></script>
@@ -94,7 +102,7 @@
             </div>
             <div class="niveauMmr">
                 <p>Niveau : <?php echo $niveau; ?></p>
-            <p>MMR : <?php echo $mmr; ?></p>
+            <p>MMR : <?php echo $elo; ?></p>
                 </div>
             <div id="info-profile">
             <p id="pseudo">Pseudo : <?php echo $PSEUDO; ?></p>

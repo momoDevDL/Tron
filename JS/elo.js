@@ -1,4 +1,4 @@
-function calculK(elo, nbPartieJoue){
+exports.calculK = function(elo, nbPartieJoue){
 	var res = 0;
 	if (elo < 2000){
 		res = 20;
@@ -7,31 +7,27 @@ function calculK(elo, nbPartieJoue){
 	}else if (elo < 3000){
 		res = 5;
 	}
-	var bonusNouveauJoueur = 20* max(0,(1-(nbPartieJoue/10)));
-	var bonusFaibleNbPartieJoue = res * max(0,(1-(nbPartieJoue/50)));
+	var bonusNouveauJoueur = 20* Math.max(0,(1-(nbPartieJoue/10)));
+	var bonusFaibleNbPartieJoue = res * Math.max(0,(1-(nbPartieJoue/50)));
 	res = res + bonusNouveauJoueur + bonusFaibleNbPartieJoue;
 	
 	return res;
+
 }
 
-function estimation(eloJ1, eloJ2){
-	return 1/ (1 + pow(10,((eloJ2 - eloJ1) / 400)));
+exports.estimation = function(eloJ1, eloJ2){
+	return 1/ (1 + Math.pow(10,((eloJ2 - eloJ1) / 400)));
 }
 
-function nouveauRang(j1,j2,score){
-	
-	let difference = 0;
-	var nouveauRangJ1 = 0;  //j1.elo + calculK(j1.elo,j1.nbPartieJoue) * (score[0] - estimation(j1.elo,j2.elo));
-	var nouveauRangJ2 = 0; //j2.elo + calculK(j2.elo,j2.nbPartieJoue) * (score[1] - estimation(j2.elo,j1.elo));
 
-	if(score[0] > score[1]){
-		difference = score[0] - score[1] ;
-		nouveauRangJ1 = j1.elo + calculK(j1.elo,j1.nbPartieJoue) * (score[0] - estimation(j1.elo,j2.elo));
-		nouveauRangJ2 = j2.elo + calculK(j2.elo,j2.nbPartieJoue) * (score[1] + 0.5*difference) (estimation(j2.elo,j1.elo));
-	}else{
-		difference = score[1] - score[0] ;
-	}
+exports.nouveauRang = function(NB_MANCHE,eloj1,eloj2,score,nbPartieJoueJ1,nbPartieJoueJ2){
+    
+    var nouveauRangJ1 = 0;  
+    var nouveauRangJ2 = 0; 
+    var nbMancheNul = NB_MANCHE - (score[0] + score[1]);
 
-
-	return {nouveauRangJ1: nouveauRangJ1,nouveauRangJ2: nouveauRangJ2};
+    nouveauRangJ1 = Math.max( 300 ,eloj1 + this.calculK(eloj1,nbPartieJoueJ1) * ( (score[0]+(0,5 * nbMancheNul)) - (NB_MANCHE * this.estimation(eloj1,eloj2)) ));
+    nouveauRangJ2 = Math.max( 300,eloj2 + this.calculK(eloj2,nbPartieJoueJ2) * ( (score[1]+(0,5 * nbMancheNul)) - (NB_MANCHE * this.estimation(eloj2,eloj1)) ));
+    
+    return {nouveauRangJ1: nouveauRangJ1,nouveauRangJ2: nouveauRangJ2};
 }

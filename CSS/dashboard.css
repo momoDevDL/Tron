@@ -581,6 +581,7 @@ padding-bottom: 12px;
     width:50%;
     height:100%;
     text-align : center;
+    color: white;
   }
   
   #playerTwo{
@@ -588,6 +589,7 @@ padding-bottom: 12px;
     width:50%;
     height:100%;
     text-align : center;
+    color:white;
   }
   
   #playerOne h3{

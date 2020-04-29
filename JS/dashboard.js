@@ -3,6 +3,8 @@
     var PriorityClient ; // variable qui va contenir la priorité de joueur  
     let indiceRoom = -1 ;
     let ID_joueur = -1;
+    var nbTentatives = 1;
+    var reconnect;
 
     var touches = [];
     var timer = TMP_PARTIE;
@@ -198,7 +200,7 @@ $(document).ready(function(){
         
         
       socket.on('connect',function(){
-
+        //if( Niveau > 2){
         $('#rechercheMatch').css({
             'position':'fixed',
             'width':'100%', 
@@ -217,10 +219,75 @@ $(document).ready(function(){
         });
 
         $('#rechercheMatch').fadeIn(); 
-        socket.emit('CommencerRecherche',Pseudo,PriorityClient);
+        console.log("========================================");
+        console.log(NB_partJoue);
+        console.log(Elo);
+        console.log("========================================");
+        
+        if(PriorityClient)
+        socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,0,indiceRoom,nbTentatives);
+        else
+        socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,250,indiceRoom,nbTentatives);
+
+        //}else{
+        /*
+             $('#rechercheMatch').css({
+            'position':'fixed',
+            'width':'100%', 
+            'height':'100vh',
+            'z-index':'3',
+            'font-size':'24px',
+            'background-color':'rgba(62, 74, 75, 0.7)',
+            'text-align':'center',
+            'justify-content':'center',
+        });
+
+        $('#rechercheMatch p').css({
+            'color':'white',
+            'position':'relative',
+            'top':'50%'            
+        });
+         $('#rechercheMatch p').html('Votre niveau ne vous permet pas de jouer en ligne veuillez augmenter votre
+         niveau en s'entrainant avec L'IA avant de s'aventurer dans notre mode de jeu en ligne'); 
+        $('#rechercheMatch').fadeIn(); 
+        */
+        //}
       });
 
-      
+      socket.on("MatchIntrouvable",()=>{
+        socket.disconnect();
+        $('#rechercheMatch p').html("Désolé aucun joueur en ligne ne correspond à vos priorité de recherche "); 
+        $('#rechercheMatch').fadeIn();
+      });
+
+    socket.on("RelanceDeRecherche",function(range,positionActuelleDansRooms){
+        //Relancer la recherche avec le nouveau range au bout d'une minute
+        nbTentatives+=1;
+       switch(nbTentatives){
+        case 2:
+            reconnect = setTimeout(()=>{
+                if(PriorityClient)
+                socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,0,positionActuelleDansRooms,nbTentatives);
+                else
+                socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,range,positionActuelleDansRooms,nbTentatives);
+        
+            },60000);
+        break;
+        case 3:
+            reconnect = setTimeout(()=>{
+                if(PriorityClient)
+                socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,0,positionActuelleDansRooms,nbTentatives);
+                else
+                socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,range+3000,positionActuelleDansRooms,nbTentatives);
+        
+            },60000);
+        break;
+        }
+    });
+
+    socket.on('clearTimeout',()=>{
+        clearTimeout(reconnect);
+    });
 
      socket.on('connectedToRoom',function(indiceRoomS,idjoueur){
         console.log("You Are Connected to Room " + indiceRoomS);
@@ -374,19 +441,20 @@ $(document).ready(function(){
 
         //quand les deux joueurs sont pret on lance la partie
         socket.on('lance_partie', function(){
-
+            finManche = false;
             DemarePartie();
         });
 
          //nous alerte lors d'une collision de nous ou de l'autre joueur
         socket.on('fin_manche', function(sc1,sc2){
-
+            finManche = true;
             console.log("=========================FIN DE MANCHE===============  ");
             console.log(sc1);
             console.log(sc2);
             console.log(ID_joueur);
             score[0] += sc1;
             score[1] += sc2;
+
             if(ID_joueur == 1){    
                 console.log(score);
                 document.getElementById('playerOne').innerHTML = score[0];
@@ -445,10 +513,10 @@ $(document).ready(function(){
         function nouvellePartie(){
             console.log("======================nouvelle manche=============================");
             nbrManche--;
-            if(nbrManche <= 0){
+            if(nbrManche <= 0 || (nbrManche == 1 && (score[0]>= 2 || score[1]>=2)) ){
                 document.getElementById('nbr_manche').innerHTML = 'Fin de la partie';
                 console.log("FIN DE PARTIE");
-                socket.emit('score', score, ID_joueur, indiceRoom);
+                socket.emit('score', NBR_MANCHE,score[ID_joueur-1], ID_joueur, indiceRoom,NB_partJoue,Elo);
             }else{
                 BoutonReady();
             }
@@ -570,7 +638,11 @@ $(document).ready(function(){
             });
 
             $('body').on('click','#btnQuit',()=>{
-                socket.emit('JQuit', score, ID_joueur,indiceRoom);
+                if(ID_joueur == 1)
+                score[1] += NBR_MANCHE;
+                else
+                score[0] += NBR_MANCHE;
+                socket.emit('JQuit', NBR_MANCHE,score, ID_joueur,indiceRoom);
             });
 
             socket.on('Joueur_A_Quitter',function(sc1,sc2,idJoueur){

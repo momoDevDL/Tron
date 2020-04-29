@@ -1,13 +1,23 @@
-var nomsJoueurs = [];
-var nbJoueursConnectes = 0;
-
-
 
 var serveur = require('http').createServer();
 var io = require("socket.io")(serveur);
 const nsp = io.of('/first-namespace');
-
-
+var eloModule = require('./elo');
+var mysql = require('mysql');
+/*
+var con = mysql.createConnection({
+  host: "test.lightcyclefight.com",
+  user: "lightcycbrfight",
+  password: "Halellujah19",
+  database:"lightcycbrfight"
+});
+*/
+var con = mysql.createConnection({
+    host: "localhost",
+    user: "debian-sys-maint",
+    password: "t5n8O9FMkWEb4ssP",
+    database:"lightcyclefight"
+});
 
 serveur.listen(8888,function(){
     console.log("serveur est en ecoute sur le port num : "+ 8888);
@@ -18,12 +28,67 @@ var Rooms = [];
 //var pseudoPlayer1 = null;
 //var pseudoPlayer2 = null;
 var indiceInsertion = 0;
+
 //var Priority ;
 
 var id = 0;
 var motoMouv;
 
 
+var MatchMaking = function(socket,Rooms,Pseudo,Priority,nbPartieJoue,Elo,range,indiceRoom,nbTentative){
+
+    let BestELo = {roomName:'null',elo:-1,differenceElo:3000,roomPosition:-1,Pseudo:'null'};
+
+    Rooms.forEach(element => {
+            if(element.remaining > 0 && element.Pseudo != Pseudo && Elo-range-Priority <= element.Elo && Elo+range+Priority >= element.Elo && BestELo.differenceElo >= Math.abs(Elo - element.Elo)){
+             BestELo.roomName = element.name;
+             BestELo.elo = element.Elo;
+             BestELo.differenceElo = Math.abs(Elo - element.Elo) ;
+             BestELo.roomPosition = element.position;
+             BestELo.Pseudo = element.Pseudo ;    
+            }
+        
+    });
+
+    if(BestELo.roomName == 'null'){
+        if(indiceRoom == -1){
+        console.log("INDICE INSERTION" + indiceInsertion);
+        indiceNouvelleRoom = Rooms.length;
+
+         /*on donne comme position de la room la taille de l'ensemble des rooms et
+         comme nom l'indice insertion qui represente le nombre de room créér depuis
+         le lancemant de serveur , on garantit ainsi des noms differents des rooms,Aussi 
+        un acces correct pour toute modification a la room avec la variable position*/
+
+        Rooms.push({name:'room'+indiceInsertion , position:indiceNouvelleRoom ,size:2,remaining:1,Priority:Priority, p1:Pseudo,p2:'null',idPartie:-1, score:[0,0],pret:0 ,plateauGenerer:0,motoPret:0,finMouv:0,moto1:0,moto2:0,collJ1:-1,collJ2:-1,nbPartieJ1:nbPartieJoue,nbPartieJ2:0,eloJ1:Elo,eloJ2:0,demandeScore:0});
+        socket.join(Rooms[indiceNouvelleRoom].name);
+        indiceInsertion++;
+    
+        socket.emit("RelanceDeRecherche",(Priority? Priority:range+250),indiceNouvelleRoom);
+        }else{
+            if(nbTentative < 3)
+            socket.emit("RelanceDeRecherche",(Priority? Priority:range+250),indiceRoom);
+            else{
+            socket.leave(Rooms[indiceRoom].name);
+            Rooms.splice(indiceRoom,1);
+            socket.emit("MatchIntrouvable");
+            }
+        }
+    }else{
+        socket.leave(Rooms[indiceRoom].name);
+        socket.join(BestELo.roomName);
+        socket.to(BestELo.roomName).emit("ClearTimeout");
+        Rooms.splice(indiceRoom,1);
+        Rooms[BestELo.position].remaining--;
+        Rooms[Best.Elo.position].p2 = Pseudo;
+        Rooms[Best.Elo.position].nbPartieJ2 = nbPartieJoue;
+        Rooms[Best.Elo.position].eloJ2 = Elo;
+        socket.emit('connectedToRoom',BestELo.position,2);
+        socket.to(BestELo.roomName).emit('connectedToRoom',BestELo.position,1);
+        nsp.in(BestELo.name).emit('CommenceBientot',{p2:Pseudo,p1:BestELo.Pseudo} );
+        socket.to(BestELo.name).emit('BeginInsertPartie',{p2:Pseudo,p1:BestELo.Pseudo});
+    }
+};
 
 nsp.on('connection', function (socket) {
 
@@ -33,21 +98,21 @@ nsp.on('connection', function (socket) {
   /* Commencer la Recherche de joueur à la connection en regardant toutes les chambrescréant une nouvelle chambre
   dont il est membre s'il trouve pas un joueur qui matche avec ça priorité de recherche
 et sinon inclu*/ 
- socket.on('CommencerRecherche',function(Pseudo,Priority){
+ socket.on('CommencerRecherche',function(Pseudo,Priority,nbPartieJoue,Elo){
     Rooms.some( element => {
         if(Priority == element.Priority){
 
             if(element.remaining > 0){
                
-                    
-                    socket.join(element.name);
                     element.remaining--;
-                    element.p2 = Pseudo
+                    element.p2 = Pseudo;
+                    element.nbPartieJ2 = nbPartieJoue;
+                    element.eloJ2 = Elo;
                     inseré = true;
+                    socket.join(element.name);
                     socket.emit('connectedToRoom',element.position,2);
                     nsp.in(element.name).emit('CommenceBientot',{p2:element.p2,p1:element.p1} );
                     socket.to(element.name).emit('BeginInsertPartie',{p2:element.p2,p1:element.p1});
-        
             }
       
         }
@@ -65,7 +130,7 @@ et sinon inclu*/
          le lancemant de serveur , on garantit ainsi des noms differents des rooms,Aussi 
         un acces correct pour toute modification a la room avec la variable position*/
 
-        Rooms.push({name:'room'+indiceInsertion , position:indiceNouvelleRoom ,size:2,remaining:1,Priority:Priority, p1:Pseudo,p2:'null',idPartie:-1, score:[0,0],pret:0 ,plateauGenerer:0,motoPret:0,finMouv:0,moto1:0,moto2:0,collJ1:-1,collJ2:-1});
+        Rooms.push({name:'room'+indiceInsertion , position:indiceNouvelleRoom ,size:2,remaining:1,Priority:Priority, p1:Pseudo,p2:'null',idPartie:-1, score:[0,0],pret:0 ,plateauGenerer:0,motoPret:0,finMouv:0,moto1:0,moto2:0,collJ1:-1,collJ2:-1,nbPartieJ1:nbPartieJoue,nbPartieJ2:0,eloJ1:Elo,eloJ2:0,demandeScore:0});
         socket.join(Rooms[indiceNouvelleRoom].name);
         indiceInsertion++;
     
@@ -168,7 +233,7 @@ et sinon inclu*/
             Rooms[indice].finMouv = 0;
             
             if(Rooms[indice].collJ1 || Rooms[indice].collJ2){
-                clearInterval(motoMouv);
+                clearTimeout(motoMouv);
                 let scoreJ1 = 0;
                 let scoreJ2 = 0; 
                 if(Rooms[indice].collJ1 == Rooms[indice].collJ2){
@@ -182,10 +247,11 @@ et sinon inclu*/
                 Rooms[indice].score[1] += scoreJ2;
                 Rooms[indice].collJ1 = -1;
                 Rooms[indice].collJ2 = -1;
-                       
-            nsp.in(Rooms[indice].name).emit('fin_manche',scoreJ1,scoreJ2);
-
-            }else{
+              process.nextTick(()=>{
+                nsp.in(Rooms[indice].name).emit('fin_manche',scoreJ1,scoreJ2);
+              });   
+           
+            }else{  
                 Rooms[indice].collJ1 = -1;
                 Rooms[indice].collJ2 = -1;
                 nsp.in(Rooms[indice].name).emit('update_joueur',Rooms[indice].moto1,Rooms[indice].moto2);
@@ -196,15 +262,53 @@ et sinon inclu*/
 
  
 
-    socket.on('score', function(sc, id_joueur, indiceRoom){
-        Rooms[indiceRoom].score[id_joueur-1] = sc[id_joueur-1];
-        nsp.in(Rooms[indiceRoom].name).emit('vainceur',Rooms[indiceRoom].score[0], Rooms[indiceRoom].score[1]);
+    socket.on('score', function(nbManche,sc, id_joueur, indiceRoom,nbPartieJoue,elo){
+        Rooms[indiceRoom].score[id_joueur-1] = sc;
+        Rooms[indiceRoom].demandeScore += 1;
+    
+        if( Rooms[indiceRoom].demandeScore == 2){
+            Rooms[indiceRoom].demandeScore = 0;
+            let nouvRang = eloModule.nouveauRang(nbManche,Rooms[indiceRoom].eloJ1,Rooms[indiceRoom].eloJ2,Rooms[indiceRoom].score,Rooms[indiceRoom].nbPartieJ1,Rooms[indiceRoom].nbPartieJ2);
+            con.connect(function(err) {
+                if (err) throw err;
+                console.log("========================================");
+                console.log(nouvRang.nouveauRangJ1);
+                console.log(nouvRang.nouveauRangJ2);
+                console.log("========================================");
+                var sql = "UPDATE UTILISATEUR SET ELO = '"+nouvRang.nouveauRangJ1+"' WHERE PSEUDO = '"+Rooms[indiceRoom].p1+"'";
+                var sql2 = "UPDATE UTILISATEUR SET ELO = '"+nouvRang.nouveauRangJ2+"' WHERE PSEUDO = '"+Rooms[indiceRoom].p2+"'";
+                con.query(sql, function (err, result) {
+                    if (err) throw err;
+                    console.log(result.affectedRows + " record(s) updated");
+                  });
+                con.query(sql2, function (err, result) {
+                    if (err) throw err;
+                    console.log(result.affectedRows + " record(s) updated");
+                  });
+              });
+            nsp.in(Rooms[indiceRoom].name).emit('vainceur',Rooms[indiceRoom].score[0], Rooms[indiceRoom].score[1]);
+        }
+
     });
 
 
-   socket.on('JQuit',function(sc,idj,iR){
+   socket.on('JQuit',function(nbManche,sc,idj,iR){
     Rooms[iR].score[0] = sc[0];
     Rooms[iR].score[1] = sc[1];
+    let nouvRang = eloModule.nouveauRang(nbManche,Rooms[iR].eloJ1,Rooms[iR].eloJ2,Rooms[iR].score,Rooms[iR].nbPartieJ1,Rooms[iR].nbPartieJ2);
+            con.connect(function(err) {
+                if (err) throw err;
+                var sql = "UPDATE UTILISATEUR SET ELO = '"+nouvRang.nouveauRangJ1+"' WHERE PSEUDO = '"+Rooms[indiceRoom].p1+"'";
+                var sql2 = "UPDATE UTILISATEUR SET ELO = '"+nouvRang.nouveauRangJ2+"' WHERE PSEUDO = '"+Rooms[indiceRoom].p2+"'";
+                con.query(sql, function (err, result){
+                    if (err) throw err;
+                    console.log(result.affectedRows + " record(s) updated");
+                  });
+                con.query(sql2, function (err, result){
+                    if (err) throw err;
+                    console.log(result.affectedRows + " record(s) updated");
+                  });
+              });
     nsp.in(Rooms[iR].name).emit('Joueur_A_Quitter',Rooms[iR].score[0], Rooms[iR].score[1],idj);
    });
    
@@ -288,14 +392,16 @@ et sinon inclu*/
 
 function TimerJeu(IR ,tempPartie, temprefresh){
     var second = tempPartie;
-    motoMouv = setInterval(function(){
+    function mouvementPerFrame(){
         if(typeof Rooms[IR] !== 'undefined'){
             nsp.in(Rooms[IR].name).emit('frame', second/1000);
             second -= temprefresh;
+            motoMouv = setTimeout(mouvementPerFrame,temprefresh);
             if(second <= 0){
-                clearInterval(motoMouv);
+                clearTimeout(motoMouv);
                 nsp.in(Rooms[IR].name).emit('fin_manche' , 0, -1);
             }
         }
-    }, temprefresh);
+    }
+    motoMouv = setTimeout(mouvementPerFrame,temprefresh);
 }

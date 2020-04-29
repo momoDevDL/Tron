@@ -296,7 +296,7 @@ function collision(moto_m1)
                     if((pl.isMur(xi+j,y+i)))
                     {   
                         collision = true ;
-                        break
+                        break;
                     }
                      //svgContainer.append("rect").attr("x", xi+j).attr("y", y+i).attr("width", 1).attr("height", 1).attr("fill", "green"); 
                 }        
@@ -859,6 +859,6 @@ function Frame(moto_m1, moto_m2)
     colli = ( collision(moto_m1) || collisionJoueur(moto_m1, moto_m2) ) ;
     
     timerMurF(moto_m1);
-   
+  if(!finManche)
     socket.emit('joueur_bouge', moto_m1,indiceRoom, colli);
 }
