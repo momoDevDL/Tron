@@ -1,32 +1,27 @@
 
-
-    var PriorityClient ; // variable qui va contenir la priorité de joueur  
     let indiceRoom = -1 ;
     let ID_joueur = -1;
     var nbTentatives = 1;
     var reconnect;
+    var rangeTmp;
 
     var touches = [];
     var timer = TMP_PARTIE;
     
     let moto1;
     let moto2;
-    let couleurG;
-    let couleurM;
     let score = [ 0 , 0 ]; // [score de J2 ,score de J1]
     
     var socket;
     var timerMur = 0;
     var murActif = false;
-    var pl ;
+    var pl;
     var svgContainer;
-    var Pseudo;
     var ID_Partie;
     var pseudoAdv;
     var nbrManche = NBR_MANCHE;
     var finManche = false;
     
-
 $(document).ready(function(){
 
     $('body').on("click","#modifyProfile",function(){
@@ -56,27 +51,6 @@ $(document).ready(function(){
                     //console.log(data);
                 }
         });
-    });
-
-        $.ajax({
-        url : "fetch_User_Colors.php",
-        method : "POST",
-        dataType: "json",
-        success:function(data){
-        console.log(data);
-        couleurG = data[0];
-        couleurM = data[1];
-        console.log(couleurG);
-        console.log(couleurM);
-        },
-        complete:function(data){
-            console.log("recuperation des couleurs fini");
-            console.log(data);
-        },
-        error: function(data){
-                console.log('error');
-                console.log(data);
-        }
     });
 
     
@@ -126,31 +100,6 @@ $(document).ready(function(){
         });
     });
 
-    $.ajax({
-        url : "fetchPlayerPseudo&Priority.php",
-        method : "POST",
-        dataType: "json",
-        success:function(data){
-            
-            PriorityClient = data.priorite;
-            Pseudo = data.pseudo ;
-            console.log("this is data : " +data);
-            console.log("this is data priority : " +PriorityClient);
-            console.log("this is data pseudo : " +Pseudo);
-            console.log(Pseudo);
- 
-        },
-        complete:function(data){
-         console.log("fetch of priority completed");
-         console.log(data);
- 
-        },
-        error: function(data){
-            console.log('error fetching priority');
-                
-        }
-        
-    });
 
     $('body').on('click','#1V1',function(){
         
@@ -192,7 +141,6 @@ $(document).ready(function(){
             
             InitGame(ID_joueur, indiceRoom);
             defEvent(moto1);
-            //console.log("l'indice de la room est :" + indiceRoom);
             socket.emit('envoi_de_notre_moto',moto1,indiceRoom);
         }
 
@@ -222,12 +170,14 @@ $(document).ready(function(){
         console.log("========================================");
         console.log(NB_partJoue);
         console.log(Elo);
+        console.log(boost);
+        console.log(XP);
         console.log("========================================");
-        
+
         if(PriorityClient)
-        socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,0,indiceRoom,nbTentatives);
+        socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,0,indiceRoom,nbTentatives,XP,boost);
         else
-        socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,250,indiceRoom,nbTentatives);
+        socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,250,indiceRoom,nbTentatives,XP,boost);
 
         //}else{
         /*
@@ -260,27 +210,55 @@ $(document).ready(function(){
         $('#rechercheMatch').fadeIn();
       });
 
+      socket.on("miseAjourIndRoom",(NouvindRoom)=>{
+        clearTimeout(reconnect);
+        console.log("mise a jour en cours ...");
+        indiceRoom = NouvindRoom;
+        switch(nbTentatives){
+            case 2:
+                reconnect = setTimeout(()=>{
+                    if(PriorityClient)
+                    socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,0,indiceRoom,nbTentatives,XP,boost);
+                    else
+                    socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,rangeTmp,indiceRoom,nbTentatives,XP,boost);
+            
+                },500);
+            break;
+            case 3:
+                reconnect = setTimeout(()=>{
+                    if(PriorityClient)
+                    socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,0,indiceRoom,nbTentatives,XP,boost);
+                    else
+                    socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,rangeTmp+3000,indiceRoom,nbTentatives,XP,boost);
+            
+                },500);
+            break;
+            }
+      });
+
     socket.on("RelanceDeRecherche",function(range,positionActuelleDansRooms){
         //Relancer la recherche avec le nouveau range au bout d'une minute
+        indiceRoom = positionActuelleDansRooms;
+        rangeTmp = range ;
         nbTentatives+=1;
        switch(nbTentatives){
         case 2:
             reconnect = setTimeout(()=>{
                 if(PriorityClient)
-                socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,0,positionActuelleDansRooms,nbTentatives);
+                socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,0,indiceRoom,nbTentatives,XP,boost);
                 else
-                socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,range,positionActuelleDansRooms,nbTentatives);
+                socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,range,indiceRoom,nbTentatives,XP,boost);
         
-            },60000);
+            },30000);
         break;
         case 3:
             reconnect = setTimeout(()=>{
                 if(PriorityClient)
-                socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,0,positionActuelleDansRooms,nbTentatives);
+                socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,0,indiceRoom,nbTentatives,XP,boost);
                 else
-                socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,range+3000,positionActuelleDansRooms,nbTentatives);
+                socket.emit('CommencerRecherche',Pseudo,PriorityClient,NB_partJoue,Elo,range+3000,indiceRoom,nbTentatives,XP,boost);
         
-            },60000);
+            },30000);
         break;
         }
     });
@@ -513,10 +491,10 @@ $(document).ready(function(){
         function nouvellePartie(){
             console.log("======================nouvelle manche=============================");
             nbrManche--;
-            if(nbrManche <= 0 || (nbrManche == 1 && (score[0]>= 2 || score[1]>=2)) ){
+            if(nbrManche <= 0 || (nbrManche == 1 && (score[0] >= 2 || score[1] >= 2)) ){
                 document.getElementById('nbr_manche').innerHTML = 'Fin de la partie';
                 console.log("FIN DE PARTIE");
-                socket.emit('score', NBR_MANCHE,score[ID_joueur-1], ID_joueur, indiceRoom,NB_partJoue,Elo);
+                socket.emit('score', NBR_MANCHE,score[ID_joueur-1], ID_joueur, indiceRoom,NB_partJoue,Elo,XP);
             }else{
                 BoutonReady();
             }

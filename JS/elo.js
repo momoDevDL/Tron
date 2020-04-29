@@ -26,8 +26,8 @@ exports.nouveauRang = function(NB_MANCHE,eloj1,eloj2,score,nbPartieJoueJ1,nbPart
     var nouveauRangJ2 = 0; 
     var nbMancheNul = NB_MANCHE - (score[0] + score[1]);
 
-    nouveauRangJ1 = Math.max( 300 ,eloj1 + this.calculK(eloj1,nbPartieJoueJ1) * ( (score[0]+(0,5 * nbMancheNul)) - (NB_MANCHE * this.estimation(eloj1,eloj2)) ));
-    nouveauRangJ2 = Math.max( 300,eloj2 + this.calculK(eloj2,nbPartieJoueJ2) * ( (score[1]+(0,5 * nbMancheNul)) - (NB_MANCHE * this.estimation(eloj2,eloj1)) ));
+    nouveauRangJ1 = Math.max( 300 ,eloj1 + this.calculK(eloj1,nbPartieJoueJ1) * ( (score[0]+(0,5 * nbMancheNul) ) - (NB_MANCHE * this.estimation(eloj1,eloj2) )));
+    nouveauRangJ2 = Math.max( 300,eloj2 + this.calculK(eloj2,nbPartieJoueJ2) * ( (score[1]+(0,5 * nbMancheNul) ) - (NB_MANCHE * this.estimation(eloj2,eloj1)) ));
     
     return {nouveauRangJ1: nouveauRangJ1,nouveauRangJ2: nouveauRangJ2};
 }

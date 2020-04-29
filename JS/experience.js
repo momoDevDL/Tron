@@ -1,4 +1,4 @@
-function gainExperience(experienceJoueur1, boostJ1, experienceJoueur2, boostJ2, score){
+exports.gainExperience = function(experienceJoueur1, boostJ1, experienceJoueur2, boostJ2, score){
 	var gainJ1 = 256;
 	var gainJ2 = 256;
 	
@@ -16,13 +16,13 @@ function gainExperience(experienceJoueur1, boostJ1, experienceJoueur2, boostJ2, 
 	gainJ1 = gainJ1 * boostJ1;
 	gainJ2 = gainJ2 * boostJ2;
 
-	var miseAJourExperienceJ1 = max((experienceJoueur1 + gainJ1),358144);
-	var miseAJourExperienceJ2 = max((experienceJoueur2 + gainJ2),358144);
+	var miseAJourExperienceJ1 = Math.max((experienceJoueur1 + gainJ1),358144);
+	var miseAJourExperienceJ2 = Math.max((experienceJoueur2 + gainJ2),358144);
 	
 	return {miseAJourExperienceJ1: miseAJourExperienceJ1, miseAJourExperienceJ2: miseAJourExperienceJ2};
 }
 
-function niveau(experience){
+exports.niveau = function(experience){
 	var niveau = 1;
 	var exp = experience;
 	

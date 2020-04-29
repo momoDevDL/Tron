@@ -4,18 +4,19 @@
     $PSEUDO= isset($_SESSION['id_utilisateur']) ? $_SESSION['id_utilisateur'] : 0;
     $ROLE =  isset($_SESSION['id_role']) ? $_SESSION['id_role'] : 0;
     $res2= $dbh->query("SELECT * FROM UTILISATEUR WHERE PSEUDO='$PSEUDO'");
-    
-    
+
     foreach($res2 as $row){
-        $PSEUDO = $row['PSEUDO'];
-        $email = $row['EMAIL'];
-        $role = $row['ROLE'];
-        $niveau = $row['NIVEAU'];
-        $elo= $row['ELO'];
-        $couleurG = $row['COULEUR_GENTIL'];
-        $couleurM = $row['COULEUR_MECHANT'];
-        $mdp= $row['PASSWORD'];
-        $avatar = $row['AVATAR'];
+        $PSEUDO =$row['PSEUDO'];
+        $email =$row['EMAIL'];
+        $role =$row['ROLE'];
+        $elo =$row['ELO'];
+        $exp =$row['EXPERIENCE'];
+        $Boost =$row['TAUX_BOOST'];
+        $priorite =$row['PRIORITE'];
+        $couleurG =$row['COULEUR_GENTIL'];
+        $couleurM =$row['COULEUR_MECHANT'];
+        $mdp =$row['PASSWORD'];
+        $avatar =$row['AVATAR'];
     } 
 
     $sql =" SELECT T.ID_TOURNOI,T.TITRE_EVENEMENTS,T.DATE_DEBUT,T.TYPE_TOURNOI FROM INSCRIT I,TOURNOI T WHERE I.ID_TOURNOI = T.ID_TOURNOI AND PSEUDO = '$PSEUDO' ORDER BY T.DATE_DEBUT DESC ";
@@ -47,15 +48,22 @@
     $ptot = $row2['NBPARTIETOTAL'];
     echo $ptot; 
     ?>;
-    var Elo = <?php echo $elo; ?>;
+    var Pseudo='<?php echo $PSEUDO; ?>';
+    var Elo =<?php echo $elo; ?>;
+    var PriorityClient =<?php echo $priorite; ?>;
+    var XP =<?php echo $exp; ?>; 
+    var couleurG ='<?php echo $couleurG; ?>';
+    var couleurM ='<?php echo $couleurM; ?>';
+    var boost =<?php echo $Boost; ?>;
+   /* let Niveau =<--?php echo $niveau; ?-->*/
     </script>
     <script src="../JS/node_modules/socket.io-client/dist/socket.io.js"></script>
     <script src="../JS/jquery-3.4.1.min.js"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="../JS/elo.js"></script>
     <script src="../JS/config.js"></script>
-     <script src="../JS/objet.js"></script>
-     <script src="../JS/Plateau.js"></script>
+    <script src="../JS/objet.js"></script>
+    <script src="../JS/Plateau.js"></script>
     <script src='../JS/dashboard.js'></script> 
     <script src="https://kit.fontawesome.com/e2aac98496.js" crossorigin="anonymous"></script>
     
@@ -102,7 +110,7 @@
             </div>
             <div class="niveauMmr">
                 <p>Niveau : <?php echo $niveau; ?></p>
-            <p>MMR : <?php echo $elo; ?></p>
+            <p>ELO : <?php echo $elo; ?></p>
                 </div>
             <div id="info-profile">
             <p id="pseudo">Pseudo : <?php echo $PSEUDO; ?></p>
