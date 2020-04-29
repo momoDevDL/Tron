@@ -20,18 +20,14 @@ function estimation(eloJ1, eloJ2){
 
 function nouveauRang(j1,j2,score){
 	
-	let difference = 0;
-	var nouveauRangJ1 = 0;  //j1.elo + calculK(j1.elo,j1.nbPartieJoue) * (score[0] - estimation(j1.elo,j2.elo));
-	var nouveauRangJ2 = 0; //j2.elo + calculK(j2.elo,j2.nbPartieJoue) * (score[1] - estimation(j2.elo,j1.elo));
 
-	if(score[0] > score[1]){
-		difference = score[0] - score[1] ;
-		nouveauRangJ1 = j1.elo + calculK(j1.elo,j1.nbPartieJoue) * (score[0] - estimation(j1.elo,j2.elo));
-		nouveauRangJ2 = j2.elo + calculK(j2.elo,j2.nbPartieJoue) * (score[1] + 0.5*difference) (estimation(j2.elo,j1.elo));
-	}else{
-		difference = score[1] - score[0] ;
-	}
+	var nouveauRangJ1 = 0;  
+	var nouveauRangJ2 = 0; 
+	var nbMancheNul = NB_MANCHE - (score[0] + score[1]);
 
 
+	nouveauRangJ1 = j1.elo + calculK(j1.elo,j1.nbPartieJoue) * ((score[0]+(0,5 * nbMancheNul)) - (NB_MANCHE * estimation(j1.elo,j2.elo)));
+	nouveauRangJ2 = j2.elo + calculK(j2.elo,j2.nbPartieJoue) * ((score[1]+(0,5 * nbMancheNul)) - (NB_MANCHE * estimation(j2.elo,j1.elo)));
+	
 	return {nouveauRangJ1: nouveauRangJ1,nouveauRangJ2: nouveauRangJ2};
 }
