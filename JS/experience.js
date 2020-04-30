@@ -1,6 +1,12 @@
 exports.gainExperience = function(experienceJoueur1, boostJ1, experienceJoueur2, boostJ2, score){
 	var gainJ1 = 256;
 	var gainJ2 = 256;
+	if (boostJ1 < 1){
+		boostJ1 = 1;
+	}
+	if (boostJ2 < 1){
+		boostJ2 = 1;
+	}
 	
 	if (score[0]== 2 && score[1] == 0){
 		gainJ1 += 64;
