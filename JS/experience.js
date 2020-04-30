@@ -16,8 +16,8 @@ exports.gainExperience = function(experienceJoueur1, boostJ1, experienceJoueur2,
 	gainJ1 = gainJ1 * boostJ1;
 	gainJ2 = gainJ2 * boostJ2;
 
-	var miseAJourExperienceJ1 = Math.max((experienceJoueur1 + gainJ1),358144);
-	var miseAJourExperienceJ2 = Math.max((experienceJoueur2 + gainJ2),358144);
+	var miseAJourExperienceJ1 = Math.min((experienceJoueur1 + gainJ1),358144);
+	var miseAJourExperienceJ2 = Math.min((experienceJoueur2 + gainJ2),358144);
 	
 	return {miseAJourExperienceJ1: miseAJourExperienceJ1, miseAJourExperienceJ2: miseAJourExperienceJ2};
 }
