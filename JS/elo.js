@@ -17,10 +17,13 @@ exports.calculK = function(elo, nbPartieJoue){
 	}else if (elo < 3000){
 		res = 5;
 	}
+	console.log(res);
 	var bonusNouveauJoueur = 10* this.max2(0,(1-(nbPartieJoue/10)));
+	console.log("NB + BonusNJ : " +nbPartieJoue+ "//" + bonusNouveauJoueur);
 	var bonusFaibleNbPartieJoue = res * this.max2(0,(1-(nbPartieJoue/50)));
+	console.log("NB + BonusFNP : " +nbPartieJoue+ "//" + bonusFaibleNbPartieJoue);
 	res = res + bonusNouveauJoueur + bonusFaibleNbPartieJoue;
-	
+
 	return res;
 
 }
@@ -28,6 +31,7 @@ exports.calculK = function(elo, nbPartieJoue){
 exports.estimation = function(eloJ1, eloJ2){
 	eloJ1 += 0.00;
 	eloJ2 += 0.00;
+	console.log( "estimation : " + 1/ (1 + Math.pow(10,((eloJ2 - eloJ1) / 400))));
 	return 1/ (1 + Math.pow(10,((eloJ2 - eloJ1) / 400)));
 }
 
@@ -43,3 +47,15 @@ exports.nouveauRang = function(NB_MANCHE,eloj1,eloj2,score,nbPartieJoueJ1,nbPart
     
     return {nouveauRangJ1: nouveauRangJ1,nouveauRangJ2: nouveauRangJ2};
 }
+
+
+ /*  var nb_manche = 2;
+    var eloj1 = 1480;
+    var eloj2 = 1520;
+    var nbPartieJoueJ1 = 50;
+    var nbPartieJoueJ2 = 50;
+    var score = [2,0];
+	
+let nouvRang = this.nouveauRang(nb_manche,eloj1,eloj2,score,nbPartieJoueJ1,nbPartieJoueJ2);
+console.log(nouvRang.nouveauRangJ1);
+console.log(nouvRang.nouveauRangJ2);*/

@@ -859,6 +859,6 @@ function Frame(moto_m1, moto_m2)
     colli = ( collision(moto_m1) || collisionJoueur(moto_m1, moto_m2) ) ;
     
     timerMurF(moto_m1);
-  if(!finManche)
+
     socket.emit('joueur_bouge', moto_m1,indiceRoom, colli);
 }

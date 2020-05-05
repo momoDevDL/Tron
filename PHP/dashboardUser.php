@@ -36,7 +36,34 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Orbitron&display=swap" rel="stylesheet">  
     <link rel="stylesheet" href="../CSS/dashboard.css">
+    
     <script type="text/javascript">
+    function niveau(experience){
+	var niveau = 1;
+	var exp = experience;
+	
+	while (exp > 0){
+		if(niveau < 8){
+			exp = exp - 256;
+		}else if(niveau < 16){
+			exp = exp - 512;
+		}else if(niveau < 32){
+			exp = exp - 1024;
+		}else if(niveau < 64){
+			exp = exp - 2048;
+		}else if(niveau < 128){
+			exp = exp - 4096;
+		}else {
+			exp = exp - 8192;
+		}
+		niveau++;
+	}
+	if (exp < 0){
+		niveau--;
+	}
+	
+	return niveau;
+    }
     var Replay = '<?php if( isset($_SESSION['replay'])){
         $replay = $_SESSION['replay'] ;
         $_SESSION['replay'] = 'false';
@@ -55,12 +82,12 @@
     var couleurG ='<?php echo $couleurG; ?>';
     var couleurM ='<?php echo $couleurM; ?>';
     var boost =<?php echo $Boost; ?>;
-   /* let Niveau =<--?php echo $niveau; ?-->*/
+    var niveau = niveau(XP);
+  
     </script>
     <script src="../JS/node_modules/socket.io-client/dist/socket.io.js"></script>
     <script src="../JS/jquery-3.4.1.min.js"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
-    <script src="../JS/elo.js"></script>
     <script src="../JS/config.js"></script>
     <script src="../JS/objet.js"></script>
     <script src="../JS/Plateau.js"></script>
@@ -108,18 +135,18 @@
             <div id="avatar">
             <img src='<?php echo $avatar;?>' width="200px" height="200px">
             </div>
-            <div class="niveauMmr">
-                <p>Niveau : <?php echo $niveau; ?></p>
+            <div class="niveauElo">
+                <p>Niveau : </p>
             <p>ELO : <?php echo $elo; ?></p>
-                </div>
+            </div>
             <div id="info-profile">
             <p id="pseudo">Pseudo : <?php echo $PSEUDO; ?></p>
             <p id="email" >email : <?php echo $email; ?></p>
             <p id="mdp" >mot de passe :<?php for($i=0 ;$i < strlen($mdp) ;$i++){
                 echo '*';
             } ?></p>
-                <p id="couleur_g">AUTOBOTS : <?php echo $couleurG; ?></p>
-                <p id="couleur_m">DECEPTICONS : <?php echo $couleurM; ?></p>
+                <p id="couleur_g">LUMIERE: <?php echo $couleurG; ?></p>
+                <p id="couleur_m">OBSCURITE : <?php echo $couleurM; ?></p>
                 <button id='modifyProfile' class='btn btn-primary'>Modifier</button>
             </div>
             
@@ -154,6 +181,7 @@
         ?>
        
         </div>
+    </div>
     </div>
 
     <div class="StatsRow">

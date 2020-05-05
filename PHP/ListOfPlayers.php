@@ -5,8 +5,32 @@
     $ROLE =  isset($_SESSION['id_role']) ? $_SESSION['id_role'] : 0;
     $res2= $dbh->query("SELECT * FROM UTILISATEUR");
     
-    
-   
+    function niveau($experience){
+        $niveau = 1;
+        $exp = $experience;
+	
+	while ($exp > 0){
+		if($niveau < 8){
+			$exp = $exp - 256;
+		}else if($niveau < 16){
+			$exp = $exp - 512;
+		}else if($niveau < 32){
+			$exp = $exp - 1024;
+		}else if($niveau < 64){
+			$exp = $exp - 2048;
+		}else if($niveau < 128){
+			$exp = $exp - 4096;
+		}else {
+			$exp = $exp - 8192;
+		}
+		$niveau++;
+	}
+	if ($exp < 0){
+		$niveau--;
+	}
+	return $niveau;
+}
+      
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -68,13 +92,13 @@
         $PSEUDO = $row['PSEUDO'];
         $email = $row['EMAIL'];
         $role = $row['ROLE'];
-        $niveau = $row['NIVEAU'];
-        $mmr= $row['MMR'];
+        $elo= $row['ELO'];
+        $XP = $row['EXPERIENCE'];
         $couleurG = $row['COULEUR_GENTIL'];
         $couleurM = $row['COULEUR_MECHANT'];
         $mdp= $row['PASSWORD'];
         $avatar = $row['AVATAR'];
-
+        $niveau = niveau($XP);
         echo "
         <div id='PlayersCard'>
         <div id='infoPlayer'>
@@ -83,7 +107,7 @@
         </div>
         <div class='mmr'>
             <p>Niveau : $niveau</p>
-            <p>MMR :$mmr</p>
+            <p>MMR :$elo</p>
         </div>
         </div>
         <div id='PseudoPlayer'>
@@ -94,3 +118,54 @@
 ?>
     </div>
      </section>
+
+ <section>
+
+    <div id="Contact">
+        <div id="contact-container">
+          <div id="contact-form">
+              <h2>Contactez-nous</h2>
+              <form method="post" action='contact-submit.php'> 
+              <label for="first-name"> Prénom:  </label>
+                  <input type="text" name="first-name" placeholder="First-Name">
+</br>
+              
+              <label for="last-name"> Nom :  </label>
+                  <input type="text" name="last-name" placeholder="Last-Name">
+              
+</br> 
+              <label for="email"> Email :  </label>
+                  <input type="text" name="email" value='<?php echo $email;?>'  required></br>
+          
+              <label class="emailContent" for="emailContent" >Contenu de message:  </label></br>
+                  <textarea class="emailContent" name="emailContent"  placeholder="text"></textarea></br>
+                  <input id='submitContactForm' type='submit' name='submit' class='btn btn-primary' value="Submit">
+              
+              </form>
+          </div>
+      
+      </div>
+         <div id="membre">
+             <h3>Membres</h3>
+              <span class="dot col-sm-6">
+              <img class="in" src='../IMAGES/linkdn.jpeg' width='150px' height='150px'/>
+              <img src='../IMAGES/31543101_102282713975787_7975195690995286016_o.jpg' width='150px' height='150px'/>
+                </span>
+            <span class="dot col-sm-6">
+            <img class="in" src='../IMAGES/linkdn.jpeg' width='150px' height='150px'/>
+            <img src='../IMAGES/40313576_642691499489932_8305937623378034688_o.jpg' width='150px' height='150px'/>
+            </span>
+            <span class="dot col-sm-6">
+            <img class="in" src='../IMAGES/linkdn.jpeg' width='150px' height='150px'/>
+            <img src='../IMAGES/23004546_713516668850307_9057302007055486628_o.jpg' width='150px' height='150px'/>
+        </span>
+            <span class="dot col-sm-6">
+            <img class="in" src='../IMAGES/linkdn.jpeg' width='150px' height='150px'/>
+            <img src='../IMAGES/48380390_342138316604462_2327487200549142528_o.jpg' width='150px' height='150px'/>
+            </span>
+            <p>ALL COPYRIGHTS RESERVED @2020</p>
+        </div>
+        
+    </div>
+    
+    </section>

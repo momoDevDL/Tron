@@ -40,6 +40,56 @@ foreach($Rooms as $room) {
 $resultat .="
 </div>
 </section>
+<section>
+
+<div id='Contact'>
+    <div id='contact-container'>
+      <div id='contact-form'>
+          <h2>Contactez-nous</h2>
+          <form method='post' action='contact-submit.php'> 
+          <label for='first-name'> Prénom:  </label>
+              <input type='text' name='first-name' placeholder='First-Name'>
+</br>
+          
+          <label for='last-name'> Nom :  </label>
+              <input type='text' name='last-name' placeholder='Last-Name'>
+          
+</br> 
+          <label for='email'> Email :  </label>
+              <input type='text' name='email' value='".$email."'  required></br>
+      
+          <label class='emailContent' for='emailContent' >Contenu de message:  </label></br>
+              <textarea class='emailContent' name='emailContent'  placeholder='text'></textarea></br>
+              <input id='submitContactForm' type='submit' name='submit' class='btn btn-primary' value='Submit'>
+          
+          </form>
+      </div>
+  
+  </div>
+     <div id='membre'>
+         <h3>Membres</h3>
+          <span class='dot col-sm-6'>
+          <img class='in' src='../IMAGES/linkdn.jpeg' width='150px' height='150px'/>
+          <img src='../IMAGES/31543101_102282713975787_7975195690995286016_o.jpg' width='150px' height='150px'/>
+            </span>
+        <span class='dot col-sm-6'>
+        <img class='in' src='../IMAGES/linkdn.jpeg' width='150px' height='150px'/>
+        <img src='../IMAGES/40313576_642691499489932_8305937623378034688_o.jpg' width='150px' height='150px'/>
+        </span>
+        <span class='dot col-sm-6'>
+        <img class='in' src='../IMAGES/linkdn.jpeg' width='150px' height='150px'/>
+        <img src='../IMAGES/23004546_713516668850307_9057302007055486628_o.jpg' width='150px' height='150px'/>
+    </span>
+        <span class='dot col-sm-6'>
+        <img class='in' src='../IMAGES/linkdn.jpeg' width='150px' height='150px'/>
+        <img src='../IMAGES/48380390_342138316604462_2327487200549142528_o.jpg' width='150px' height='150px'/>
+        </span>
+        <p>ALL COPYRIGHTS RESERVED @2020</p>
+    </div>
+    
+</div>
+
+</section>
 ";
 echo $resultat;
 ?>

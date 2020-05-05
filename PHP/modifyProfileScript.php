@@ -3,9 +3,9 @@
     <div id='avatar'>
     <img src='".$_POST['avatar']."' width='190px' height='190px'>
     </div>
-    <div class='niveauMmr'>
+    <div class='niveauElo'>
         <p>".$_POST['niveau']."</p>
-        <p>".$_POST['mmr']."</p>
+        <p>".$_POST['elo']."</p>
         </div>
     <div id='info-profile'>
         <form action='confirmModif.php' method='post' enctype='multipart/form-data'>

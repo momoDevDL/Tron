@@ -1,32 +1,35 @@
-body{
+body {
     margin: 0;
     padding: 0;
     height: 100%;
     width: 100%;
- /*   background-image: url('../IMAGES/monochrome-photo-of-triangle-shape-digital-wallpaper-3137064.jpg');*/
+    /*   background-image: url('../IMAGES/monochrome-photo-of-triangle-shape-digital-wallpaper-3137064.jpg');*/
     background-size: cover;
     background-repeat: no-repeat;
-    font-family: 'Orbitron',sans-serif;
+    font-family: 'Orbitron', sans-serif;
 }
-#intro{
-    height: 70vh;
+
+#intro {
+    height: max-content;
     background-color: #181818;
     border-bottom: 4px solid rgb(0, 247, 255);
- /*   background-image: url(../IMAGES/person-holding-a-glass-ball-3588602.jpg);*/
+    /*   background-image: url(../IMAGES/person-holding-a-glass-ball-3588602.jpg);*/
     background-size: cover;
     background-position-y: -30em;
     background-repeat: no-repeat;
 }
-h1{
-    font-size:180px;
+
+h1 {                    
+    font-size: 180px;
     position: relative;
-    left: 25%; 
+    left: 25%;
     letter-spacing: 1em;
-    top: 20%;
+    top: 40%;
     width: min-content;
-    color:rgb(0, 247, 255);
+    color: rgb(0, 247, 255);
     font-weight: bold;
-    margin-bottom: 200px;
+    padding-top: 0.5em;
+    margin-bottom: 1em;
 }
 
 #playIAButton {
@@ -38,8 +41,11 @@ h1{
     left: 38%;
     padding-left: 50px;
     padding-right: 50px;
+    margin-bottom: 5em;
 }
-#playIAButton:hover , #playIAButton:focus{
+
+#playIAButton:hover,
+#playIAButton:focus {
     box-shadow: 0 0.5em 0.5em -0.2em rgb(0, 247, 255);
     transform: translateY(-0.25em);
     color: rgb(0, 247, 255);
@@ -47,8 +53,8 @@ h1{
 }
 
 
-#User-dashboard{
-    background-color:rgb(0, 247, 255);
+#User-dashboard {
+    background-color: rgb(0, 247, 255);
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -57,17 +63,20 @@ h1{
     align-items: center;
     height: fit-content;
 }
-#logo{
-float: left;
-margin:0;
-padding-top: 12px;
-padding-bottom: 12px;
+
+#logo {
+    float: left;
+    margin: 0;
+    padding-top: 12px;
+    padding-bottom: 12px;
 }
-#links{
+
+#links {
     margin-left: 5%;
-  
+
 }
-#links a{
+
+#links a {
     padding-top: 12px;
     padding-bottom: 12px;
     padding-right: 12px;
@@ -78,23 +87,23 @@ padding-bottom: 12px;
     color: #181818;
 }
 
-#links a:hover{
-    background-color: #181818;   
-    color:rgb(0, 247, 255);
+#links a:hover {
+    background-color: #181818;
+    color: rgb(0, 247, 255);
     cursor: pointer;
     /*border-bottom: 2px solid rgb(0, 247, 255);  */
     border-radius: 10px;
 }
 
-#logOut{
+#logOut {
     float: right;
     margin-right: 10px;
     text-decoration: none;
 
 }
 
-#logOut a{
-    color:#181818;
+#logOut a {
+    color: #181818;
     padding-top: 12px;
     padding-bottom: 12px;
     text-decoration: none;
@@ -103,44 +112,46 @@ padding-bottom: 12px;
     padding-left: 12px;
 }
 
-#logOut a:hover{
+#logOut a:hover {
     background-color: rgb(61, 74, 85);
-    color:rgb(0, 247, 255);
+    color: rgb(0, 247, 255);
     text-decoration: none;
 }
 
-#profil{
+#profil {
     width: 100%;
-    height : 150vh;
+    height: 150vh;
     background-color: #181818;
 }
 
-#Info{
-    display:flex;
+#Info {
+    display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: space-evenly;
 }
 
-#Profil{
+#Profil {
     height: 65vh;
     margin-left: 20px;
-    width:40%;
+    width: 40%;
     margin-top: 5em;
     margin-bottom: 5em;
 }
 
-#Profil p{
+#Profil p {
     font-size: 20px;
 }
-#Profil h2{
+
+#Profil h2 {
     text-align: center;
     width: max-content;
     position: relative;
     left: 45%;
 }
-#profil-container{
-    background-color:#181818;   
+
+#profil-container {
+    background-color: #181818;
     width: 100%;
     height: 60vh;
     color: white;
@@ -150,33 +161,35 @@ padding-bottom: 12px;
     margin: 0;
 }
 
-#modifyProfile{
-    width: 40%; 
+#modifyProfile {
+    width: 40%;
     position: relative;
     border: 2px solid white;
     background-color: transparent;
-    bottom: 20%;
-    left: 60%;
-}
-#modifyProfile:hover{
-    box-shadow: inset 0 0 0 2em rgb(0, 247, 255);
-    color: #181818;
-}
-
-#confirmModif{
-    width: 80%;
-    background-color: transparent;
-    position: absolute;
     bottom: 0;
-    border: 2px solid white;
-    left: 100%;
+    left: 30%;
 }
-#confirmModif:hover{
+
+#modifyProfile:hover {
     box-shadow: inset 0 0 0 2em rgb(0, 247, 255);
     color: #181818;
 }
 
-#avatar img{
+#confirmModif {
+    width: 40%;
+    background-color: transparent;
+    position: relative;
+    bottom: -1em;
+    border: 2px solid white;
+    left: 30%;
+}
+
+#confirmModif:hover {
+    box-shadow: inset 0 0 0 2em rgb(0, 247, 255);
+    color: #181818;
+}
+
+#avatar img {
     width: 200px;
     height: 200px;
     border: 6px solid rgb(0, 247, 255);
@@ -185,28 +198,31 @@ padding-bottom: 12px;
     position: relative;
     bottom: 47px;
 }
-.niveauMmr{
+
+.niveauElo {
     width: max-content;
     position: relative;
     bottom: 30%;
     left: 40%;
     text-decoration: underline;
 }
-#info-profile{
-    width:max-content;
+
+#info-profile {
+    width:auto;
     position: relative;
     left: 10%;
     display: flex;
     flex-direction: column;
     bottom: 20%;
 }
-#submitContactForm:hover{
+
+#submitContactForm:hover {
     box-shadow: inset 0 0 0 2em rgb(0, 247, 255);
     color: #181818;
 }
 
 
-#Tournois{
+#Tournois {
     width: 50%;
     height: 50vh;
     background-color: #181818;
@@ -216,24 +232,24 @@ padding-bottom: 12px;
 
 }
 
-#TournoiContainer{
+#TournoiContainer {
     border: 6px solid rgb(0, 247, 255);
     border-radius: 10px;
 }
 
-#TournoiContainer h2{
+#TournoiContainer h2 {
     text-align: center;
     color: aliceblue;
 }
 
-#aucunTournoi{
+#aucunTournoi {
     text-align: center;
     padding-top: 3em;
     padding-bottom: 1em;
     font-weight: 800;
 }
 
-#ConsulterTournoi{
+#ConsulterTournoi {
     background-color: transparent;
     border-color: aliceblue;
     color: aliceblue;
@@ -247,17 +263,18 @@ padding-bottom: 12px;
     margin-bottom: 2em;
 }
 
-#ConsulterTournoi:hover{
+#ConsulterTournoi:hover {
     box-shadow: inset 0 0 0 2.5em rgb(0, 247, 255);
     color: #181818;
 }
 
-#TournoiInfo{
+#TournoiInfo {
     color: aliceblue;
     margin-left: 10px;
-   
+
 }
-.detailsTournoi{
+
+.detailsTournoi {
     width: 100%;
     padding-top: 2em;
     padding-bottom: 2em;
@@ -270,11 +287,11 @@ padding-bottom: 12px;
     align-content: center;
 }
 
-.detailsTournoi p{
+.detailsTournoi p {
     font-size: 20px;
 }
 
-.afficheDetailsTournoi{
+.afficheDetailsTournoi {
     background-color: transparent;
     border-color: aliceblue;
     color: aliceblue;
@@ -283,23 +300,23 @@ padding-bottom: 12px;
     padding-left: 40px;
 }
 
-.afficheDetailsTournoi:hover{
+.afficheDetailsTournoi:hover {
     box-shadow: inset 0 0 0 2em rgb(0, 247, 255);
     color: #181818;
 }
 
-.StatsRow{
+.StatsRow {
     width: 100%;
-    height: 50%;
+    height: max-content;
     align-content: center;
     display: flex;
     flex-direction: row;
     background-color: #181818;
-    margin-top:5em;
+    margin-top: 5em;
     justify-content: space-around;
 }
 
-.statsCards{
+.statsCards {
     width: 20%;
     height: 100%;
     background-color: aliceblue;
@@ -308,29 +325,32 @@ padding-bottom: 12px;
 
 }
 
-.statsCards:hover{
+.statsCards:hover {
     box-shadow: -8px 8px 10px 4px rgb(8, 158, 163);
-    
+
 }
 
-.statsData p{
+.statsData p {
     padding-top: 2em;
     padding-bottom: 2em;
     font-size: 25px;
-    columns: #111111;;
+    columns: #111111;
+    ;
 }
-.statsTitle p{
+
+.statsTitle p {
     padding-top: 2em;
     padding-bottom: 2em;
     font-size: 18px;
 }
-.statsData{
+
+.statsData {
     width: 100%;
     height: 50%;
     background-color: aliceblue;
 }
 
-.statsTitle{
+.statsTitle {
     width: 100%;
     height: 50%;
     background-color: #181818;
@@ -341,12 +361,12 @@ padding-bottom: 12px;
 }
 
 
-#sectionRooms{
+#sectionRooms {
     height: 100vh;
     background-color: #181818;
 }
 
-.RoomsRow{
+.RoomsRow {
     width: 100%;
     height: max-content;
     align-content: center;
@@ -356,7 +376,7 @@ padding-bottom: 12px;
     justify-content: space-around;
 }
 
-.RoomsCards{
+.RoomsCards {
     width: 20%;
     height: 20%;
     background-color: aliceblue;
@@ -365,29 +385,32 @@ padding-bottom: 12px;
     margin-top: 1em;
 }
 
-.RoomsCards:hover{
+.RoomsCards:hover {
     box-shadow: -8px 8px 10px 4px rgb(8, 158, 163);
-    
+
 }
 
-.RoomsData p{
+.RoomsData p {
     padding-top: 0.5em;
     padding-bottom: 0.5em;
     font-size: 25px;
-    columns: #111111;;
+    columns: #111111;
+    ;
 }
-.RoomsTitle p{
+
+.RoomsTitle p {
     padding-top: 0.5em;
     padding-bottom: 0.5em;
     font-size: 18px;
 }
-.RoomsData{
+
+.RoomsData {
     width: 100%;
     height: max-content;
     background-color: aliceblue;
 }
 
-.RoomsTitle{
+.RoomsTitle {
     width: 100%;
     height: 50%;
     background-color: #181818;
@@ -397,15 +420,15 @@ padding-bottom: 12px;
 
 }
 
-#Contact{
+#Contact {
     background-color: #181818;
     height: 50vh;
     border: 6px solid rgb(0, 247, 255);
     display: flex;
 }
 
-#contact-container{
-    background-color:#181818;
+#contact-container {
+    background-color: #181818;
     float: left;
     width: 50%;
     height: 100%;
@@ -420,25 +443,25 @@ padding-bottom: 12px;
     height: 100%;
 }
 
-#contact-form h2{
+#contact-form h2 {
     text-align: center;
 }
 
-#contact-form form{
+#contact-form form {
     width: 80%;
     margin-left: 2em;
 }
 
-#contact-form input{
+#contact-form input {
     width: 100%;
     margin-top: 1em;
     background-color: transparent;
-    border:none;
+    border: none;
     border-bottom: 6px solid #111111;
 }
 
-#contact-form #submitContactForm{
-    width: 30%; 
+#contact-form #submitContactForm {
+    width: 30%;
     position: relative;
     bottom: 3em;
     left: 25em;
@@ -446,8 +469,8 @@ padding-bottom: 12px;
     background-color: transparent;
 }
 
-#membre{
-    text-align:center;
+#membre {
+    text-align: center;
     height: max-content;
     width: 50%;
     color: aliceblue;
@@ -464,178 +487,180 @@ padding-bottom: 12px;
     margin-bottom: 5em;
     margin-right: 3em;
     position: relative;
-    
-  }
-  .dot img{
-      border-radius: 50%;
-      position: absolute; 
-        left: 0;
-        border: 4px solid rgb(0, 247, 255);
-  }
 
-  .dot img:hover{
+}
+
+.dot img {
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    border: 4px solid rgb(0, 247, 255);
+}
+
+.dot img:hover {
     opacity: 0.5;
     cursor: pointer;
-  }
+}
 
-  .in{
+.in {
     opacity: 1;
-  }
+}
 
 
 /*======================CSS PARTIES=============================*/
 
-#ScoreBanner{
-    background-color:#181818;
-    width:30%;
+#ScoreBanner {
+    background-color: #181818;
+    width: 30%;
     height: max-content;
-    position:absolute;
-    top:0;
-    left:25%;
-  }
-  
-  #btnQuit{
-      cursor: pointer;
-  }
-  
-  #score{
-    padding-top:0;
-    margin-top:0; 
-    padding-bottom:0;
-    margin-bottom:0;
-    text-align : center;
-    color:white;
-    font-size:50px;
-    background-color:#181818;
-    text-decoration:underline;
-  }
-  
-  #gameInfo_firstRow{
+    position: absolute;
+    top: 0;
+    left: 25%;
+}
+
+#btnQuit {
+    cursor: pointer;
+}
+
+#score {
+    padding-top: 0;
+    margin-top: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    text-align: center;
+    color: white;
+    font-size: 50px;
+    background-color: #181818;
+    text-decoration: underline;
+}
+
+#gameInfo_firstRow {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     align-content: center;
-    text-align : center;
+    text-align: center;
     width: 100%;
     height: 30%;
-    
+
     justify-content: space-evenly;
-  }
-  #gameInfo_firstRow h5{
-      text-align: center;
-      color: white;
-  }
+}
 
-  #gameInfo_firstRow p{
-      color: rgb(0, 247, 255);
-      text-align : center;
-  }
+#gameInfo_firstRow h5 {
+    text-align: center;
+    color: white;
+}
 
-  #gameInfo_SecondRow{
+#gameInfo_firstRow p {
+    color: rgb(0, 247, 255);
+    text-align: center;
+}
+
+#gameInfo_SecondRow {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     align-content: center;
-    text-align : center;
+    text-align: center;
     width: 100%;
     height: 30%;
     justify-content: center;
-   
-  }
 
-  #gameInfo_SecondRow h5{
+}
+
+#gameInfo_SecondRow h5 {
     text-align: center;
     color: white;
-  }
+}
 
-  #gameInfo_SecondRow p{
-      color: rgb(0, 247, 255);
-      text-align : center;
-  }
+#gameInfo_SecondRow p {
+    color: rgb(0, 247, 255);
+    text-align: center;
+}
 
-  #btn_ready{
+#btn_ready {
     background-color: rgb(0, 247, 255);
     text-align: center;
-    color:#181818;
-    border:none;
+    color: #181818;
+    border: none;
     border-radius: 12px;
     padding: 15px 15px 15px 15px;
-  }
+}
 
-  #btn_ready:hover{
-      background-color: black;
-      color: white;
-  }
+#btn_ready:hover {
+    background-color: black;
+    color: white;
+}
 
-  #container{
-    width:100%;
-    display:flex;
-    flex-direction:row;
+#container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
 
-  }
+}
 
-  #playerOne{
-    background-color:orange;
-    width:50%;
-    height:100%;
-    text-align : center;
+#playerOne {
+    background-color: orange;
+    width: 50%;
+    height: 100%;
+    text-align: center;
     color: white;
-  }
-  
-  #playerTwo{
-    background-color:red;
-    width:50%;
-    height:100%;
-    text-align : center;
-    color:white;
-  }
-  
-  #playerOne h3{
-   color : white ;
-    width:fit-content;
-    display:flex;
-    flex-direction:row; 
-    justify-content:center;
-    align-items:center;
-    padding-top:1em;
-    padding-bottom:1em;  
-  }
-  
-  #playerTwo h3{
-   display:flex;
-    flex-direction:row; 
-    justify-content:center;
-    align-items:center;
-   color : white ;
-   width:fit-content;
-    padding-top:1em;
-    padding-bottom:1em;
-  }
-  
- 
- 
-  svg{
+}
 
-      position: relative;
-      margin-top: 100px;
-      margin-bottom: 100px;
+#playerTwo {
+    background-color: red;
+    width: 50%;
+    height: 100%;
+    text-align: center;
+    color: white;
+}
 
-  }
+#playerOne h3 {
+    color: white;
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
 
-  
- #game{
+#playerTwo h3 {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    width: fit-content;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+
+
+svg {
+
+    position: relative;
+    margin-top: 100px;
+    margin-bottom: 100px;
+
+}
+
+
+#game {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     height: 100vh;
     width: 100%;
     justify-content: start;
-    background-color: #181818; 
+    background-color: #181818;
 }
 
-#damier{
+#damier {
     height: 100%;
     width: 75%;
     margin-top: 50px;
@@ -645,72 +670,72 @@ padding-bottom: 12px;
     justify-content: center;
 }
 
-#User-info{
+#User-info {
     width: 25%;
     height: 100%;
-    background-color:transparent;
-    position:relative;
+    background-color: transparent;
+    position: relative;
 }
 
-#homePlayerInfo{
-  width: 100%;
-  height:max-content;
-  background-color: #bbb;
-  padding-top: 50px;
+#homePlayerInfo {
+    width: 100%;
+    height: max-content;
+    background-color: #bbb;
+    padding-top: 50px;
 }
 
-#AwayPlayerInfo{
-  width: 100%;
-  height: max-content;
-  background-color:chocolate;
-  padding-top: 50px;
+#AwayPlayerInfo {
+    width: 100%;
+    height: max-content;
+    background-color: chocolate;
+    padding-top: 50px;
 }
 
 
-#User-info #avatar{
-  width: 100%;
-  height: max-content;
+#User-info #avatar {
+    width: 100%;
+    height: max-content;
 }
 
-#User-info #avatar img{
-  width: 150px;
-  height: 150px;
-  border: 6px solid rgb(0, 247, 255);
-  border-radius: 100px;
-  position: relative;
+#User-info #avatar img {
+    width: 150px;
+    height: 150px;
+    border: 6px solid rgb(0, 247, 255);
+    border-radius: 100px;
+    position: relative;
 }
 
-#User-info .mmr{
-  width: max-content;
-  height: max-content;
-  position: relative;
-  left: 50%;
-  bottom: 70%;
+#User-info .mmr {
+    width: max-content;
+    height: max-content;
+    position: relative;
+    left: 50%;
+    bottom: 70%;
 }
 
-#User-info #info{
-  width: max-content;
-  height: max-content;
-  position: relative;
-  left: 5%;
-  bottom: 30%;
+#User-info #info {
+    width: max-content;
+    height: max-content;
+    position: relative;
+    left: 5%;
+    bottom: 30%;
 }
 
-#FinDePartiePopUp{
-    width:100%;
+#FinDePartiePopUp {
+    width: 100%;
     height: 100vh;
     background-color: #1818185b;
     position: fixed;
-    top:0;
+    top: 0;
     z-index: 3;
 }
 
-#FinDePartiePopUp h3{
+#FinDePartiePopUp h3 {
     text-align: center;
-    color:rgb(0, 247, 255);
+    color: rgb(0, 247, 255);
 }
 
-#popUp{
+#popUp {
     background-color: #181818;
     width: max-content;
     height: max-content;
@@ -721,7 +746,7 @@ padding-bottom: 12px;
     left: 40%;
 }
 
-#popUpAction{
+#popUpAction {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -729,39 +754,43 @@ padding-bottom: 12px;
 
 
 /*====================== CSS LISTE JOUEURS ================ */
-#PlayersList{
-    width:100%;
-    display:flex;
+#PlayersList {
+    width: 100%;
+    display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-    background-color:#181818;
-  }
-  #PlayersCard{
-    width:300px;
-    height:max-content;
-    background-color:white;
+    background-color: #181818;
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+#PlayersCard {
+    width: 300px;
+    height: max-content;
+    background-color: white;
     margin-right: 3em;
     margin-bottom: 3em;
-  }
-  #infoPlayer{
-      width: 100%;
-      height: 50%;
-      background-color: aliceblue;
-  }
-  #PseudoPlayer{
-       width: 100%;
-      height: 50%;
-      background-color: #181818;
-      color: rgb(0, 247, 255);
-      border-bottom: 5px solid rgb(0, 247, 255);
-      border-top: 5px solid rgb(0, 247, 255);
-      text-align: center;
-      padding-top:0.5em;
-      padding-bottom: 0.5em;
-  }
-  
-  #PlayerAvatar{
-      width: 100%;
-  }
-  
+}
+
+#infoPlayer {
+    width: 100%;
+    height: 50%;
+    background-color: aliceblue;
+}
+
+#PseudoPlayer {
+    width: 100%;
+    height: 50%;
+    background-color: #181818;
+    color: rgb(0, 247, 255);
+    border-bottom: 5px solid rgb(0, 247, 255);
+    border-top: 5px solid rgb(0, 247, 255);
+    text-align: center;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+#PlayerAvatar {
+    width: 100%;
+}

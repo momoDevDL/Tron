@@ -21,8 +21,12 @@ var con = mysql.createConnection({
     database:"lightcyclefight"
 });
 
+con.connect(function(err) {
+    if (err) throw err;
+});
+
 serveur.listen(8888,function(){
-    console.log("serveur est en ecoute sur le port num : "+ 8888);
+    console.log("serveur est en ecoute sur le port num : "+ 8888) ;
 });
 
 
@@ -43,9 +47,9 @@ function MatchMaking(socket,Rooms,Pseudo,Priority,nbPartieJoue,Elo,range,indiceR
     Rooms.forEach(element => {
             if(element.remaining > 0 && element.Pseudo != Pseudo && Elo-range-Priority <= element.eloJ1 && Elo+range+Priority >= element.eloJ1 && BestELo.differenceElo >= Math.abs(Elo - element.eloJ1)){
              BestELo.roomName = element.name;
-             BestELo.differenceElo = Math.abs(Elo - element.Elo) ;
+             BestELo.differenceElo = Math.abs(Elo - element.eloJ1) ;
              BestELo.roomPosition = element.position;
-             BestELo.Pseudo = element.Pseudo ;    
+             BestELo.Pseudo = element.p1 ;    
             }
         
     });
@@ -109,7 +113,7 @@ nsp.on('connection', function (socket) {
 
     console.log('connetion');
     var inseré = false ;
-   
+
   /* Commencer la Recherche de joueur à la connection en regardant toutes les chambrescréant une nouvelle chambre
   dont il est membre s'il trouve pas un joueur qui matche avec ça priorité de recherche
 et sinon inclu*/ 
@@ -167,6 +171,7 @@ et sinon inclu*/
     socket.on('ok_pret', function(IR, tmpPartie, temp_refresh){
         Rooms[IR].motoPret +=1;
         if(Rooms[IR].motoPret == 2){
+            if(typeof Rooms[IR] !== 'undefined'){
             Rooms[IR].motoPret = 0 ;
             var seconde_left = 5;
             var interval = setInterval(function(){
@@ -181,6 +186,7 @@ et sinon inclu*/
                    
                 }
             }, 1000);
+        }
         }
         
     });
@@ -246,12 +252,12 @@ et sinon inclu*/
         if( Rooms[indiceRoom].demandeScore == 2){
             Rooms[indiceRoom].demandeScore = 0;
             let nouvRang = eloModule.nouveauRang(nbManche,Rooms[indiceRoom].eloJ1,Rooms[indiceRoom].eloJ2,Rooms[indiceRoom].score,Rooms[indiceRoom].nbPartieJ1,Rooms[indiceRoom].nbPartieJ2);
-            con.connect(function(err) {
-                if (err) throw err;
-                console.log("========================================");
+            let nouvXP= ExpModule.gainExperience(Rooms[indiceRoom].XPJ1,Rooms[indiceRoom].BoostJ1,Rooms[indiceRoom].XPJ2,Rooms[indiceRoom].BoostJ2,Rooms[indiceRoom].score);
+            
+            /*    console.log("========================================");
                 console.log(nouvRang.nouveauRangJ1);
                 console.log(nouvRang.nouveauRangJ2);
-                console.log("========================================");
+                console.log("========================================");*/
                 var sql = "UPDATE UTILISATEUR SET ELO = '"+nouvRang.nouveauRangJ1+"' WHERE PSEUDO = '"+Rooms[indiceRoom].p1+"'";
                 var sql2 = "UPDATE UTILISATEUR SET ELO = '"+nouvRang.nouveauRangJ2+"' WHERE PSEUDO = '"+Rooms[indiceRoom].p2+"'";
                 con.query(sql, function (err, result) {
@@ -262,14 +268,12 @@ et sinon inclu*/
                     if (err) throw err;
                     console.log(result.affectedRows + " record(s) updated");
                   });
-              });
-              let nouvXP= ExpModule.gainExperience(Rooms[indiceRoom].XPJ1,Rooms[indiceRoom].BoostJ1,Rooms[indiceRoom].XPJ2,Rooms[indiceRoom].BoostJ2,Rooms[indiceRoom].score);
-                  console.log("========================================");
-                  console.log(nouvXP.miseAJourExperienceJ1);
-                  console.log(nouvXP.miseAJourExperienceJ2);
-                  console.log("========================================");
-                  var sql = "UPDATE UTILISATEUR SET EXPERIENCE = '"+nouvXP.miseAJourExperienceJ1+"' WHERE PSEUDO = '"+Rooms[indiceRoom].p1+"'";
-                  var sql2 = "UPDATE UTILISATEUR SET  EXPERIENCE = '"+nouvXP.miseAJourExperienceJ2+"' WHERE PSEUDO = '"+Rooms[indiceRoom].p2+"'";
+               /* console.log("========================================");
+                console.log(nouvXP.miseAJourExperienceJ1);
+                console.log(nouvXP.miseAJourExperienceJ2);
+                console.log("========================================");*/
+                sql = "UPDATE UTILISATEUR SET EXPERIENCE = '"+nouvXP.miseAJourExperienceJ1+"' WHERE PSEUDO = '"+Rooms[indiceRoom].p1+"'";
+                sql2 = "UPDATE UTILISATEUR SET  EXPERIENCE = '"+nouvXP.miseAJourExperienceJ2+"' WHERE PSEUDO = '"+Rooms[indiceRoom].p2+"'";
                   con.query(sql, function (err, result) {
                       if (err) throw err;
                       console.log(result.affectedRows + " record(s) updated");
@@ -278,6 +282,21 @@ et sinon inclu*/
                       if (err) throw err;
                       console.log(result.affectedRows + " record(s) updated");
                     });
+                if(Rooms[indiceRoom].score[0] != Rooms[indiceRoom].score[1]){
+                let scoreGagnant = Math.max(Rooms[indiceRoom].score[0],Rooms[indiceRoom].score[1]);
+                let gagnant = ( scoreGagnant == Rooms[indiceRoom].score[0] ? Rooms[indiceRoom].p1 : Rooms[indiceRoom].p2 ) ;
+                sql2 = "UPDATE PARTIE SET GAGNANT='"+gagnant+"', SCORE='"+scoreGagnant+"' WHERE ID_PARTIE='"+Rooms[indiceRoom].idPartie+"' ";
+                    con.query(sql2, function (err, result) {
+                        if (err) throw err;
+                        console.log(result.affectedRows + " record(s) updated");
+                      });
+                }else{
+                    sql2 = "UPDATE PARTIE SET GAGNANT='null', SCORE='-1' WHERE ID_PARTIE='"+Rooms[indiceRoom].idPartie+"'";
+                    con.query(sql2, function (err, result) {
+                        if (err) throw err;
+                        console.log(result.affectedRows + " record(s) updated");
+                      });
+                }
             nsp.in(Rooms[indiceRoom].name).emit('vainceur',Rooms[indiceRoom].score[0], Rooms[indiceRoom].score[1]);
         }
 
@@ -288,10 +307,10 @@ et sinon inclu*/
     Rooms[iR].score[0] = sc[0];
     Rooms[iR].score[1] = sc[1];
     let nouvRang = eloModule.nouveauRang(nbManche,Rooms[iR].eloJ1,Rooms[iR].eloJ2,Rooms[iR].score,Rooms[iR].nbPartieJ1,Rooms[iR].nbPartieJ2);
-            con.connect(function(err) {
-                if (err) throw err;
-                var sql = "UPDATE UTILISATEUR SET ELO = '"+nouvRang.nouveauRangJ1+"' WHERE PSEUDO = '"+Rooms[indiceRoom].p1+"'";
-                var sql2 = "UPDATE UTILISATEUR SET ELO = '"+nouvRang.nouveauRangJ2+"' WHERE PSEUDO = '"+Rooms[indiceRoom].p2+"'";
+    let nouvXP = ExpModule.gainExperience(Rooms[iR].XPJ1,Rooms[iR].BoostJ1,Rooms[iR].XPJ2,Rooms[iR].BoostJ2,Rooms[iR].score);
+
+                var sql = "UPDATE UTILISATEUR SET ELO = '"+nouvRang.nouveauRangJ1+"' WHERE PSEUDO = '"+Rooms[iR].p1+"'";
+                var sql2 = "UPDATE UTILISATEUR SET ELO = '"+nouvRang.nouveauRangJ2+"' WHERE PSEUDO = '"+Rooms[iR].p2+"'";
                 con.query(sql, function (err, result){
                     if (err) throw err;
                     console.log(result.affectedRows + " record(s) updated");
@@ -300,16 +319,14 @@ et sinon inclu*/
                     if (err) throw err;
                     console.log(result.affectedRows + " record(s) updated");
                   });
-              });
-    let nouvXP = ExpModule.gainExperience(Rooms[indiceRoom].XPJ1,Rooms[indiceRoom].BoostJ1,Rooms[indiceRoom].XPJ2,Rooms[indiceRoom].BoostJ2,Rooms[indiceRoom].score);
-            con.connect(function(err) {
-                  if (err) throw err;
+       
                   console.log("========================================");
                   console.log(nouvXP.miseAJourExperienceJ1);
                   console.log(nouvXP.miseAJourExperienceJ2);
                   console.log("========================================");
-                  var sql = "UPDATE UTILISATEUR SET EXPERIENCE = '"+nouvXP.miseAJourExperienceJ1+"' WHERE PSEUDO = '"+Rooms[indiceRoom].p1+"'";
-                  var sql2 = "UPDATE UTILISATEUR SET  EXPERINECE = '"+nouvXP.miseAJourExperienceJ2+"' WHERE PSEUDO = '"+Rooms[indiceRoom].p2+"'";
+
+                  sql = "UPDATE UTILISATEUR SET EXPERIENCE = '"+nouvXP.miseAJourExperienceJ1+"' WHERE PSEUDO = '"+Rooms[iR].p1+"'";
+                  sql2 = "UPDATE UTILISATEUR SET  EXPERIENCE = '"+nouvXP.miseAJourExperienceJ2+"' WHERE PSEUDO = '"+Rooms[iR].p2+"'";
                   con.query(sql, function (err, result) {
                       if (err) throw err;
                       console.log(result.affectedRows + " record(s) updated");
@@ -318,7 +335,22 @@ et sinon inclu*/
                       if (err) throw err;
                       console.log(result.affectedRows + " record(s) updated");
                     });
-                });         
+                     
+                    if(Rooms[iR].score[0] != Rooms[iR].score[1]){
+                        let scoreGagnant = Math.max(Rooms[iR].score[0],Rooms[iR].score[1]);
+                        let gagnant = ( scoreGagnant == Rooms[iR].score[0] ? Rooms[iR].p1 : Rooms[iR].p2 ) ;
+                        sql2 = "UPDATE PARTIE SET GAGNANT='"+gagnant+"', SCORE='"+scoreGagnant+"' WHERE ID_PARTIE='"+Rooms[iR].idPartie+"' ";
+                            con.query(sql2, function (err, result) {
+                                if (err) throw err;
+                                console.log(result.affectedRows + " record(s) updated");
+                              });
+                    }else{
+                            sql2 = "UPDATE PARTIE SET GAGNANT='null', SCORE='-1' WHERE ID_PARTIE='"+Rooms[iR].idPartie+"'";
+                            con.query(sql2, function (err, result) {
+                                if (err) throw err;
+                                console.log(result.affectedRows + " record(s) updated");
+                              });
+                    }
     nsp.in(Rooms[iR].name).emit('Joueur_A_Quitter',Rooms[iR].score[0], Rooms[iR].score[1],idj);
    });
    
