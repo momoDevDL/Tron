@@ -19,7 +19,7 @@
                 //$query = "INSERT INTO UTILISATEUR VALUES('$pseudo',md5($passwd),'JOUEUR','$email',1,100,1.00,'NULL','ORANGE','BLEU')";
                 
                 $req = $dbh->query($sql);
-                echo "whaaaaaat";
+                
                 session_start();
                 $_SESSION['id_utilisateur']= $pseudo;
                 $_SESSION['id_role']="JOUEUR";
