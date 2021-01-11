@@ -6,13 +6,25 @@ body{
     margin: 0;
     padding: 0;
 }
+
 header{
-    height:100vh ;
+    height: 75vh ;
     background-color: #181818;
-    background-image: url('../IMAGES/monochrome-photo-of-triangle-shape-digital-wallpaper-3137064.jpg');
+    /*background-image: url('../IMAGES/monochrome-photo-of-triangle-shape-digital-wallpaper-3137064.jpg');*/
     background-repeat: no-repeat;
     background-size: cover;
 }
+
+div.header-container{
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: space-between;
+}
+
 button a{
     text-decoration: none;
     text-align: center;
@@ -24,42 +36,50 @@ button a:hover{
     text-align: center;
     color: black;
 }
+
 nav{
     width: 100%;
+    display: block;
     position: fixed;
     background-color: rgba(109, 107, 107, 0.808);
     font-family: 'Orbitron', sans-serif;
-    font-size:14px;
+    font-size:16px;
     z-index: 2;
 }
-hr{
-    background-color: white;
-    width: 50%;
-    margin-top: 15%;
-    height: 5px;
-}
-h1{
-    font-size:150px;
+
+div.main-title{
     position: relative;
-    top: 20%;
-    text-align: center;
-    width: min-content;
+    display: flex;
+    align-items: space-around;
+    justify-content: center;
+    flex-direction: column;
+}
+
+h1{
+    margin: auto;
+    font-size:130px;
     color:rgb(0, 247, 255);
     font-family: 'Orbitron', sans-serif;
     font-weight: bold;
-    margin-bottom: 200px;
     letter-spacing: 5px;
 }
+
+div.main-play-now-button{
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: space-around;
+}
+
 #logButton {
     background-color:transparent;
-    position: relative;
+    display: block;
     border: none;
     border: 2px solid white ;
-    top: 5em;
-    left: 41%;
     color: rgb(0, 247, 255);
     padding-left: 50px;
     padding-right: 50px;
+    margin-top: 20%;
 }
 
 #logButton a {
