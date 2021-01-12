@@ -140,7 +140,8 @@ require_once('PHP/ConnexionBD.php');
     </div>
     </section>  
     <section id="Team">
-        <h3>Team</h3>
+      <h3>Equipe</h3>
+      <div id="Team-div">
         <div id="row">
             <div class="card" style="width: 20%;">
                 <img src="IMAGES/31543101_102282713975787_7975195690995286016_o.jpg" class="card-img-top" alt="...">
@@ -176,32 +177,33 @@ require_once('PHP/ConnexionBD.php');
                 </div>
               </div>
         </div>
-      
+      </div>
     </section>   
    
     <section id="Jouer">
-        <h3>Essayer le jeu </h3>
-        <p class="col-md-7">Essayer une partie contre une IA développée par nos soins pour vous garantir une experience de jeu intense </p>
-         <button type='button' id="playIAButton" class='btn btn-primary btn-lg col-md-4'>JOUER MAINTENANT</button>
-
+        <h3>Tester le jeu </h3>
+        <div id="Jouer-div">
+        <p>Essayer une partie contre une IA développée par nos soins pour vous garantir une experience de jeu intense </p>
+        <button type='button' id="playIAButton" class='btn btn-primary btn-lg col-md-4'>JOUER MAINTENANT</button>
+        </div>
     </section>   
     <section id="Events">
-        <h3>Prochainements</h3>
+        
         <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
-              <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
+              <!--li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li-->
+              <li data-target="#carouselExampleCaptions" data-slide-to="0"></li>
               <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
-              <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
             </ol>
             <div class="carousel-inner">
-              <div class="carousel-item active">
+              <!--div class="carousel-item">
                 <img src="IMAGES/edgar-m-Tfrl8rH-QoU-unsplash.jpg" class="d-block w-100" alt="...">
                 <div class="carousel-caption d-none d-md-block">
                   <h5>First slide label</h5>
                   <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
                 </div>
-              </div>
-              <div class="carousel-item">
+              </div-->
+              <div class="carousel-item active">
                 <img src="IMAGES/s_t_a_r__labs_wallpaper_by_celethas-dbj509r.png" class="d-block w-100" alt="...">
                 <div class="carousel-caption d-none d-md-block">
                   <h5>Second slide label</h5>
@@ -228,6 +230,8 @@ require_once('PHP/ConnexionBD.php');
     </section>   
     <section id="Contact">
         <h3>Contact</h3>
+        
+        <div id="contact-div">
         <div id="contact-container">
           <div id="contact-form">
               <h2>Contactez-nous</h2>
@@ -257,8 +261,11 @@ require_once('PHP/ConnexionBD.php');
         <i href="#" class="fab fa-instagram fa-4x"></i>
         <i href="#" class="fab fa-linkedin fa-4x"></i> 
         <i href="#" class="fab fa-facebook fa-4x"></i>
+        <div id="Copyrights">
+        <p >All Copyrights Reserved 2020.</p>
+        </div>
       </div>
-      <p id="Copyrights">All Copyrights Reserved 2020.</p>
+      </div>
     </section>   
     <script src="JS/main.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
