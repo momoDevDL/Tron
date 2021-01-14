@@ -257,10 +257,13 @@ require_once('PHP/ConnexionBD.php');
       </div>
       
       <div id='socialMediaAccounts'>
-        <h2>Rejoignez l'aventure </h2>
+        <h2>Rejoignez l'aventure ! </h2>
+        <div id="Social-Icons">
         <i href="#" class="fab fa-instagram fa-4x"></i>
         <i href="#" class="fab fa-linkedin fa-4x"></i> 
         <i href="#" class="fab fa-facebook fa-4x"></i>
+        </div>
+        
         <div id="Copyrights">
         <p >All Copyrights Reserved 2020.</p>
         </div>
