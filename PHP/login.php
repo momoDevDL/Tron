@@ -22,20 +22,18 @@ if(!(isset($_SESSION['pseudoExistant']))){
     <script src="../JS/jquery-3.4.1.min.js"></script>
     <script src="https://kit.fontawesome.com/e2aac98496.js" crossorigin="anonymous"></script>
 </head>
-<body class="col-md-12">  
-    
-
+<body>
     
         <div id="formulaire">
-        <h1 class="col-md-12">AUTHENTIFICATION</h1>
+        <h1>AUTHENTIFICATION</h1>
             <form id="logInForm" action='loginScript.php' method='POST'>
             <?php
     
         if($_SESSION["pseudoExistant"] == "true"){
-            echo"<input type='hidden' name='erreur' value='true'/><br />";
+            echo"<input type='hidden' name='erreur' value='true'/>";
             $_SESSION["pseudoExistant"]="false";
         }else{
-        echo"<input type='hidden' name='erreur' value='false'/><br />";
+        echo"<input type='hidden' name='erreur' value='false'/>";
         }
     
 
@@ -49,9 +47,9 @@ if(!(isset($_SESSION['pseudoExistant']))){
     
     ?>
                 <input type="text" name="user_name" placeholder="pseudo">
-                <span class="bar"></span>            
+                            
                 <input type="password" name="password" placeholder="mot de passe">
-                <span class="bar"></span>
+                
                
                 <button type="submit" id="submit" name="submit" class="btn btn-primary btn-lg" value="Soumettre">Soumettre</button>
                 <div id="links">

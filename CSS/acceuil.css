@@ -329,17 +329,19 @@ padding-top: 1%;
 #contact-container{
     background-color:#181818;
     float: left;
-    width: 43%;
+    width: 50%;
     height: 40vh;
     color: white;
     border-radius: 10px;
-    margin-left: 10px;
+    
 }
 
 #contact-div{
     display: flex;
     justify-content: space-around;
+    align-items: center;
     padding-top:1%;
+    width: 100%;
 }
 
 #Contact h3{
@@ -360,17 +362,16 @@ padding-top: 1%;
 }
 
 #socialMediaAccounts{
-    width: 40%;
+ width: 20%;   
 }
 
-#socialMediaAccounts i{
-    padding-right: 1em;
-}
+
 
 #socialMediaAccounts h2{
     color: white;
     padding-bottom: 30px;
     width: max-content;
+    text-align: center;
 }
 
 #contact-form #submitContactForm{
@@ -387,13 +388,20 @@ padding-top: 1%;
     color: #181818;
 }
 
+#Social-Icons{
+display: flex;
+justify-content: space-around;
+align-items: center;
+}
+
 #Copyrights{
     position: relative;
     padding-top: 2%;
     color:white;
     text-decoration: underline;
-    width: max-content;
+    width: 100%;
     z-index: 5;
+    margin-top: 5%;
 }
 
 #Copyrights p{
